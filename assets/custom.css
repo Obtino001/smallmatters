@@ -3544,97 +3544,261 @@ vipps-button#vipps-button {
     margin: 30px auto;
 }
 
-/* --- Filter Drawer Optimization --- */
+/* ================================================================
+   EXERCERE.COM STYLE FILTER DRAWER — FULL REDESIGN
+   ================================================================ */
 
-/* 2-Column Grid for Color Swatches */
-.facets-layout-list--swatch {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px 10px;
+/* --- 1. ACCORDION CONVERSION: Override Dawn's slide-in submenu --- */
+.js .mobile-facets__submenu {
+  position: static !important;
+  transform: none !important;
+  visibility: visible !important;
+  z-index: auto !important;
+  width: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  top: auto !important;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.35s ease;
+  background: transparent !important;
 }
 
-.facets-layout-list--swatch .mobile-facets__label,
-.facets-layout-list--swatch .facets__label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0;
+/* When a details accordion is open, expand its submenu */
+.mobile-facets__details[open] > .mobile-facets__submenu {
+  max-height: 3000px !important;
+  overflow: visible !important;
 }
 
-.facets-layout-list--swatch .swatch-input-wrapper {
-  margin: 0;
+/* Keep the main filter list visible even when Dawn JS adds submenu-open */
+.js .mobile-facets .submenu-open {
+  visibility: visible !important;
 }
 
-/* Elegant Typography for Filter Accordions */
+/* Hide the back/close button inside each submenu (not needed in accordion) */
+.mobile-facets__close-button {
+  display: none !important;
+}
+
+/* Hide the per-filter submenu footer (Clear/Apply inside each filter) */
+.mobile-facets__submenu > .mobile-facets__footer {
+  display: none !important;
+}
+
+/* --- 2. HEADER --- */
+.mobile-facets__header {
+  padding: 0 !important;
+  border-bottom: none !important;
+}
+.mobile-facets__header-inner {
+  border-bottom: 1px solid #e5e5e5;
+}
+/* Hide the product count paragraph inside header */
+.mobile-facets__count {
+  display: none !important;
+}
+
+/* --- 3. ACCORDION CATEGORY SUMMARIES --- */
 .mobile-facets__summary {
-  border-bottom: 1px solid rgba(0,0,0,0.08);
-  padding-block: 16px;
+  padding: 18px 20px !important;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
 }
-
-.mobile-facets__summary > div > span {
-  font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
-  font-weight: 500;
-  font-size: 14px;
+.mobile-facets__details[open] > .mobile-facets__summary {
+  border-bottom: none;
+}
+.mobile-facets__summary > div {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+.mobile-facets__summary > div > span:first-child {
+  font-weight: 600;
+  font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #3c3c3c;
+  color: #333;
+}
+/* Replace arrow icon with a caret that rotates */
+.mobile-facets__arrow {
+  transition: transform 0.25s ease;
+}
+.mobile-facets__details[open] > .mobile-facets__summary .mobile-facets__arrow {
+  transform: rotate(180deg);
 }
 
-/* Custom Checkboxes Text */
-.facet-checkbox__text-label {
-  font-family: Lato, sans-serif;
+/* --- 4. PILL-STYLE TEXT FILTERS (3-column grid) --- */
+.mobile-facets__list:not(.facets-layout-list--swatch) {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 10px !important;
+  padding: 8px 20px 20px !important;
+}
+.mobile-facets__list:not(.facets-layout-list--swatch) .mobile-facets__item {
+  width: 100% !important;
+}
+.mobile-facets__list:not(.facets-layout-list--swatch) .mobile-facets__label {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 10px 6px !important;
+  background-color: #f6f6f6 !important;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  text-align: center;
+}
+/* Hide the default Dawn checkbox square and checkmark inside pills */
+.mobile-facets__list:not(.facets-layout-list--swatch) .mobile-facets__label > svg,
+.mobile-facets__list:not(.facets-layout-list--swatch) .mobile-facets__label .mobile-facets__highlight,
+.mobile-facets__list:not(.facets-layout-list--swatch) .mobile-facets__label .icon-checkmark {
+  display: none !important;
+}
+/* Pill text styling */
+.mobile-facets__list:not(.facets-layout-list--swatch) .facet-checkbox__text {
   font-size: 13px;
-  color: #3c3c3c;
+  color: #555;
+  text-align: center;
+}
+.mobile-facets__list:not(.facets-layout-list--swatch) .facet-checkbox__text-label {
+  font-size: 13px;
+}
+/* Hide the count "(X)" from pills to keep them clean */
+.mobile-facets__list:not(.facets-layout-list--swatch) .facet-checkbox__text {
+  font-size: 0; /* hide everything */
+}
+.mobile-facets__list:not(.facets-layout-list--swatch) .facet-checkbox__text .facet-checkbox__text-label {
+  font-size: 13px; /* bring back just the label text */
+}
+/* Active/Selected pill state */
+.mobile-facets__list:not(.facets-layout-list--swatch) .mobile-facets__label:has(input:checked),
+.mobile-facets__list:not(.facets-layout-list--swatch) .mobile-facets__label.active {
+  border: 1px solid #000 !important;
+  background-color: #fff !important;
+}
+.mobile-facets__list:not(.facets-layout-list--swatch) .mobile-facets__label:has(input:checked) .facet-checkbox__text .facet-checkbox__text-label,
+.mobile-facets__list:not(.facets-layout-list--swatch) .mobile-facets__label.active .facet-checkbox__text .facet-checkbox__text-label {
+  font-weight: 700;
+  color: #000;
 }
 
-/* Filter Action Buttons (Clear & Apply) */
-.mobile-facets__footer {
-  border-top: 1px solid rgba(0,0,0,0.08);
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
+/* --- 5. COLOR SWATCH GRID (3-column with checkbox + swatch + name) --- */
+.facets-layout-list--swatch {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 14px 10px !important;
+  padding: 8px 20px 20px !important;
+}
+.facets-layout-list--swatch .mobile-facets__label,
+.facets-layout-list--swatch .facets__label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 0 !important;
+  cursor: pointer;
+}
+/* Custom checkbox before swatch label */
+.facets-layout-list--swatch .mobile-facets__label > svg,
+.facets-layout-list--swatch .mobile-facets__label .mobile-facets__highlight {
+  display: none !important;
+}
+.facets-layout-list--swatch .mobile-facets__item {
+  position: relative;
+}
+.facets-layout-list--swatch .mobile-facets__label::before {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  border: 1.5px solid #ccc;
+  border-radius: 2px;
+  background-color: #fff;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.facets-layout-list--swatch .mobile-facets__label:has(input:checked)::before,
+.facets-layout-list--swatch .mobile-facets__label.active::before {
+  background-color: #000;
+  border-color: #000;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='8' viewBox='0 0 10 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 4L3.5 6.5L9 1' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.facets-layout-list--swatch .swatch-input-wrapper {
+  margin: 0 !important;
+  width: 16px !important;
+  height: 16px !important;
+  flex-shrink: 0;
+}
+.facets-layout-list--swatch .swatch {
+  width: 16px !important;
+  height: 16px !important;
+  border-radius: 2px !important;
+}
+.facets-layout-list--swatch .facet-checkbox__text-label {
+  font-size: 12px;
+  color: #333;
+}
+/* Hide count from swatches */
+.facets-layout-list--swatch .facet-checkbox__text {
+  font-size: 0;
+}
+.facets-layout-list--swatch .facet-checkbox__text .facet-checkbox__text-label {
+  font-size: 12px;
 }
 
-.mobile-facets__clear-wrapper {
-  width: 50%;
+/* --- 6. MAIN FOOTER: Stacked APPLY FILTER + VIEW X ITEMS --- */
+.mobile-facets__footer.exercere-footer {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  padding: 20px !important;
+  border-top: 1px solid #e5e5e5 !important;
+  background: #fff;
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
 }
-
-.mobile-facets__clear {
+.exercere-btn {
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  background: white;
-  color: #3c3c3c;
-  border: 1px solid #3c3c3c;
-  padding: 12px 20px;
-  text-transform: uppercase;
+  padding: 14px 20px;
+  font-size: 12px;
   font-weight: 600;
-  font-size: 13px;
-  text-decoration: none !important;
-  transition: all 0.3s ease;
-}
-
-.mobile-facets__clear:hover {
-  background: #f4f4f4;
-}
-
-.mobile-facets__footer .button.button--primary {
-  width: 50%;
-  background: #000;
-  color: #fff;
-  border: 1px solid #000;
-  padding: 12px 20px;
   text-transform: uppercase;
-  font-weight: 600;
-  font-size: 13px;
-  margin: 0;
-  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  border-radius: 0;
+  border: 1px solid #e0e0e0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #fff;
+}
+.exercere-btn--apply {
+  color: #999;
+}
+.exercere-btn--apply:hover {
+  border-color: #000;
+  color: #000;
+}
+.exercere-btn--view {
+  color: #000;
+  font-weight: 700;
+}
+.exercere-btn--view:hover {
+  background-color: #f9f9f9;
 }
 
-.mobile-facets__footer .button.button--primary:hover {
-  background: #3c3c3c;
-  color: #fff;
+/* --- 7. PRICE RANGE inside accordion --- */
+.mobile-facets__submenu .facets__price {
+  padding: 10px 20px 20px;
+}
+.mobile-facets__info {
+  padding: 8px 20px 0;
+  font-size: 12px;
+  color: #888;
 }
