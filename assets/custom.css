@@ -3544,202 +3544,97 @@ vipps-button#vipps-button {
     margin: 30px auto;
 }
 
-/* --- Filter Drawer Optimization Redesign --- */
+/* --- Filter Drawer Optimization --- */
 
-/* 1. Header Styling */
-.mobile-facets__header {
-  padding: 0 !important;
-}
-.mobile-facets__header-inner {
-  padding: 20px;
-  border-bottom: 1px solid #e5e5e5;
-}
-.drawer-top-clear a {
-  text-decoration: none !important;
-}
-
-/* 2. Accordion Styling (Convert Submenu to Accordion) */
-.mobile-facets__submenu {
-  position: static !important;
-  transform: none !important;
-  visibility: visible !important;
-  display: none;
-  background-color: transparent !important;
-}
-.mobile-facets__details[open] .mobile-facets__submenu {
-  display: block;
-}
-.mobile-facets__close-button {
-  display: none !important;
-}
-.mobile-facets__summary {
-  padding: 16px 20px;
-  border-bottom: 1px solid #f0f0f0;
-}
-.mobile-facets__details[open] .mobile-facets__summary {
-  border-bottom: none;
-}
-.mobile-facets__summary > div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.mobile-facets__summary > div > span {
-  font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
-  font-weight: 600;
-  font-size: 13px;
-  text-transform: uppercase;
-  color: #333;
-}
-.mobile-facets__arrow {
-  transition: transform 0.2s ease;
-}
-.mobile-facets__details[open] .mobile-facets__arrow {
-  transform: rotate(180deg);
-}
-
-/* 3. Text Filters (Pill Style) Grid */
-.mobile-facets__list:not(.facets-layout-list--swatch) {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  padding: 0 20px 20px;
-}
-.mobile-facets__list:not(.facets-layout-list--swatch) .mobile-facets__item {
-  width: 100%;
-}
-.mobile-facets__list:not(.facets-layout-list--swatch) .mobile-facets__label {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 10px 5px;
-  background-color: #f6f6f6;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: 1px solid transparent;
-}
-/* Hide default checkboxes for pills */
-.mobile-facets__list:not(.facets-layout-list--swatch) .mobile-facets__label > svg,
-.mobile-facets__list:not(.facets-layout-list--swatch) .mobile-facets__label .mobile-facets__highlight {
-  display: none !important;
-}
-.mobile-facets__list:not(.facets-layout-list--swatch) .facet-checkbox__text {
-  font-size: 13px;
-  color: #555;
-  text-align: center;
-  font-family: 'Lato', sans-serif;
-}
-/* Active Pill State */
-.mobile-facets__list:not(.facets-layout-list--swatch) .mobile-facets__label input:checked + .facet-checkbox__text,
-.mobile-facets__list:not(.facets-layout-list--swatch) .mobile-facets__label.active .facet-checkbox__text {
-  font-weight: bold;
-  color: #000;
-}
-.mobile-facets__list:not(.facets-layout-list--swatch) .mobile-facets__label:has(input:checked) {
-  border: 1px solid #000;
-  background-color: #fff;
-}
-.mobile-facets__list:not(.facets-layout-list--swatch) .mobile-facets__label.active {
-  border: 1px solid #000;
-  background-color: #fff;
-}
-
-/* 4. Color Swatch Grid */
+/* 2-Column Grid for Color Swatches */
 .facets-layout-list--swatch {
   display: grid !important;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px 10px;
-  padding: 0 20px 20px;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 10px;
 }
+
 .facets-layout-list--swatch .mobile-facets__label,
 .facets-layout-list--swatch .facets__label {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 0;
-  cursor: pointer;
 }
-/* Fake Checkbox for Swatches */
-.facets-layout-list--swatch .mobile-facets__label::before {
-  content: "";
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 1px solid #ccc;
-  border-radius: 2px;
-  background-color: #fff;
-  transition: all 0.2s;
-  flex-shrink: 0;
-}
-.facets-layout-list--swatch .mobile-facets__label:has(input:checked)::before,
-.facets-layout-list--swatch .mobile-facets__label.active::before {
-  background-color: #000;
-  border-color: #000;
-  background-image: url('data:image/svg+xml;utf8,<svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>');
-  background-repeat: no-repeat;
-  background-position: center;
-}
+
 .facets-layout-list--swatch .swatch-input-wrapper {
   margin: 0;
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
 }
-.facets-layout-list--swatch .swatch {
-  width: 14px !important;
-  height: 14px !important;
-  border-radius: 2px;
+
+/* Elegant Typography for Filter Accordions */
+.mobile-facets__summary {
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  padding-block: 16px;
 }
-.facets-layout-list--swatch .facet-checkbox__text-label {
-  font-family: 'Lato', sans-serif;
+
+.mobile-facets__summary > div > span {
+  font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #3c3c3c;
+}
+
+/* Custom Checkboxes Text */
+.facet-checkbox__text-label {
+  font-family: Lato, sans-serif;
   font-size: 13px;
   color: #3c3c3c;
 }
 
-/* 5. Sticky Footer Stacked Layout */
-.mobile-facets__footer.stacked-footer {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+/* Filter Action Buttons (Clear & Apply) */
+.mobile-facets__footer {
+  border-top: 1px solid rgba(0,0,0,0.08);
   padding: 20px;
-  border-top: 1px solid #e5e5e5;
-  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
 }
-.stacked-footer .button {
-  width: 100% !important;
+
+.mobile-facets__clear-wrapper {
+  width: 50%;
+}
+
+.mobile-facets__clear {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 14px 20px;
-  font-size: 12px;
-  font-weight: 600;
+  width: 100%;
+  background: white;
+  color: #3c3c3c;
+  border: 1px solid #3c3c3c;
+  padding: 12px 20px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-radius: 4px;
+  font-weight: 600;
+  font-size: 13px;
+  text-decoration: none !important;
+  transition: all 0.3s ease;
+}
+
+.mobile-facets__clear:hover {
+  background: #f4f4f4;
+}
+
+.mobile-facets__footer .button.button--primary {
+  width: 50%;
+  background: #000;
+  color: #fff;
+  border: 1px solid #000;
+  padding: 12px 20px;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 13px;
   margin: 0;
-  text-decoration: none;
-  font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+  transition: all 0.3s ease;
 }
-.stacked-footer .apply-btn {
-  background-color: #fff;
-  color: #999;
-  border: 1px solid #e0e0e0;
-}
-.stacked-footer .apply-btn:hover {
-  border-color: #000;
-  color: #000;
-}
-.stacked-footer .view-btn {
-  background-color: #fff;
-  color: #000;
-  border: 1px solid #e0e0e0;
-}
-.stacked-footer .view-btn:hover {
-  background-color: #f9f9f9;
-}
-/* Hide inner clear button since we moved it to top */
-.mobile-facets__footer:not(.stacked-footer) {
-  display: none !important;
+
+.mobile-facets__footer .button.button--primary:hover {
+  background: #3c3c3c;
+  color: #fff;
 }
