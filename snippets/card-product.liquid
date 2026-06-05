@@ -93,9 +93,9 @@
             <div class="WI_slider_track">
               {%- for image in card_product.images limit: image_limit -%}
                 <div class="WI_slider_item">
-                  <img src="{{ image | image_url: width: 533 }}" alt="{{ image.alt | escape }}" loading="lazy" class="img-main">
+                  <img src="{{ image | image_url: width: 533 }}" alt="{{ image.alt | escape }}" loading="lazy" class="img-main" width="533" height="{{ 533 | divided_by: image.aspect_ratio | ceil }}">
                   {% if forloop.first and card_product.images[1] != blank %}
-                    <img src="{{ card_product.images[1] | image_url: width: 533 }}" alt="" loading="lazy" class="img-secondary">
+                    <img src="{{ card_product.images[1] | image_url: width: 533 }}" alt="" loading="lazy" class="img-secondary" width="533" height="{{ 533 | divided_by: card_product.images[1].aspect_ratio | ceil }}">
                   {% endif %}
                 </div>
               {%- endfor -%}

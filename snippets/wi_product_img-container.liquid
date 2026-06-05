@@ -38,7 +38,7 @@
               <img
                 src="{{ image | image_url: width: 533 }}"
                 alt="{{ image.alt | escape }}"
-                loading="eager"
+                loading="lazy"
                 class="img-main"
                 width="533"
                 height="{{ 533 | divided_by: image.aspect_ratio | ceil }}"
