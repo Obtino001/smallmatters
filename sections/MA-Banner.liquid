@@ -128,18 +128,13 @@ padding: 12px;
   width: 37px;
   height: 37px;
 }
-.Ma-sss-img.mob{
-  display: none;
-}
+
 @media screen and (max-width:768px){
   .text-sss-3{
     font-size: 22px;
   }
-  .Ma-swipersss .swiper-slide:has(.Ma-sss-img.mob) .desk{
-    display: none;
-  }
-  .Ma-sss-img.mob{
-    display: block;
+  .Ma-sss-img {
+    width: 100%;
   }
   .ma-banner-sss {
     padding-top: 3rem;
@@ -191,17 +186,22 @@ padding: 12px;
         <div class="swiper-wrapper">
           {% for block in section.blocks %}
           <div class="swiper-slide">
-            <img
-              class="Ma-sss-img desk"
-              src="{{ block.settings.image | img_url: 'master' }}"
-              alt="{{ block.settings.title }}"
-            />
-            {% if block.settings.image-mob %}
-            <img
-              class="Ma-sss-img mob"
-              src="{{ block.settings.image-mob | img_url: 'master' }}"
-              alt="{{ block.settings.title }}"
-            />
+            {% liquid
+              assign fetch_priority = 'auto'
+              assign loading_strategy = 'lazy'
+              if forloop.first
+                assign fetch_priority = 'high'
+                assign loading_strategy = 'eager'
+              endif
+            %}
+            {% if block.settings.image != blank %}
+              <picture style="width: 100%; height: 100%;">
+                {% if block.settings.image-mob %}
+                  <source media="(max-width: 768px)" srcset="{{ block.settings.image-mob | image_url: width: 768 }} 768w, {{ block.settings.image-mob | image_url: width: 400 }} 400w" sizes="100vw">
+                {% endif %}
+                <source media="(min-width: 769px)" srcset="{{ block.settings.image | image_url: width: 2000 }} 2000w, {{ block.settings.image | image_url: width: 1400 }} 1400w, {{ block.settings.image | image_url: width: 1000 }} 1000w" sizes="100vw">
+                {{ block.settings.image | image_url: width: 1400 | image_tag: class: 'Ma-sss-img', loading: loading_strategy, fetchpriority: fetch_priority, alt: block.settings.title }}
+              </picture>
             {% endif %}
             <div class="text-ssss">
               <div class="text-sss-1">
