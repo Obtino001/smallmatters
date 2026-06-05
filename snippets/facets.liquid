@@ -600,6 +600,33 @@
                                       {% endif %}
                                     >
 
+                                    {%- assign swatch_bg = '' -%}
+                                    {%- assign val_down = value.label | downcase | strip -%}
+                                    {%- for prod in results.products -%}
+                                      {%- assign siblings = prod.metafields.custom.products_color.value -%}
+                                      {%- if siblings != blank -%}
+                                        {%- for sibling in siblings -%}
+                                          {%- assign title_down = sibling.title | downcase -%}
+                                          {%- if title_down contains val_down or val_down contains sibling.metafields.custom.variant_color.value.name -%}
+                                             {%- assign main_meta = sibling.metafields.custom.variant_color.value -%}
+                                             {%- assign contrast_meta = sibling.metafields.custom.variant_secondary_color.value -%}
+                                             {%- assign main_color = main_meta.color | default: main_meta.value | default: main_meta -%}
+                                             {%- assign contrast_color = contrast_meta.color | default: contrast_meta.value | default: contrast_meta -%}
+                                             
+                                             {%- if main_color != blank -%}
+                                               {%- if contrast_color != blank -%}
+                                                 {%- assign swatch_bg = 'linear-gradient(90deg, ' | append: main_color | append: ' 50%, ' | append: contrast_color | append: ' 50%)' -%}
+                                               {%- else -%}
+                                                 {%- assign swatch_bg = main_color -%}
+                                               {%- endif -%}
+                                             {%- endif -%}
+                                             {%- break -%}
+                                          {%- endif -%}
+                                        {%- endfor -%}
+                                      {%- endif -%}
+                                      {%- if swatch_bg != '' -%}{%- break -%}{%- endif -%}
+                                    {%- endfor -%}
+
                                     {%- if presentation == 'image' -%}
                                       <div class="facets__image-wrapper">
                                         {%- if value.image -%}
@@ -614,6 +641,9 @@
                                       <span class="mobile-facets__highlight"></span>
                                       {{- 'square.svg' | inline_asset_content -}}
                                       {{- 'icon-checkmark.svg' | inline_asset_content -}}
+                                      {%- if swatch_bg != '' -%}
+                                        <div style="background: {{ swatch_bg }}; display:inline-block; width: 16px; height: 16px; border: 1px solid #e5e5e5; margin-right: 8px;"></div>
+                                      {%- endif -%}
                                     {%- endif %}
 
                                     {{ text_value }}
