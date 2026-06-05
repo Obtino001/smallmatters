@@ -509,6 +509,9 @@
               class="mobile-facets__main has-submenu gradient"
             >
               {%- if enable_filtering -%}
+                <div style="padding: 20px; background: red; color: white; font-weight: bold; font-size: 16px;">
+                  DEBUG: Shopify is returning {{ results.filters.size }} filters for this collection.
+                </div>
                 {%- for filter in results.filters -%}
                   {% liquid
                     assign presentation = filter.presentation | default: default_presentation
