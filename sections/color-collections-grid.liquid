@@ -1,0 +1,174 @@
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  .color-collections-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: flex-start;
+    margin-top: 30px;
+  }
+
+  .color-collection-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    width: calc(10% - 15px);
+    min-width: 60px;
+  }
+
+  .color-collection-square {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border: 1px solid rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .color-collection-item:hover .color-collection-square {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .color-collections-header {
+    margin-bottom: 20px;
+  }
+
+  .color-collections-title {
+    font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: #3c3c3c;
+    margin-bottom: 10px;
+  }
+
+  .color-collections-text {
+    font-family: Lato, sans-serif;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+    max-width: 800px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .color-collection-item {
+      width: calc(20% - 12px);
+    }
+    .color-collections-grid {
+      gap: 10px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="color-collections-section section-{{ section.id }}-padding page-width">
+  <div class="color-collections-header">
+    {%- if section.settings.title != blank -%}
+      <h2 class="color-collections-title">{{ section.settings.title | escape }}</h2>
+    {%- endif -%}
+    {%- if section.settings.text != blank -%}
+      <div class="color-collections-text">{{ section.settings.text }}</div>
+    {%- endif -%}
+  </div>
+
+  <div class="color-collections-grid">
+    {%- for block in section.blocks -%}
+      {%- if block.settings.collection != blank -%}
+        <a href="{{ block.settings.collection.url }}" class="color-collection-item" {{ block.shopify_attributes }}>
+          <div class="color-collection-square" style="background-color: {{ block.settings.color_hex }};">
+            {%- if block.settings.image != blank -%}
+              {{ block.settings.image | image_url: width: 300 | image_tag: loading: 'lazy', style: 'width: 100%; height: 100%; object-fit: cover;' }}
+            {%- endif -%}
+          </div>
+        </a>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Color Collections Grid",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Finn din farge",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "default": "<p>Vi elsker farger. Fra tidløse elegante nyanser til spreke knallfarger som skiller seg ut. For å gjøre det enkelt for deg har vi her sortert genserne på farger, slik at du kan klikke deg inn på den fargen du ønsker og finne din favoritt.</p>",
+      "label": "Description"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Color Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "color",
+          "id": "color_hex",
+          "label": "Square Color",
+          "default": "#000000"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Optional Image (Overrides Color)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Color Collections Grid",
+      "blocks": [
+        { "type": "collection" },
+        { "type": "collection" },
+        { "type": "collection" }
+      ]
+    }
+  ]
+}
+{% endschema %}
