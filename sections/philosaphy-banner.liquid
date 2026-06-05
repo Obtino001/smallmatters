@@ -113,11 +113,7 @@
 
     {% if section.settings.mobile_image != blank %}
       <div class="philo-banner__image_mobile">
-        <img 
-          src="{{ section.settings.mobile_image | image_url}}" 
-          alt="{{ section.settings.mobile_image.alt | escape }}"
-          loading="lazy"
-        >
+        {{ section.settings.mobile_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: section.settings.mobile_image.alt }}
       </div>
     {% endif %}
       {% if section.settings.description != blank %}
@@ -133,11 +129,7 @@
 
     {% if section.settings.corner_image != blank %}
       <div class="philo-banner__image">
-        <img 
-          src="{{ section.settings.corner_image | image_url}}" 
-          alt="{{ section.settings.corner_image.alt | escape }}"
-          loading="lazy"
-        >
+        {{ section.settings.corner_image | image_url: width: 400 | image_tag: loading: 'lazy', alt: section.settings.corner_image.alt }}
       </div>
     {% endif %}
   </div>

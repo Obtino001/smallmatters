@@ -170,7 +170,7 @@ color: #3C3C3C;
                                 <div class="icon-block">
                                   {% if block.settings.icon != blank %}
                                     <div class="icon-block__icon">
-                                      <img src="{{ block.settings.icon | image_url }}" alt="">
+                                      {{ block.settings.icon | image_url: width: 100 | image_tag: loading: 'lazy', alt: block.settings.icon.alt }}
                                     </div>
                                   {% endif %}
                                   <div class="icon-block__text">
@@ -182,7 +182,7 @@ color: #3C3C3C;
                                 <div class="icon-block">
                                   {% if block.settings.icon1 != blank %}
                                     <div class="icon-block__icon">
-                                      <img src="{{ block.settings.icon1 | image_url }}" alt="">
+                                      {{ block.settings.icon1 | image_url: width: 100 | image_tag: loading: 'lazy', alt: block.settings.icon1.alt }}
                                     </div>
                                   {% endif %}
                                   <div class="icon-block__text">
@@ -195,7 +195,7 @@ color: #3C3C3C;
                                 <div class="icon-block">
                                   {% if block.settings.icon2 != blank %}
                                     <div class="icon-block__icon">
-                                      <img src="{{ block.settings.icon2 | image_url }}" alt="">
+                                      {{ block.settings.icon2 | image_url: width: 100 | image_tag: loading: 'lazy', alt: block.settings.icon2.alt }}
                                     </div>
                                   {% endif %}
                                   <div class="icon-block__text">

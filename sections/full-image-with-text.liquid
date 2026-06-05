@@ -156,7 +156,7 @@
     {% if section.settings.image_position == 'left' %}
       {% if section.settings.dog_image != blank %}
         <div class="aok9-image">
-          <img src="{{ section.settings.dog_image | image_url }}" alt="image">
+          {{ section.settings.dog_image | image_url: width: 1200 | image_tag: loading: 'lazy', alt: section.settings.dog_image.alt | default: 'image' }}
         </div>
       {% endif %}
     {% endif %}
@@ -180,7 +180,7 @@
     {% if section.settings.image_position == 'right' %}
       {% if section.settings.dog_image != blank %}
         <div class="aok9-image">
-          <img src="{{ section.settings.dog_image | image_url }}" alt="image" loading="lazy">
+          {{ section.settings.dog_image | image_url: width: 1200 | image_tag: loading: 'lazy', alt: section.settings.dog_image.alt | default: 'image' }}
         </div>
       {% endif %}
     {% endif %}

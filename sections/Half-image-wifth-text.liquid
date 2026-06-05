@@ -44,7 +44,7 @@
       <div class="half-width-section right-section">
         {% if section.settings.Section_Image != blank %}
           <div class="half-width-section-inner">
-            <img src="{{ section.settings.Section_Image | image_url }}" alt="">
+            {{ section.settings.Section_Image | image_url: width: 1200 | image_tag: loading: 'lazy' }}
           </div>
         {% endif %}
       </div>
