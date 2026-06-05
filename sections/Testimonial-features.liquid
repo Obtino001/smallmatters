@@ -1,0 +1,577 @@
+
+
+<div class="testi-feat" style="
+  padding-top: {{ section.settings.padding_top_desktop }}px;
+  padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+  background-color: {{ section.settings.background_color }};
+">
+  <div class="testi-feat__container">
+    <div class="testi-feat__grid">
+      
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          
+          {%- when 'testimonial' -%}
+            <div class="testi-feat__testimonial" {{ block.shopify_attributes }}>
+              {%- if block.settings.image != blank -%}
+                <div class="testi-feat__img-wrap">
+                  <img
+                    src="{{ block.settings.image | image_url: width: 800 }}"
+                    srcset="
+                      {{ block.settings.image | image_url: width: 400 }} 400w,
+                      {{ block.settings.image | image_url: width: 600 }} 600w,
+                      {{ block.settings.image | image_url: width: 800 }} 800w
+                    "
+                    sizes="(min-width: 990px) 50vw, 100vw"
+                    alt="{{ block.settings.image.alt | escape }}"
+                    loading="lazy"
+                    width="{{ block.settings.image.width }}"
+                    height="{{ block.settings.image.height }}"
+                    class="testi-feat__img"
+                  >
+                  
+                  <div class="testi-feat__overlay" style="
+                    background: {{ block.settings.overlay_color }};
+                    opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};
+                  "></div>
+                  
+                  <div class="testi-feat__content">
+                    {%- if block.settings.show_quote_icon -%}
+                      <div class="testi-feat__quote" style="color: {{ block.settings.quote_color }};">
+                        "
+                      </div>
+                    {%- endif -%}
+                    
+                    {%- if block.settings.quote_text != blank -%}
+                      <blockquote class="testi-feat__text" style="color: {{ block.settings.text_color }};">
+                        {{ block.settings.quote_text }}
+                      </blockquote>
+                    {%- endif -%}
+                    
+                    {%- if block.settings.author != blank -%}
+                      <cite class="testi-feat__author" style="color: {{ block.settings.author_color }};">
+                        {{ block.settings.author }}
+                      </cite>
+                    {%- endif -%}
+                  </div>
+                </div>
+              {%- else -%}
+                {{ 'lifestyle-1' | placeholder_svg_tag: 'testi-feat__placeholder' }}
+              {%- endif -%}
+            </div>
+          
+          {%- when 'features' -%}
+            <div class="testi-feat__features" {{ block.shopify_attributes }} style="
+              background-color: {{ block.settings.features_bg_color }};
+            ">
+              <div class="testi-feat__features-inner">
+                {%- if block.settings.heading != blank -%}
+                  <h3 class="testi-feat__feat-heading" style="color: {{ block.settings.heading_color }};">
+                    {{ block.settings.heading }}
+                  </h3>
+                {%- endif -%}
+                
+                <ul class="testi-feat__list">
+                  {%- if block.settings.feature_1_text != blank -%}
+                    <li class="testi-feat__item">
+                      {%- if block.settings.feature_1_icon != blank -%}
+                        <div class="testi-feat__icon-wrap">
+                          <img
+                            src="{{ block.settings.feature_1_icon | image_url: width: 100 }}"
+                            alt="{{ block.settings.feature_1_text }}"
+                            class="testi-feat__icon"
+                            loading="lazy"
+                            width="40"
+                            height="40"
+                          >
+                        </div>
+                      {%- endif -%}
+                      <span class="testi-feat__item-text" style="color: {{ block.settings.feature_text_color }};">
+                        {{ block.settings.feature_1_text }}
+                      </span>
+                    </li>
+                  {%- endif -%}
+                  
+                  {%- if block.settings.feature_2_text != blank -%}
+                    <li class="testi-feat__item">
+                      {%- if block.settings.feature_2_icon != blank -%}
+                        <div class="testi-feat__icon-wrap">
+                          <img
+                            src="{{ block.settings.feature_2_icon | image_url: width: 100 }}"
+                            alt="{{ block.settings.feature_2_text }}"
+                            class="testi-feat__icon"
+                            loading="lazy"
+                            width="40"
+                            height="40"
+                          >
+                        </div>
+                      {%- endif -%}
+                      <span class="testi-feat__item-text" style="color: {{ block.settings.feature_text_color }};">
+                        {{ block.settings.feature_2_text }}
+                      </span>
+                    </li>
+                  {%- endif -%}
+                  
+                  {%- if block.settings.feature_3_text != blank -%}
+                    <li class="testi-feat__item">
+                      {%- if block.settings.feature_3_icon != blank -%}
+                        <div class="testi-feat__icon-wrap">
+                          <img
+                            src="{{ block.settings.feature_3_icon | image_url: width: 100 }}"
+                            alt="{{ block.settings.feature_3_text }}"
+                            class="testi-feat__icon"
+                            loading="lazy"
+                            width="40"
+                            height="40"
+                          >
+                        </div>
+                      {%- endif -%}
+                      <span class="testi-feat__item-text" style="color: {{ block.settings.feature_text_color }};">
+                        {{ block.settings.feature_3_text }}
+                      </span>
+                    </li>
+                  {%- endif -%}
+                  
+                  {%- if block.settings.feature_4_text != blank -%}
+                    <li class="testi-feat__item">
+                      {%- if block.settings.feature_4_icon != blank -%}
+                        <div class="testi-feat__icon-wrap">
+                          <img
+                            src="{{ block.settings.feature_4_icon | image_url: width: 100 }}"
+                            alt="{{ block.settings.feature_4_text }}"
+                            class="testi-feat__icon"
+                            loading="lazy"
+                            width="40"
+                            height="40"
+                          >
+                        </div>
+                      {%- endif -%}
+                      <span class="testi-feat__item-text" style="color: {{ block.settings.feature_text_color }};">
+                        {{ block.settings.feature_4_text }}
+                      </span>
+                    </li>
+                  {%- endif -%}
+                </ul>
+              </div>
+            </div>
+          
+        {%- endcase -%}
+      {%- endfor -%}
+      
+    </div>
+  </div>
+</div>
+
+<style>
+  .testi-feat {
+    width: 100%;
+  }
+  
+  .testi-feat__container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  
+  .testi-feat__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    align-items: stretch;
+  }
+  
+  .testi-feat__testimonial {
+    position: relative;
+    min-height: 400px;
+  }
+  
+  .testi-feat__img-wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .testi-feat__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .testi-feat__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  
+  .testi-feat__content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 2;
+    width: 85%;
+    max-width: 500px;
+  }
+  
+  .testi-feat__quote {
+    font-size: 72px;
+    line-height: 1;
+    margin-bottom: 16px;
+    font-family: Georgia, serif;
+  }
+  
+  .testi-feat__text {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-style: normal;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .testi-feat__author {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-style: normal;
+  }
+  
+  .testi-feat__features {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 40px;
+  }
+  
+  .testi-feat__features-inner {
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .testi-feat__feat-heading {
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+  
+  .testi-feat__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .testi-feat__item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .testi-feat__icon-wrap {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .testi-feat__icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  
+  .testi-feat__item-text {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 1.4;
+  }
+  
+  .testi-feat__placeholder {
+    width: 100%;
+    height: 400px;
+  }
+  
+  @media (max-width: 989px) {
+    .testi-feat {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+    
+    .testi-feat__grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .testi-feat__testimonial {
+      min-height: 350px;
+    }
+    
+    .testi-feat__quote {
+      font-size: 60px;
+    }
+    
+    .testi-feat__text {
+      font-size: 14px;
+    }
+    
+    .testi-feat__features {
+      padding: 40px 30px;
+    }
+    
+    .testi-feat__list {
+      gap: 20px;
+    }
+  }
+  
+  @media (max-width: 589px) {
+    .testi-feat__quote {
+      font-size: 48px;
+    }
+    
+    .testi-feat__text {
+      font-size: 13px;
+    }
+    
+    .testi-feat__item {
+      flex-direction: column;
+      text-align: center;
+      gap: 12px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Testimonial Features",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top (Desktop)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom (Desktop)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top (Mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom (Mobile)",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Background Image"
+        },
+        {
+          "type": "color",
+          "id": "overlay_color",
+          "label": "Overlay Color",
+          "default": "#000000"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "min": 0,
+          "max": 80,
+          "step": 5,
+          "unit": "%",
+          "label": "Overlay Opacity",
+          "default": 40
+        },
+        {
+          "type": "checkbox",
+          "id": "show_quote_icon",
+          "label": "Show Quote Icon",
+          "default": true
+        },
+        {
+          "type": "color",
+          "id": "quote_color",
+          "label": "Quote Icon Color",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "textarea",
+          "id": "quote_text",
+          "label": "Quote Text",
+          "default": "WE RE-ENGINEERED THE CLASSIC JUMPSUIT WITH SMART, HIDDEN FUNCTIONALITY, SO YOU CAN LOOK ELEGANT, FEEL COMFORTABLE, AND STAY UNSTOPPABLE."
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text Color",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author",
+          "default": "ELSA THE BRAND"
+        },
+        {
+          "type": "color",
+          "id": "author_color",
+          "label": "Author Color",
+          "default": "#FFFFFF"
+        }
+      ]
+    },
+    {
+      "type": "features",
+      "name": "Features List",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "color",
+          "id": "features_bg_color",
+          "label": "Background Color",
+          "default": "#F5F5F0"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "color",
+          "id": "heading_color",
+          "label": "Heading Color",
+          "default": "#000000"
+        },
+        {
+          "type": "color",
+          "id": "feature_text_color",
+          "label": "Features Text Color",
+          "default": "#000000"
+        },
+        {
+          "type": "header",
+          "content": "Feature 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "feature_1_icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "feature_1_text",
+          "label": "Text",
+          "default": "READY IN 60 SECONDS"
+        },
+        {
+          "type": "header",
+          "content": "Feature 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "feature_2_icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "feature_2_text",
+          "label": "Text",
+          "default": "100% NATURAL FABRIC"
+        },
+        {
+          "type": "header",
+          "content": "Feature 3"
+        },
+        {
+          "type": "image_picker",
+          "id": "feature_3_icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "feature_3_text",
+          "label": "Text",
+          "default": "EFFORTLESS CARE"
+        },
+        {
+          "type": "header",
+          "content": "Feature 4"
+        },
+        {
+          "type": "image_picker",
+          "id": "feature_4_icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "feature_4_text",
+          "label": "Text",
+          "default": "SEAMLESS INVISIBLE ZIPPERS"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonial Features",
+      "blocks": [
+        {
+          "type": "testimonial"
+        },
+        {
+          "type": "features"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,34 @@
+.blog-articles {
+  display: grid;
+  grid-gap: 1rem;
+  column-gap: var(--grid-mobile-horizontal-spacing);
+  row-gap: var(--grid-mobile-vertical-spacing);
+}
+
+.blog-articles .card-wrapper {
+  width: 100%;
+}
+
+/* Desktop layout: Always 2 equal columns */
+@media screen and (min-width: 750px) {
+  .blog-articles {
+    grid-template-columns:  1fr;
+    column-gap: var(--grid-desktop-horizontal-spacing);
+    row-gap: var(--grid-desktop-vertical-spacing);
+  }
+}
+
+/* Remove ALL collage rules */
+.blog-articles--collage > * {
+  grid-column: span 1 !important; /* Force equal width */
+}
+
+.blog-articles--collage .card,
+.blog-articles--collage .article-card__image--small,
+.blog-articles--collage .article-card__image--medium,
+.blog-articles--collage .article-card__image--large,
+.blog-articles--collage .ratio::before {
+  /* Reset any custom collage styling */
+  text-align: left !important;
+  padding-bottom: auto !important;
+}

@@ -1,0 +1,103 @@
+{% liquid
+  assign section_id = section.id | default: 'product-grid'
+  assign image_limit = 4
+  assign image_count = card_product.images.size
+  if image_count > image_limit
+    assign image_count = image_limit
+  endif
+
+  assign total_images = card_product.images.size
+  
+  assign unique_id = section_id | append: '-' | append: card_product.id | append: '-' | append: card_product.handle | append: 'card'
+%}
+
+<div class="WI_productCard_img hover-load-trigger" data-handle="{{ card_product.handle }}" style="display:none;">
+  <div class="WI_productCard_img_in">
+    <a href="{{ card_product.url }}" class="product-link"></a>
+
+    <div class="WI_productCard_img_B_CSS">
+      {%- for image in card_product.images limit: image_limit -%}
+        <input
+          type="radio"
+          class="slide-input-{{ forloop.index }}"
+          name="slider-{{ unique_id }}"
+          id="slide-{{ unique_id }}-{{ forloop.index }}"
+          {% if forloop.first %}checked{% endif %}
+        >
+      {%- endfor -%}
+
+      <div class="WI_slider_track">
+        {%- for image in card_product.images limit: image_limit -%}
+          <div class="WI_slider_item {% if forloop.first %}hover-active{% endif %}">
+            {%- comment -%}
+              UPDATED IMAGE LOGIC:
+              1. Standard src for all.
+              2. Lazy loading for 2nd, 3rd, 4th images.
+            {%- endcomment -%}
+            {% if forloop.first %}
+              <img
+                src="{{ image | image_url: width: 533 }}"
+                alt="{{ image.alt | escape }}"
+                loading="eager"
+                class="img-main"
+                width="533"
+                height="{{ 533 | divided_by: image.aspect_ratio | ceil }}"
+              >
+              {% if card_product.images[1] != blank %}
+                <img
+                  src="{{ card_product.images[1] | image_url: width: 533 }}"
+                  alt="{{ card_product.images[1].alt | escape }}"
+                  loading="lazy"
+                  class="img-secondary"
+                  width="533"
+                  height="{{ 533 | divided_by: card_product.images[1].aspect_ratio | ceil }}"
+                >
+              {% endif %}
+            {% else %}
+              <img
+                src="{{ image | image_url: width: 533 }}"
+                alt="{{ image.alt | escape }}"
+                loading="lazy"
+                class="img-main"
+                width="533"
+                height="{{ 533 | divided_by: image.aspect_ratio | ceil }}"
+                style="object-fit: contain;"
+              >
+            {% endif %}
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {% if image_count > 1  %}
+        <div class="WI_controls_CSS">
+          <div class="WI_arrow_box WI_prev_btn">
+            <div class="WI_arrow_disabled">
+               <svg xmlns="http://www.w3.org/2000/svg" width="9" height="14" viewBox="0 0 9 14" fill="none"><path d="M7.41431 0.707092L1.41431 6.70709L7.41431 12.7071" stroke="#333333" stroke-width="2"/></svg>
+            </div>
+            {% for i in (1..image_count) %}
+              {% if i > 1 %}
+                {% assign target = i | minus: 1 %}
+                <label class="WI_arrow_label to-slide-{{ target }}" for="slide-{{ unique_id }}-{{ target }}">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="9" height="14" viewBox="0 0 9 14" fill="none"><path d="M7.41431 0.707092L1.41431 6.70709L7.41431 12.7071" stroke="#333333" stroke-width="2"/></svg>
+                </label>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="WI_arrow_box WI_next_btn">
+            <div class="WI_arrow_disabled">
+              <svg width="9" height="14" viewBox="0 0 9 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.707031 0.707092L6.70703 6.70709L0.707031 12.7071" stroke="#333333" stroke-width="2"/></svg>
+            </div>
+            {% for i in (1..image_count) %}
+              {% if i < image_count %}
+                {% assign target = i | plus: 1 %}
+                <label class="WI_arrow_label to-slide-{{ target }}" for="slide-{{ unique_id }}-{{ target }}">
+                   <svg width="9" height="14" viewBox="0 0 9 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.707031 0.707092L6.70703 6.70709L0.707031 12.7071" stroke="#333333" stroke-width="2"/></svg>
+                </label>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

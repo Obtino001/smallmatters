@@ -1,0 +1,163 @@
+{% if article and article != empty %}
+  {% liquid
+    assign ratio = 1
+    if media_aspect_ratio != null
+      assign ratio = media_aspect_ratio
+    endif
+  %}
+
+  <div class="articlecard-wrapper">
+
+    <div
+      class="articlecard
+             articlecard--{{ settings.blog_card_style }}
+             {% if media_height and media_height != 'adapt' %} articlecard__img--{{ media_height }}{% endif %}
+             {% if article.image and show_image %} articlecard--hasimage{% else %} articlecard--notextimg{% endif %}"
+      style="--articlecard-ratio: {{ 1 | divided_by: ratio | times: 100 }}%;"
+    >
+
+      <div
+        class="articlecard-inner
+               {% if settings.blog_card_style == 'standard' %} articlecard-inner--standard{% endif %}
+               {% if article.image and show_image %} articlecard-inner--ratio{% endif %}"
+        style="--articlecard-ratio: {{ 1 | divided_by: ratio | times: 100 }}%;"
+      >
+
+        {%- if show_image == true and article.image %}
+        <div class="articlecard-imagewrap">
+          <div class="articlecard-image">
+            <img
+              src="{{ article.image.src | image_url: width: 2000 }}"
+              alt="{{ article.image.src.alt | escape }}"
+              loading="lazy"
+            >
+          </div>
+        </div>
+        {% endif %}
+
+        <div class="articlecard-content">
+          <div class="articlecard-info">
+            <h3 class="articlecard-title">
+              <a href="{{ article.url }}" class="articlecard-link">
+                {{ article.title | truncate: 50 | escape }}
+              </a>
+            </h3>
+
+            <div class="articlecard-meta">
+              {% if show_date %}
+                <span class="articlecard-date">
+                  {{ article.published_at | time_tag: format: 'date' }}
+                </span>
+              {% endif %}
+              {% if show_author %}
+                <span class="articlecard-author">{{ article.author }}</span>
+              {% endif %}
+            </div>
+
+            {% if show_excerpt %}
+              {% if article.excerpt.size > 0 or article.content.size > 0 %}
+                <p class="articlecard-excerpt">
+                  {% if article.excerpt.size > 0 %}
+                    {{ article.excerpt | strip_html | truncatewords: 30 }}
+                  {% else %}
+                    {{ article.content | strip_html | truncatewords: 30 }}
+                  {% endif %}
+                </p>
+              {% endif %}
+
+              <div class="articlecard-footer">
+                {% if article.comments_count > 0 and blog.comments_enabled? %}
+                  <span>{{ 'blogs.article.comments' | t: count: article.comments_count }}</span>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+
+          {% if show_badge %}
+            <div class="articlecard-badge">
+              <span class="articlecard-badgeinner">
+                {{ 'blogs.article.blog' | t }}
+              </span>
+            </div>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+{% endif %}
+<style>
+.articlecard-wrapper { 
+  margin-bottom: 2.5rem;
+}
+
+.articlecard {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  color: #545453; /* unified text color */
+}
+
+/* IMAGE */
+.articlecard-imagewrap {
+  overflow: hidden;
+}
+
+.articlecard-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* CONTENT AREA */
+.articlecard-content {
+  padding: 1.2rem 0 0.8rem; /* improved spacing */
+}
+
+.articlecard-title {
+  margin: 0 0 0.4rem 0;
+  font-size: 1.8rem;
+  font-weight: 400; /* no bold */
+  color: #545453;
+  line-height: 1.35;
+}
+
+.articlecard-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* META INFO */
+.articlecard-meta {
+  font-size: 1.3rem;
+  opacity: 0.75;
+  margin-bottom: 0.8rem; /* more breathing room */
+  display: flex;
+  gap: 8px;
+  color: #545453;
+}
+
+/* EXCERPT */
+.articlecard-excerpt {
+  font-size: 1.4rem;
+  color: #545453;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+/* BADGE */
+.articlecard-badge {
+  margin-top: 0.5rem;
+}
+
+.articlecard-badgeinner {
+  background: #545453; /* soft neutral badge */
+  color: white;
+  padding: 3px 10px;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+}
+
+</style>

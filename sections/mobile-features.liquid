@@ -1,0 +1,340 @@
+<section class="featured-collection-premium">
+  <div class="featured-collection-premium__grid container-x">
+    {% for block in section.blocks %}
+      {% assign product = all_products[block.settings.product] %}
+      {% if product %}
+        <div class="featured-item" {{ block.shopify_attributes }}>
+                   <a href="{{ product.url }}" class="featured-item__link">
+            <div class="featured-item__image-wrapper">
+              {% if block.settings.custom_image != blank %}
+                <img 
+                  src="{{ block.settings.custom_image | image_url: width: 1200 }}" 
+                  alt="{{ product.title }}"
+                  class="featured-item__image featured-item__image--primary"
+                  loading="lazy"
+                >
+              {% elsif product.featured_image %}
+                <img 
+                  src="{{ product.featured_image | image_url: width: 1200 }}" 
+                  alt="{{ product.title }}"
+                  class="featured-item__image featured-item__image--primary"
+                  loading="lazy"
+                >
+              {% endif %}
+
+              {% if block.settings.hover_image != blank %}
+                <img 
+                  src="{{ block.settings.hover_image | image_url: width: 1200 }}" 
+                  alt="{{ product.title }}"
+                  class="featured-item__image featured-item__image--hover"
+                  loading="lazy"
+                >
+              {% elsif product.images[1] %}
+                <img 
+                  src="{{ product.images[1] | image_url: width: 1200 }}" 
+                  alt="{{ product.title }}"
+                  class="featured-item__image featured-item__image--hover"
+                  loading="lazy"
+                >
+              {% endif %}
+              
+              <div class="featured-item__overlay"></div>
+            </div>
+
+            <div class="featured-item__content">
+              <div class="featured-item__info-card">
+                <h3 class="featured-item__title">{{ product.title }}</h3>
+                
+                <div class="featured-item__price-wrapper">
+                  {% if product.compare_at_price > product.price %}
+                    <span class="featured-item__price featured-item__price--sale">{{ product.price | money }}</span>
+                    <span class="featured-item__price featured-item__price--compare">{{ product.compare_at_price | money }}</span>
+                  {% else %}
+                    <span class="featured-item__price">{{ product.price | money }}</span>
+                  {% endif %}
+                </div>
+
+                <div class="featured-item__cta">
+                  <span class="featured-item__btn">Shop Now</span>
+                  <svg class="featured-item__arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+
+<style>
+/* Premium Featured Collection Section */
+.featured-collection-premium {
+  padding: 0;
+  margin: 60px 0;
+}
+
+.featured-collection-premium__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  max-width: 100%;
+  padding: 0px;
+}
+
+/* Featured Item */
+.featured-item {
+  position: relative;
+  overflow: hidden;
+  background: #f8f8f8;
+}
+
+.featured-item__link {
+  display: block;
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+}
+
+.featured-item__image-wrapper {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+}
+
+.featured-item__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.featured-item__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 100%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.featured-item:hover .featured-item__image {
+  {% comment %} transform: scale(1.05); {% endcomment %}
+}
+
+.featured-item:hover .featured-item__overlay {
+  opacity: 1;
+}
+
+/* Content Positioning */
+.featured-item__content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 30px;
+  z-index: 2;
+}
+
+.featured-item__info-card {
+  background: #ffffff;
+  padding: 10px;
+  max-width: fit-content;
+  {% comment %} box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); {% endcomment %}
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
+}
+
+.featured-item:hover .featured-item__info-card {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.featured-item__title {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: #545453;
+  margin: 0 0 6px 0;
+  line-height: 1.4;
+}
+
+.featured-item__price-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.featured-item__price {
+  font-size: 18px;
+  font-weight: 400;
+  color: #545453;
+}
+
+
+.featured-item__price--compare {
+  font-size: 15px;
+  font-weight: 300;
+  color: #545453;
+  text-decoration: line-through;
+}
+
+.featured-item__image--hover {
+  opacity: 0;
+  z-index: 2;
+}
+
+.featured-item:hover .featured-item__image--primary {
+  opacity: 0;
+}
+
+.featured-item:hover .featured-item__image--hover {
+  opacity: 1;
+      z-index: 2;
+    position: absolute;
+    inset: 0;
+}
+.featured-item__arrow {
+  transition: transform 0.3s ease;
+}
+
+.featured-item:hover .featured-item__cta {
+  background: #ffffff;
+  color: #545453;
+}
+
+.featured-item:hover .featured-item__arrow {
+  transform: translateX(4px);
+}
+
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .featured-collection-premium__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+  }
+
+  .featured-item:nth-child(3n) {
+    grid-column: span 2;
+  }
+
+  .featured-item__content {
+    padding: 40px;
+  }
+
+}
+
+@media (min-width: 1200px) {
+
+  .featured-collection-premium__grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .featured-item__content {
+    padding: 50px;
+  }
+
+  .featured-item__title {
+    font-size: 14px;
+  }
+
+  .featured-item__price {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .featured-item__image-wrapper {
+    aspect-ratio: 3 / 4.2;
+  }
+}
+
+@media (max-width: 767px) {
+  .featured-collection-premium {
+    margin: 40px 0;
+  }
+
+  .featured-item__content {
+    padding: 20px;
+  }
+
+  .featured-item__info-card {
+    padding: 10px;
+  }
+
+  .featured-item__title {
+    font-size: 15px;
+  }
+
+  .featured-item__price {
+    font-size: 16px;
+  }
+
+  .featured-item__price--compare {
+    font-size: 14px;
+  }
+.featured-item__image-wrapper {
+  aspect-ratio: 2 / 4;
+}
+  .featured-item__cta {
+    padding: 11px 20px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 767px) {
+  .featured-collection-premium__grid .featured-item:nth-child(2),
+  .featured-collection-premium__grid .featured-item:nth-child(3) {
+    display: none !important;
+  }
+}
+
+</style>
+
+{% schema %}
+{
+  "name": "Featured Products Premium",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Featured Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select Product"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_image",
+          "label": "Custom Image",
+          "info": "Optional: Use a custom lifestyle image instead of the product's featured image"
+        },
+                {
+          "type": "image_picker",
+          "id": "hover_image",
+          "label": "Hover Image",
+          "info": "Image shown on hover. If not set, will use the product's second image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Products Premium",
+      "blocks": [
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" }
+      ]
+    }
+  ]
+}
+{% endschema %}

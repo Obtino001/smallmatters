@@ -1,0 +1,296 @@
+{%- liquid
+assign show_collection_listing_link = false
+assign breadcrumbs_title = 'Breadcrumbs'
+assign home_title = 'Home'
+assign other_templates = 'blog, cart, list-collections, page, search' | split: ', '
+
+if template.name == 'blog' or template.name == 'page'
+  assign item_title = [template.name].title
+  assign item_url = [template.name].url
+elsif template.name == 'list-collections'
+  assign item_title = 'Collections'
+  assign item_url = routes.collections_url
+elsif template.name == 'collection' or template.name == 'product'
+  assign collections_title = 'Collections'
+elsif template.name == 'search'
+  assign item_title = 'Search for products on our site'
+  assign item_url = routes.search_url
+  assign show_structured_data = false
+elsif template.name == 'cart'
+  assign item_title = 'Shopping cart'
+  assign item_url = routes.cart_url
+  assign show_structured_data = false
+elsif template.directory == 'customers'
+  assign item_title = 'My Account'
+  assign item_url = routes.account_url
+  assign show_structured_data = false
+endif
+-%}
+
+<style>
+  .MA-breadcrumbs {
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: normal;
+    text-transform: capitalize;
+  }
+
+  .MA-breadcrumbs__list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .MA-breadcrumbs__item {
+    display: inline-block;
+  }
+
+.MA-breadcrumbs__item:not(:last-child)::after {
+    content: "/";
+    display: inline-block;
+    margin: 0 6px;
+    color: #3C3C3C;
+    font-size: 14px;
+    line-height: 1;
+    vertical-align: middle;
+}
+.MA-breadcrumbs__link {
+    text-decoration: none;
+    color: #3C3C3C;
+    font-family: Lato;
+    font-weight: 300;
+    font-style: Light;
+    font-size: 12px;
+    leading-trim: NONE;
+    line-height: 100%;
+    letter-spacing: 0%;
+    font-family: "Satoshi";
+    opacity: 0.8;
+}
+.MA-breadcrumbs__link[aria-current="page"] {
+  opacity: 1;
+}
+  .MA-breadcrumbs__link[aria-current="page"]:hover,
+  .MA-breadcrumbs__link[aria-current="page"]:focus {
+  }
+  @media screen and (max-width: 768px){
+ .MA-breadcrumbs {
+  margin: 0;
+    font-size: 9px;
+    padding-block: 10px;
+}
+  }
+</style>
+
+{%- capture crumbs_structured_data -%}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": {{ home_title | json }},
+        "item": {{ shop.url | append: routes.root_url | json }}
+      },
+
+      {%- if template.name == 'collection' and collection.handle -%}
+        {%- assign collection_position = 2 -%}
+        {%- if show_collection_listing_link -%}
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": {{ collections_title | json }},
+            "item": {{ shop.url | append: routes.collections_url | json }}
+          },
+          {%- assign collection_position = 3 -%}
+        {%- endif -%}
+        {
+          "@type": "ListItem",
+          "position": {{ collection_position }},
+          "name": {{ collection.title | json }},
+          "item": {{ shop.url | append: collection.url | json }}
+        }
+
+      {%- elsif template.name == 'product' -%}
+        {%- assign type_handle = product.type | handle -%}
+      
+        {%- case type_handle -%}
+          {%- when 'hoejhaelede' -%}
+            {%- assign type_title = 'Højhælede' -%}
+            {%- assign type_url = '/collections/hoejhaelede' -%}
+          {%- else -%}
+            {%- assign type_collection = collections[type_handle] -%}
+            {%- if type_collection != blank -%}
+              {%- assign type_title = type_collection.title -%}
+              {%- assign type_url = type_collection.url -%}
+            {%- else -%}
+              {%- assign type_title = 'All Products' -%}
+              {%- assign type_url = routes.all_products_collection_url -%}
+            {%- endif -%}
+        {%- endcase -%}
+      
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": {{ type_title | json }},
+          "item": {{ shop.url | append: type_url | json }}
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": {{ product.title | json }},
+          "item": {{ shop.url | append: product.url | json }}
+        }
+
+      {%- elsif template.name == 'blog' and current_tags -%}
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": {{ blog.title | json }},
+          "item": {{ shop.url | append: blog.url | json }}
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": {{ current_tags | join: ", " | json }},
+          "item": {{ shop.url | append: blog_tag_url | json }}
+        }
+
+      {%- elsif template.name == 'article' -%}
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": {{ blog.title | json }},
+          "item": {{ shop.url | append: blog.url | json }}
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": {{ article.title | json }},
+          "item": {{ shop.url | append: article.url | json }}
+        }
+
+      {%- else -%}
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": {{ item_title | json }},
+          "item": {{ shop.url | append: item_url | json }}
+        }
+      {%- endif -%}
+    ]
+  }
+</script>
+{%- endcapture -%}
+
+{%- unless template == 'index' or template == 'cart' or template == 'list-collections' or template == '404' -%}
+{%- assign t = template | split: '.' | first -%}
+
+{{ crumbs_structured_data }}
+
+<nav class="MA-breadcrumbs container-x" role="navigation" aria-label="MA-breadcrumbs">
+  <ol class="MA-breadcrumbs__list">
+    <li class="MA-breadcrumbs__item">
+      {%- comment -%} 1. Updated Home Link to use Schema Settings {%- endcomment -%}
+      <a class="MA-breadcrumbs__link" href="/">
+        {{ section.settings.home_label | default: 'Home' }}
+      </a>
+    </li>
+    
+    {%- case t -%}
+      {%- when 'page' -%}
+        <li class="MA-breadcrumbs__item">
+          <a class="MA-breadcrumbs__link" href="{{ page.url }}" aria-current="page">{{ page.title }}</a>
+        </li>
+
+      {%- when 'product' -%}
+        {%- assign type_handle = product.type | handle -%}
+        {%- case type_handle -%}
+          {%- when 'hoejhaelede' -%}
+            {%- assign type_title = 'Højhælede' -%}
+            {%- assign type_url = '/collections/hoejhaelede' -%}
+          {%- else -%}
+            {%- assign type_collection = collections[type_handle] -%}
+            {%- if type_collection != blank -%}
+              {%- assign type_title = type_collection.title -%}
+              {%- assign type_url = type_collection.url -%}
+            {%- else -%}
+              {%- assign type_title = 'All products' -%}
+              {%- assign type_url = routes.all_products_collection_url -%}
+            {%- endif -%}
+        {%- endcase -%}
+
+        <li class="MA-breadcrumbs__item">
+          <a class="MA-breadcrumbs__link" href="{{ type_url }}">{{ type_title }}</a>
+        </li>
+        <li class="MA-breadcrumbs__item">
+          <a class="MA-breadcrumbs__link" href="{{ product.url }}" aria-current="page">{{ product.title }}</a>
+        </li>
+{%- when 'collection' and collection.handle -%}
+  {%- comment -%} 1. Check for Grandparent (Parent of the Parent) {%- endcomment -%}
+  {%- assign parent_collection = collection.metafields.custom.parent_collection.value -%}
+  {%- assign grandparent_collection = parent_collection.metafields.custom.parent_collection.value -%}
+
+  {%- if grandparent_collection != blank -%}
+    <li class="MA-breadcrumbs__item">
+      <a class="MA-breadcrumbs__link" href="{{ grandparent_collection.url }}">{{ grandparent_collection.title }}</a>
+    </li>
+  {%- endif -%}
+
+  {%- comment -%} 2. Check for Parent Collection {%- endcomment -%}
+  {%- if parent_collection != blank -%}
+    <li class="MA-breadcrumbs__item">
+      <a class="MA-breadcrumbs__link" href="{{ parent_collection.url }}">{{ parent_collection.title }}</a>
+    </li>
+  {%- endif -%}
+
+  {%- comment -%} 3. Current Collection and Tags {%- endcomment -%}
+  {%- if current_tags -%}
+    <li class="MA-breadcrumbs__item">
+      {{ collection.title | link_to: collection.url }}
+    </li>
+    <li class="MA-breadcrumbs__item">
+      {%- capture tag_url -%}{{ collection.url }}/{{ current_tags | join: "+"}}{%- endcapture -%}
+      <a class="MA-breadcrumbs__link" href="{{ tag_url }}" aria-current="page">{{ current_tags | join: " + "}}</a>
+    </li>
+  {%- else -%}
+    <li class="MA-breadcrumbs__item">
+      <a class="MA-breadcrumbs__link" href="{{ collection.url }}" aria-current="page">{{ collection.title }}</a>
+    </li>
+  {%- endif -%}
+
+      {%- when 'blog' -%}
+        {%- if current_tags -%}
+          <li class="MA-breadcrumbs__item">
+            {{ blog.title | link_to: blog.url }}
+          </li>
+          <li class="MA-breadcrumbs__item">
+            {%- capture tag_url -%}{{blog.url}}/tagged/{{ current_tags | join: "+" }}{%- endcapture -%}
+            <a class="MA-breadcrumbs__link" href="{{ tag_url }}" aria-current="page">{{ current_tags | join: " + " }}</a>
+          </li>
+        {%- else -%}
+          <li class="MA-breadcrumbs__item">
+            <a class="MA-breadcrumbs__link" href="{{ blog.url }}" aria-current="page">{{ blog.title }}</a>
+          </li>
+        {%- endif -%}
+
+      {%- when 'article' -%}
+        <li class="MA-breadcrumbs__item">
+          {{ blog.title | link_to: blog.url }}
+        </li>
+        <li class="MA-breadcrumbs__item">
+          <a class="MA-breadcrumbs__link" href="{{ article.url }}" aria-current="page">{{ article.title }}</a>
+        </li>
+
+      {%- else -%}
+        <li class="MA-breadcrumbs__item">
+          <a class="MA-breadcrumbs__link" href="{{ request.path }}" aria-current="page">{{ page_title }}</a>
+        </li>
+    {%- endcase -%}
+  </ol>
+</nav>
+{%- endunless -%}
+

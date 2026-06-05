@@ -1,0 +1,260 @@
+<style>
+  .countdown-message-bar { width: 100%; padding: 5px !important; overflow: hidden; }
+  .flex-container { display: flex; align-items: center; flex-wrap: nowrap; white-space: nowrap;}
+  .flex-container.space-center { justify-content: start; }
+  .flex-container.center {
+    justify-content: center;
+    align-items: center;
+  }
+  .clock-container { display: flex; gap: 8px; align-items: center; }
+  .clock-number { text-align: center; font-weight: 500; }
+  .timer-text { font-weight: 500; font-size: 14px; }
+  .clock-text { margin: 0; font-size: 12px; font-weight: 500; }
+  p.annou-heading { margin: 0; font-weight: 500; font-size: 12px; }
+  .clock-number { text-align: center; display: flex; gap: 2px; align-items: center; justify-content: center; font-size: 12px; }
+  .clock-container { display: flex; gap: 8px; align-items: center; justify-content: center; }
+  .timerContainer:before { content: "|"; padding-left: 8px; padding-right: 8px; }
+  .timerContainer { display: flex; gap: 0px; align-items: center; justify-content: center; }
+  .clock-number,
+  .timer-text,
+  .clock-text,
+  p.annou-heading {
+    font-size: {{ section.settings.font_size_desktop }}px;
+    line-height: 28px;
+  }
+
+  .marquee-container {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+    white-space: nowrap;
+  }
+
+  .marquee-track {
+    display: inline-flex;
+    align-items: center;
+    gap: 100px;
+    animation: scroll-left 75s linear infinite;
+    will-change: transform;
+  }
+
+  @keyframes scroll-left {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .marquee-item {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  @media screen and (max-width: 768px) {
+    .clock-container { gap: 3px; }
+    .clock-number,
+    .timer-text,
+    .clock-text,
+    p.annou-heading {
+      font-size: {{ section.settings.font_size_mobile }}px;
+    }
+    .countdown-message-bar { padding: 5px; }
+    .timerContainer:before { content: "|"; padding-left: 4px; padding-right: 4px; }
+    .marquee-track {
+    gap: 50px;
+}
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Countdown Bar",
+  "settings": [
+    {
+      "type": "text",
+      "id": "announcement_text",
+      "label": "Announcement Text",
+      "default": "30 DAYS EXCHANGES AND RETURNS"
+    },
+    {
+      "type": "text",
+      "id": "announcement_text_2",
+      "label": "Free Shipping Text",
+      "default": "AUTUMN SALES UP TO 30% OFF"
+    },
+    {
+      "type": "text",
+      "id": "announcement_text_3",
+      "label": "Free Shipping Text",
+      "default": "AUTUMN SALES UP TO 30% OFF"
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "Font Size Mobile",
+      "min": 5,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "font_size_desktop",
+      "label": "Font Size Desktop",
+      "min": 5,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "number",
+      "id": "countdown_days",
+      "label": "Countdown Days",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "countdown_hours",
+      "label": "Countdown Hours",
+      "default": 12
+    },
+    {
+      "type": "number",
+      "id": "countdown_minutes",
+      "label": "Countdown Minutes",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "countdown_seconds",
+      "label": "Countdown Seconds",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#e1ded7"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Countdown Bar"
+    }
+  ]
+}
+{% endschema %}
+
+{% assign countdown_days_in_seconds = section.settings.countdown_days | times: 86400 %}
+{% assign countdown_hours_in_seconds = section.settings.countdown_hours | times: 3600 %}
+{% assign countdown_minutes_in_seconds = section.settings.countdown_minutes | times: 60 %}
+{% assign countdown_seconds = section.settings.countdown_seconds %}
+
+{% assign total_seconds = countdown_days_in_seconds
+  | plus: countdown_hours_in_seconds
+  | plus: countdown_minutes_in_seconds
+  | plus: countdown_seconds
+%}
+{% assign end_time = 'now' | date: '%s' | plus: total_seconds %}
+
+<div
+  class="countdown-message-bar marquee-container"
+  style="background-color: {{ section.settings.background_color }}; color: {{ section.settings.text_color }};"
+>
+  <div class="marquee-track">
+    {% for i in (1..8) %}
+{% if section.settings.announcement_text != blank %}
+  <div class="marquee-item">
+    <p class="annou-heading">{{ section.settings.announcement_text }}</p>
+  </div>
+{% endif %}
+
+
+      <div class="marquee-item">
+        <p class="annou-heading">{{ section.settings.announcement_text_2 }}</p>
+        <div class="timerContainer" data-end-time="{{ end_time }}">
+          <div class="clock-container">
+            <span class="timer-text">ENDS IN</span>
+
+            <div class="clock-number">
+              <span id="cd-days-{{ i }}">00</span>
+              <p class="clock-text">DAYS</p>
+            </div>
+
+            <span class="separation-clock">:</span>
+
+            <div class="clock-number">
+              <span id="cd-hours-{{ i }}">00</span>
+              <p class="clock-text">HOURS</p>
+            </div>
+
+            <span class="separation-clock">:</span>
+
+            <div class="clock-number">
+              <span id="cd-minutes-{{ i }}">00</span>
+              <p class="clock-text">MIN</p>
+            </div>
+          </div>
+        </div>
+      </div>
+{% if section.settings.announcement_text_3 != blank %}
+      <div class="marquee-item">
+        <p class="annou-heading">{{ section.settings.announcement_text_3 }}</p>
+      </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const countdownVersion = "{{ section.settings.countdown_days }}-{{ section.settings.countdown_hours }}-{{ section.settings.countdown_minutes }}-{{ section.settings.countdown_seconds }}";
+    const storedData = JSON.parse(localStorage.getItem('countdownData') || '{}');
+    const currentVersion = countdownVersion;
+
+    let endTime;
+
+    if (!storedData.version || storedData.version !== currentVersion) {
+      endTime = {{ end_time | json }} * 1000;
+      localStorage.setItem('countdownData', JSON.stringify({ version: currentVersion, endTime }));
+    } else {
+      endTime = storedData.endTime;
+    }
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = endTime - now;
+
+      if (distance < 0) {
+        document.querySelector('.countdown-message-bar').style.display = 'none';
+        localStorage.removeItem('countdownData');
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+
+      // Update all countdown instances
+      for (let i = 1; i <= 8; i++) {
+        const daysEl = document.getElementById("cd-days-" + i);
+        const hoursEl = document.getElementById("cd-hours-" + i);
+        const minutesEl = document.getElementById("cd-minutes-" + i);
+        
+        if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
+        if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
+        if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
+      }
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  });
+</script>

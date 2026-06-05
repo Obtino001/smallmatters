@@ -1,0 +1,25 @@
+<div class="cc-dif-wrapper">
+  <div class="cc-dif-container">
+    <div class="cc-dif-grid">
+      {%- for i in (1..12) -%}
+        {%- assign img_id = 'item_image_' | append: i -%}
+        {%- assign title_id = 'item_title_' | append: i -%}
+        {%- assign link_id = 'item_link_' | append: i -%}
+        
+        {%- if block.settings[title_id] != blank -%}
+          <a href="{{ block.settings[link_id] }}" class="cc-dif-item">
+            <div class="cc-dif-image-box">
+              {%- if block.settings[img_id] != blank -%}
+                <img src="{{ block.settings[img_id] | image_url: width: 600 }}" alt="{{ block.settings[title_id] }}" loading="lazy">
+              {%- else -%}
+                {{ 'image' | placeholder_svg_tag: 'cc-dif-placeholder' }}
+              {%- endif -%}
+            </div>
+            <span class="cc-dif-title">{{ block.settings[title_id] }}</span>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+

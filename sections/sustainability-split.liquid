@@ -1,0 +1,286 @@
+{% schema %}
+{
+  "name": "Sustainability Split",
+  "settings": [
+     {
+      "type": "header",
+      "content": "Paddding Heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Bottom",
+      "default": 0
+    },
+        {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Top Mobile",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Bottom Mobile",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#F9F8F6"
+    },
+    {
+      "type": "header",
+      "content": "Left Column"
+    },
+    {
+      "type": "text",
+      "id": "main_heading",
+      "label": "Heading",
+      "default": "Sustainability"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link Text",
+      "default": "Read more about our approach"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "content_block",
+      "name": "Content Block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Block Title",
+          "default": "Ethically Manufactured"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Block Text",
+          "default": "It is our responsibility to take care of our team and partners, providing them with the support, working environment and tools that they need."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sustainability Split",
+      "blocks": [
+        {
+          "type": "content_block",
+          "settings": {
+            "title": "Ethically Manufactured",
+            "text": "It is our responsibility to take care of our team and partners, providing them with the support, working environment and tools that they need to be happy and successful in their work. Our team regularly visits our partner factories and completes an annual review of our Code of Conduct."
+          }
+        },
+        {
+          "type": "content_block",
+          "settings": {
+            "title": "Quality Materials",
+            "text": "We are fortunate enough to work with some of the world's most renowned fabric mills, allowing us to invest in the finest raw materials for a cap that will stand the test of time."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+  .section-{{ section.id }}-title{
+    text-align: {{section.settings.title-align}};
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+<style>
+  .sus-section {
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  .sus-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 60px;
+  }
+
+  .sus-left {
+    width: 35%;
+    flex-shrink: 0;
+  }
+
+  .sus-heading {
+font-family: Lora;
+font-weight: 500;
+font-style: Medium;
+font-size: 32px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+
+    color: #3c3c3c;
+  }
+
+  .sus-link {
+font-family: Neue Haas Grotesk Display Pro;
+font-weight: 500;
+font-style: 55 Roman;
+font-size: 14px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+text-decoration: underline;
+text-decoration-style: solid;
+text-decoration-offset: 0%;
+text-decoration-thickness: 0%;
+text-decoration-skip-ink: auto;
+color: #3c3c3c;
+  }
+
+  .sus-link:hover {
+    color: #000;
+  }
+
+  /* Right Column */
+  .sus-right {
+    width: 60%;
+    padding-top: 5px; /* Aligns first subhead slightly below main heading visual line */
+  }
+
+  .sus-block {
+    margin-bottom: 50px;
+    max-width: 700px; /* Prevents text from stretching too wide on huge screens */
+  }
+
+  .sus-block:last-child {
+    margin-bottom: 0;
+  }
+
+  .sus-block-title {
+  font-family: Neue Haas Grotesk Display Pro;
+font-weight: 500;
+font-style: 55 Roman;
+font-size: 18px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+color: #3c3c3c;
+  }
+
+  .sus-block-text {
+   font-family: Lato;
+font-weight: 500;
+font-style: Medium;
+font-size: 14px;
+leading-trim: NONE;
+line-height: 140%;
+letter-spacing: 0%;
+ color: #3c3c3c;
+
+    margin: 0;
+  }
+
+  @media screen and (max-width: 900px) {
+   .sus-container {
+    flex-direction: column-reverse;
+    gap: 40px;
+}
+
+    .sus-left {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .sus-heading {
+     display: none;
+    }
+
+    .sus-right {
+      width: 100%;
+    }
+  }
+</style>
+
+<div class="sus-section section-{{ section.id }}-padding">
+  <div class="sus-container  container-x">
+    
+    <div class="sus-left">
+      {% if section.settings.main_heading != blank %}
+        <h2 class="sus-heading">{{ section.settings.main_heading }}</h2>
+      {% endif %}
+
+      {% if section.settings.link_text != blank %}
+        <a href="{{ section.settings.link_url }}" class="sus-link">{{ section.settings.link_text }}</a>
+      {% endif %}
+    </div>
+
+    <div class="sus-right">
+      {% for block in section.blocks %}
+        <div class="sus-block" {{ block.shopify_attributes }}>
+          {% if block.settings.title != blank %}
+            <h3 class="sus-block-title">{{ block.settings.title }}</h3>
+          {% endif %}
+          
+          {% if block.settings.text != blank %}
+            <p class="sus-block-text">{{ block.settings.text }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>

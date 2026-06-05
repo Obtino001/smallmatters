@@ -1,0 +1,565 @@
+{% comment %} 
+  -------------------------------------------------------
+  1. LOGIC: Find the matching block BEFORE rendering HTML 
+  -------------------------------------------------------
+{% endcomment %}
+{% assign active_block = nil %}
+{% for block in section.blocks %}
+  {% comment %} Check if the product has the specific tag or type defined in the block {% endcomment %}
+  {% if product.tags contains block.settings.trigger_tag or product.type == block.settings.trigger_tag %}
+    {% assign active_block = block %}
+    {% break %} {% comment %} Stop looking once we find a match {% endcomment %}
+  {% endif %}
+{% endfor %}
+
+{% comment %} 
+  -------------------------------------------------------
+  2. RENDER: Only output code if a matching block was found
+  -------------------------------------------------------
+{% endcomment %}
+{% if active_block %}
+
+<size-guide-modal section-id="{{ section.id }}">
+  <button type="button" class="sg-btn" data-trigger>
+    {{ section.settings.trigger_label | default: "Size Guide" }}
+  </button>
+
+  <div data-teleport-target hidden>
+    <div class="sg-overlay" data-overlay></div>
+    <div class="sg-modal" data-modal>
+      <div class="sg-card">
+        
+        <div class="sg-header">
+          <h2 class="sg-title">{{ active_block.settings.title }}</h2>
+
+          <div class="sg-toggle-wrapper">
+            <span class="sg-label-text sg-label-cm" data-type="cm">
+              {{ active_block.settings.label_cm | default: 'CM' }}
+            </span>
+            
+            <label class="sg-toggle">
+              <input type="checkbox" class="sg-unit-toggle" {% if section.settings.default_metric %}checked{% endif %}>
+              <span class="sg-slider"></span>
+            </label>
+
+            <span class="sg-label-text sg-label-in" data-type="in">
+              {{ active_block.settings.label_in | default: 'IN' }}
+            </span>
+          </div>
+          
+          <button type="button" class="sg-close" data-close>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="icon icon-close" viewBox="0 0 18 17"><path fill="currentColor" d="M.865 15.978a.5.5 0 0 0 .707.707l7.433-7.431 7.579 7.282a.501.501 0 0 0 .846-.37.5.5 0 0 0-.153-.351L9.712 8.546l7.417-7.416a.5.5 0 1 0-.707-.708L8.991 7.853 1.413.573a.5.5 0 1 0-.693.72l7.563 7.268z"></path></svg>
+          </button>
+        </div>
+        
+        <div class="sg-body">
+          <div class="sg-meta">
+            <p><strong>{{ active_block.settings.fit_label }}</strong> {{ active_block.settings.fit_text }}</p>
+            <p><strong>{{ active_block.settings.model_label }}</strong> {{ active_block.settings.model_text }}</p>
+          </div>
+
+          <div class="sg-table">
+            <div class="sg-row sg-row--head">
+              <div>{{ active_block.settings.col_1_label }}</div>
+              <div>{{ active_block.settings.col_2_label }}</div>
+              <div>{{ active_block.settings.col_3_label }}</div>
+              <div>{{ active_block.settings.col_4_label }}</div>
+              <div>{{ active_block.settings.col_5_label }}</div>
+            </div>
+            
+            {% comment %} XS ROW {% endcomment %}
+            <div class="sg-row">
+              <div>XS</div>
+              <div>{{ active_block.settings.xs_col_2_val }}</div>
+              <div data-measurement data-cm="{{ active_block.settings.xs_col_3_cm }}" data-in="{{ active_block.settings.xs_col_3_in }}">{{ active_block.settings.xs_col_3_cm }}</div>
+              <div data-measurement data-cm="{{ active_block.settings.xs_col_4_cm }}" data-in="{{ active_block.settings.xs_col_4_in }}">{{ active_block.settings.xs_col_4_cm }}</div>
+              <div data-measurement data-cm="{{ active_block.settings.xs_col_5_cm }}" data-in="{{ active_block.settings.xs_col_5_in }}">{{ active_block.settings.xs_col_5_cm }}</div>
+            </div>
+
+            {% comment %} S ROW {% endcomment %}
+            <div class="sg-row">
+              <div>S</div>
+              <div>{{ active_block.settings.s_col_2_val }}</div>
+              <div data-measurement data-cm="{{ active_block.settings.s_col_3_cm }}" data-in="{{ active_block.settings.s_col_3_in }}">{{ active_block.settings.s_col_3_cm }}</div>
+              <div data-measurement data-cm="{{ active_block.settings.s_col_4_cm }}" data-in="{{ active_block.settings.s_col_4_in }}">{{ active_block.settings.s_col_4_cm }}</div>
+              <div data-measurement data-cm="{{ active_block.settings.s_col_5_cm }}" data-in="{{ active_block.settings.s_col_5_in }}">{{ active_block.settings.s_col_5_cm }}</div>
+            </div>
+
+            {% comment %} M ROW {% endcomment %}
+            <div class="sg-row">
+              <div>M</div>
+              <div>{{ active_block.settings.m_col_2_val }}</div>
+              <div data-measurement data-cm="{{ active_block.settings.m_col_3_cm }}" data-in="{{ active_block.settings.m_col_3_in }}">{{ active_block.settings.m_col_3_cm }}</div>
+              <div data-measurement data-cm="{{ active_block.settings.m_col_4_cm }}" data-in="{{ active_block.settings.m_col_4_in }}">{{ active_block.settings.m_col_4_cm }}</div>
+              <div data-measurement data-cm="{{ active_block.settings.m_col_5_cm }}" data-in="{{ active_block.settings.m_col_5_in }}">{{ active_block.settings.m_col_5_cm }}</div>
+            </div>
+
+            {% comment %} L ROW {% endcomment %}
+            <div class="sg-row">
+              <div>L</div>
+              <div>{{ active_block.settings.l_col_2_val }}</div>
+              <div data-measurement data-cm="{{ active_block.settings.l_col_3_cm }}" data-in="{{ active_block.settings.l_col_3_in }}">{{ active_block.settings.l_col_3_cm }}</div>
+              <div data-measurement data-cm="{{ active_block.settings.l_col_4_cm }}" data-in="{{ active_block.settings.l_col_4_in }}">{{ active_block.settings.l_col_4_cm }}</div>
+              <div data-measurement data-cm="{{ active_block.settings.l_col_5_cm }}" data-in="{{ active_block.settings.l_col_5_in }}">{{ active_block.settings.l_col_5_cm }}</div>
+            </div>
+
+            {% comment %} XL ROW {% endcomment %}
+            <div class="sg-row">
+              <div>XL</div>
+              <div>{{ active_block.settings.xl_col_2_val }}</div>
+              <div data-measurement data-cm="{{ active_block.settings.xl_col_3_cm }}" data-in="{{ active_block.settings.xl_col_3_in }}">{{ active_block.settings.xl_col_3_cm }}</div>
+              <div data-measurement data-cm="{{ active_block.settings.xl_col_4_cm }}" data-in="{{ active_block.settings.xl_col_4_in }}">{{ active_block.settings.xl_col_4_cm }}</div>
+              <div data-measurement data-cm="{{ active_block.settings.xl_col_5_cm }}" data-in="{{ active_block.settings.xl_col_5_in }}">{{ active_block.settings.xl_col_5_cm }}</div>
+            </div>
+
+          </div>
+
+          <div class="sg-body-map">
+            {% if active_block.settings.figure_image %}
+              <img class="sg-model" src="{{ active_block.settings.figure_image | image_url }}" alt="Size guide model">
+            {% endif %}
+            
+            {% if active_block.settings.note_bust != blank %}
+            <div class="sg-point sg-point--bust">
+              <div class="sg-text"><strong>BUST</strong> {{ active_block.settings.note_bust }}</div>
+            </div>
+            {% endif %}
+             {% if active_block.settings.note_waist != blank %}
+            <div class="sg-point sg-point--waist">
+              <div class="sg-text"><strong>WAIST</strong> {{ active_block.settings.note_waist }}</div>
+            </div>
+            {% endif %}
+             {% if active_block.settings.note_hip != blank %}
+            <div class="sg-point sg-point--hip">
+              <div class="sg-text"><strong>HIPS</strong> {{ active_block.settings.note_hip }}</div>
+            </div>
+            {% endif %}
+             {% if active_block.settings.note_inseam != blank %}
+            <div class="sg-point sg-point--inseam">
+              <div class="sg-text"><strong>INSEAM</strong> {{ active_block.settings.note_inseam }}</div>
+            </div>
+            {% endif %}
+            
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</size-guide-modal>
+
+<script>
+  class SizeGuideModal extends HTMLElement {
+    constructor() {
+      super();
+      this.open = this.open.bind(this);
+      this.close = this.close.bind(this);
+      this.handleToggle = this.handleToggle.bind(this);
+      this.handleKeydown = this.handleKeydown.bind(this);
+    }
+
+    connectedCallback() {
+      this.triggerBtn = this.querySelector('[data-trigger]');
+      this.overlay = this.querySelector('[data-overlay]');
+      this.modal = this.querySelector('[data-modal]');
+      this.closeBtn = this.querySelector('[data-close]');
+      this.toggle = this.querySelector('.sg-unit-toggle'); 
+      this.measurements = this.querySelectorAll('[data-measurement]');
+
+      // Initial Update
+      if(this.toggle) this.updateUnits();
+
+      if (this.triggerBtn) this.triggerBtn.addEventListener('click', this.open);
+      if (this.closeBtn) this.closeBtn.addEventListener('click', this.close);
+      if (this.overlay) this.overlay.addEventListener('click', this.close);
+      if (this.toggle) this.toggle.addEventListener('change', this.handleToggle);
+    }
+
+    disconnectedCallback() {
+      if (this.teleported && document.body.contains(this.overlay)) {
+        this.overlay.remove();
+        this.modal.remove();
+      }
+    }
+
+    teleportToBody() {
+      if (this.teleported) return;
+      document.body.appendChild(this.overlay);
+      document.body.appendChild(this.modal);
+      this.teleported = true;
+    }
+
+    open() {
+      this.teleportToBody();
+      requestAnimationFrame(() => {
+        this.overlay.hidden = false;
+        this.modal.hidden = false;
+        setTimeout(() => {
+          this.overlay.classList.add('is-open');
+          this.modal.classList.add('is-open');
+          document.body.classList.add('sg--lock');
+          document.addEventListener('keydown', this.handleKeydown);
+        }, 10);
+      });
+    }
+
+    close() {
+      this.overlay.classList.remove('is-open');
+      this.modal.classList.remove('is-open');
+      document.body.classList.remove('sg--lock');
+      document.removeEventListener('keydown', this.handleKeydown);
+      setTimeout(() => {
+        this.overlay.hidden = true;
+        this.modal.hidden = true;
+      }, 300);
+    }
+
+    handleKeydown(e) {
+      if (e.key === 'Escape') this.close();
+    }
+
+    handleToggle(e) {
+      this.updateUnits();
+    }
+
+    updateUnits() {
+      const useMetric = this.toggle.checked;
+      
+      // Update Numbers
+      this.measurements.forEach(el => {
+        const val = useMetric ? el.dataset.cm : el.dataset.in;
+        if(val && val.trim() !== "") el.textContent = val;
+      });
+
+      // Update Text Colors
+      const labelCM = this.querySelector('.sg-label-cm');
+      const labelIN = this.querySelector('.sg-label-in');
+
+      if(useMetric) {
+        labelCM.classList.add('is-active');
+        labelIN.classList.remove('is-active');
+      } else {
+        labelIN.classList.add('is-active');
+        labelCM.classList.remove('is-active');
+      }
+    }
+  }
+
+  customElements.define('size-guide-modal', SizeGuideModal);
+</script>
+<style>
+  size-guide-modal {
+    display: block;
+  }
+
+  .sg-body-map {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+    display: none; 
+    margin-top: 30px;
+  }
+
+  label.sg-toggle._mobile {
+    position: static;
+    padding-bottom: 10px;
+  }
+
+  .sg-model {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .sg-point {
+    position: absolute;
+    width: 200px;
+    color: #3c3c3c;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .sg-text strong {
+    font-size: 12px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  /* Arrow */
+  .sg-arrow {
+    width: 60px;
+    height: auto;
+    position: absolute;
+  }
+
+  .sg-point--bust { top: 22%; right: 50px; }
+  .sg-point--bust .sg-arrow { right: 215px; top: 29px; transform: rotate(180deg); }
+
+  .sg-point--waist { top: 30%; left: 50px; }
+  .sg-point--waist .sg-arrow { left: 195px; top: 48px; }
+
+  .sg-point--hip { top: 60%; right: 50px; }
+  .sg-point--hip .sg-arrow { right: 210px; top: 15px; transform: rotate(180deg); }
+
+  .sg-point--inseam { bottom: 5%; left: 50px; }
+  .sg-point--inseam .sg-arrow { left: 200px; top: 60px; }
+
+
+  @media (max-width: 749px) {
+    .sg-point { font-size: 8px; }
+    .sg-point--bust { top: 22%; right: 1%; width: 120px; }
+    label.sg-toggle._mobile { display: block; }
+    .sg-point--bust .sg-arrow { right: 190px; top: 29px; }
+    .sg-point--hip .sg-arrow { right: 195px; top: 15px; }
+    .sg-arrow { width: 20px; }
+    .sg-point--waist { top: 15%; left: 1%; width: 120px; }
+    .sg-point--hip { top: 60%; width: 120px; right: 1%; }
+    .sg-point--inseam { bottom: 0%; left: 1%; width: 120px; }
+  }
+
+  .sg-modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: .3s;
+    padding: 20px;
+    left: 50%;
+    top: 50%;
+    z-index: 999999;
+    transform: translate(-50%, -50%);
+  }
+  .sg-modal.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .sg--lock {
+    overflow: hidden;
+    touch-action: none;
+  }
+
+  .sg-btn {
+    font-family: Satoshi, sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 100%;
+    text-decoration: underline;
+    color: #3C3C3C;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .sg-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9998;
+    background: rgba(0,0,0,0.3);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+  }
+
+  .sg-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+    display: block !important;
+  }
+
+  .sg-card {
+    background: #EAE5DF;
+    width: 100%;
+    min-width: 750px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.2);
+    overflow: auto;
+    max-height: 85vh;
+    scrollbar-width: none;
+    position: relative;
+  }
+
+
+/* Container for the checkbox and text */
+.sg-toggle {
+  cursor: pointer;
+  font-size: 13px;
+  color: #3c3c3c;
+  user-select: none;
+}
+
+/* 1. Hide the default ugly browser checkbox */
+.sg-toggle input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #3c3c3c; /* Box border color */
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+/* 2. Create the "Tick Mark" (Hidden by default) */
+.sg-toggle input[type="checkbox"]::after {
+  content: '';
+  width: 5px;
+  height: 9px;
+  border: solid #000; /* Tick color */
+  border-width: 0 2px 2px 0; /* Creates the 'L' shape */
+  transform: rotate(45deg) scale(0); /* Rotates it and hides it */
+  transition: transform 0.2s ease; /* Smooth pop-in animation */
+  margin-bottom: 2px; /* Slight adjustment to center it visually */
+}
+
+/* 3. Show the Tick Mark when clicked */
+.sg-toggle input[type="checkbox"]:checked::after {
+  transform: rotate(45deg) scale(1); /* Scales it up to visible */
+}
+  .sg-header {
+    position: relative;
+    padding: 15px 56px;
+    text-align: center;
+    border-bottom: 1px solid #3c3c3c;
+  }
+  .sg-title {
+    font-weight: 500;
+    font-size: 18px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #3c3c3c;
+    margin: 0;
+  }
+
+  .sg-close {
+    position: absolute;
+    right: 30px;
+    top: 18px;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    width: 25px;
+    height: 20px;
+  }
+  
+  .sg-toggle-wrapper {
+    position: absolute;
+    right: 80px;
+    top: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #3c3c3c;
+    cursor: pointer;
+  }
+
+  .sg-body { padding: 24px; }
+  .sg-meta p { margin: 0 0 8px; font-size: 13px; color: #3c3c3c; }
+  .sg-table { overflow: hidden; margin-top: 18px; }
+  
+  .sg-row {
+    display: flex;
+    width: 100%;
+  }
+  
+  .sg-row--head { background: #D9D9D9; font-weight: 500; font-size: 13px; }
+  
+  .sg-row div {
+    padding: 12px 14px;
+    border-bottom: 1px solid #3c3c3c;
+    font-size: 13px;
+    color: #3c3c3c;
+    width: 20%;
+    white-space: nowrap;
+  }
+  /* The Toggle Container */
+.sg-toggle {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* Hide default HTML checkbox */
+.sg-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The Slider Track (Grey Background) */
+.sg-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #3c3c3c;
+  transition: .4s;
+  border-radius: 34px; /* Round Pill Shape */
+}
+
+/* The White Circle (Knob) */
+.sg-slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Active State (Black Background when checked) */
+input:checked + .sg-slider {
+  background-color: #000;
+}
+
+/* Move Circle to the Right when checked */
+input:checked + .sg-slider:before {
+  transform: translateX(16px);
+}
+  
+  .sg-table .sg-row:nth-child(odd) { background-color: #3c3c3c; color: white; }
+  .sg-row.sg-row--head div { color: white; }
+  .sg-row:last-child div { border-bottom: none; }
+  .sg-row:nth-child(odd):not(.sg-row--head) { background: #EAE5DF; }
+
+  @media(max-width:749px) {
+    .sg-body { padding: 12px; }
+    .sg-close {
+    right: 10px;
+    top: 5px;
+}
+    .sg-card { min-width: 90vw; margin: 0 auto; }
+    .sg-header { padding: 10px 20px; }
+    .sg-title { font-size: 14px; }
+    /* Hide top toggle on mobile, show the body toggle */
+ .sg-toggle-wrapper { position: static; }
+    .sg-row { display: grid; grid-template-columns: 0.9fr 1fr 1fr 1fr 1fr; }
+    .sg-row div { width: auto; font-size: 11px; padding: 10px 5px;}
+  }
+
+  @media(max-width:400px) {
+    .sg-card { min-width: 350px; }
+  }
+</style>
+
+{% endif %}
+

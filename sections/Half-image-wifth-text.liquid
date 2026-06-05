@@ -1,0 +1,416 @@
+<div class="ma-shopify-page-section-{{ section.id }} {{ section.settings.custom_class }}">
+  <div class="ma-page-section-inner container-x">
+    <div class="full-width-container {% if section.settings.Revrese_Row == true %} row-reverse {% endif %}">
+      <div class="half-width-section left-section">
+        <div class="half-width-section-inner">
+          {% if section.settings.Heading_Main != blank %}
+            <h2 class="section-main-title">
+              {{ section.settings.Heading_Main }}
+            </h2>
+          {% endif %}
+          {% if section.settings.Section_Text != blank %}
+            <div class="section-text">
+              {{ section.settings.Section_Text }}
+            </div>
+          {% endif %}
+          <div class="ma-section-buttons">
+            {% if section.settings.Button_Label != blank %}
+              <div class="section-button ">
+                <a
+                  href="{{ section.settings.Button_Link }}"
+                  class="{% if section.settings.btn-sec-1 %}btn-sec{% endif %}"
+                >
+                  <span>
+                    {{ section.settings.Button_Label }}
+                  </span>
+                </a>
+              </div>
+            {% endif %}
+            {% if section.settings['Button_Label-2'] != blank %}
+              <div class="section-button ">
+                <a
+                  href="{{ section.settings.Button_Link-2 }}"
+                  class="{% if section.settings.btn-sec-2 %}btn-sec{% endif %}"
+                >
+                  <span>
+                    {{ section.settings['Button_Label-2'] }}
+                  </span>
+                </a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="half-width-section right-section">
+        {% if section.settings.Section_Image != blank %}
+          <div class="half-width-section-inner">
+            <img src="{{ section.settings.Section_Image | image_url }}" alt="">
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Text and Image",
+  "settings": [
+          {
+    "type": "header",
+    "content": "Don't delete otherwise design may break"
+    },
+    {
+    "type": "text",
+    "id": "custom_class",
+    "label": "Custom CSS class",
+    "default": "my-default-class"
+    },
+    {
+      "type": "image_picker",
+      "id": "Section_Image",
+      "label": "Section Image"
+    },
+    {
+      "type": "checkbox",
+      "id": "Revrese_Row",
+      "label": "Reverse Row"
+    },
+
+    {
+      "type": "text",
+      "id": "Heading_Main",
+      "label": "Main Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "Section_Text",
+      "label": "Section Text"
+    },
+    {
+      "type": "header",
+      "content": "FIRST BUTTON"
+    },
+    {
+      "type": "url",
+      "id": "Button_Link",
+      "label": "Link"
+    },
+    {
+      "type": "text",
+      "id": "Button_Label",
+      "label": "Label"
+    },
+    {
+      "type": "checkbox",
+      "id": "btn-sec-1",
+      "label": "Button Outline"
+    },
+    {
+      "type": "header",
+      "content": "SECOND BUTTON"
+    },
+    {
+      "type": "url",
+      "id": "Button_Link-2",
+      "label": "Link"
+    },
+    {
+      "type": "text",
+      "id": "Button_Label-2",
+      "label": "Label"
+    },
+    {
+      "type": "checkbox",
+      "id": "btn-sec-2",
+      "label": "Button Outline"
+    },
+    {
+      "type": "header",
+      "content": "SETTINGS"
+    },
+    {
+      "type": "color_background",
+      "id": "background-color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "checkbox",
+      "id": "adapt-height",
+      "label": "Adapt Height",
+    },
+    {
+      "type": "range",
+      "id": "d-img-height",
+      "label": "Desktop Image Height",
+      "max": 1000,
+      "min": 0,
+      "step": 10,
+      "unit": "px",
+      "default": 570,
+      "visible_if": "{{ section.settings.adapt-height == false }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show-text",
+      "label": "Show text on image",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "m-img-height",
+      "label": "Mobile Image Height",
+      "max": 1000,
+      "min": 0,
+      "step": 10,
+      "unit": "px",
+      "default": 300,
+      "visible_if": "{{ section.settings.show-text == false and section.settings.adapt-height == false }}"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop padding top",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop padding bottom",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile padding top",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile padding bottom",
+      "default": 16
+    },
+  ],
+  "presets": [
+    {
+      "name": "Custom Text and Image"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .full-width-container{
+    position: relative;
+  }
+  .ma-shopify-page-section-{{ section.id }} {
+    padding-top: {{ section.settings.desktop_padding_top }}px;
+    padding-bottom: {{ section.settings.desktop_padding_bottom }}px;
+    background-color: {{ section.settings.background-color }};
+  }
+  @media only screen and (max-width: 768px) {
+    .ma-shopify-page-section-{{ section.id }} {
+      padding-top: {{ section.settings.mobile_padding_top }}px;
+      padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+    }
+  }
+</style>
+{% style %}
+    .ma-shopify-page-section-{{ section.id }} .full-width-container {
+      display: flex;
+    }
+    .ma-shopify-page-section-{{ section.id }} .left-section{
+    display: flex;
+    align-items: center;
+    background: #E6DBCE;
+    }
+        .struggling.ma-shopify-page-section-{{ section.id }} .left-section{
+    display: flex;
+    align-items: center;
+    background: #fff;
+    }
+          .struggling.ma-shopify-page-section-{{ section.id }} .ma-page-section-inner.container-x {
+    padding: 0px;
+    max-width: 100%;
+}
+            .meet-diana.ma-shopify-page-section-{{ section.id }} .ma-page-section-inner.container-x {
+    max-width: 1280px;
+}
+        .meet-diana.ma-shopify-page-section-{{ section.id }} .left-section{
+    display: flex;
+    align-items: center;
+    background: #fff;
+    }
+       .meet-diana.ma-shopify-page-section-{{ section.id }} .left-section .half-width-section-inner {
+      height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10%;
+    max-width: 100%;
+    }
+       .struggling.ma-shopify-page-section-{{ section.id }} .left-section .half-width-section-inner {
+      height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10%;
+    max-width: 90%;
+    }
+    .ma-shopify-page-section-{{ section.id }} .left-section .half-width-section-inner {
+      height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    padding: 10%;
+    max-width: 60%;
+    }
+
+    .ma-shopify-page-section-{{ section.id }} .right-section .half-width-section-inner{
+      height: 100%;
+    }
+    .struggling.ma-shopify-page-section-{{ section.id }} .right-section .half-width-section-inner img{
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .ma-shopify-page-section-{{ section.id }} .right-section .half-width-section-inner img{
+      height: 100%;
+    {% if section.settings.adapt-height == false %}
+      height: {{section.settings.d-img-height}}px;
+    {% endif %}
+      object-fit: cover;
+      display: block;
+    }
+
+    .ma-shopify-page-section-{{ section.id }} .section-button {
+      margin-top: 24px;
+    }
+    .ma-shopify-page-section-{{ section.id }} .section-main-title {
+font-weight: 500;
+font-size: 28px;
+line-height: 120%;
+letter-spacing: 2px;
+text-transform: uppercase;
+color:#545453;
+    }
+        .ma-shopify-page-section-{{ section.id }} .section-text {
+font-weight: 500;
+font-size: 12px;
+line-height: 140%;
+letter-spacing: 0px;
+color:#545453;
+    }
+            .meet-diana.ma-shopify-page-section-{{ section.id }} .section-text {
+font-weight: 500;
+font-size: 16px;
+line-height: 140%;
+letter-spacing: 0px;
+color:#545453;
+    }
+                .struggling.ma-shopify-page-section-{{ section.id }} .section-text {
+font-weight: 500;
+font-size: 16px;
+line-height: 140%;
+letter-spacing: 0px;
+color:#545453;
+    }
+.section-button a{
+  
+font-weight: 500;
+font-size: 18px;
+line-height: 120%;
+letter-spacing: 0px;
+text-align: center;
+text-transform: uppercase;
+color: #000000;
+text-decoration: none;    
+}
+.ma-shopify-page-section-{{ section.id }} .half-width-section-inner img {
+width: 100%;
+
+}
+.half-width-section.right-section {
+height: 100%;
+}
+.ma-shopify-page-section-{{ section.id }} .row-reverse {
+flex-direction: row-reverse;
+}
+@media only screen and (min-width: 768px) {
+.ma-shopify-page-section-{{ section.id }} .full-width-container {
+display: grid;
+grid-template-columns: 1fr 1fr;
+}
+.ma-shopify-page-section-{{ section.id }} .row-reverse .right-section{
+grid-row-start: 1;
+grid-column-start: 1;
+height: 100%;
+}
+.ma-shopify-page-section-{{ section.id }} .right-section{
+height: 100%;
+}
+}
+@media only screen and (max-width: 750px) {
+         .struggling.ma-shopify-page-section-{{ section.id }} .left-section .half-width-section-inner {
+    max-width: 100%;
+    }
+.ma-shopify-page-section-{{ section.id }} .section-main-title {
+font-size: 22px;
+}
+.ma-shopify-page-section-{{ section.id }} .left-section .half-width-section-inner {
+max-width: 100%;
+}
+
+{% if section.settings.show-text %}
+.ma-shopify-page-section-{{ section.id }} .ma-page-section-inner {
+background-image: url('{{ section.settings.Section_Image | image_url: width: 800 }}');
+background-position: center;
+}
+.ma-shopify-page-section-{{ section.id }} .right-section{
+display: none;
+}
+{% endif %}
+{% if section.settings.adapt-height == false %}
+.ma-shopify-page-section-{{ section.id }} .right-section .half-width-section-inner{
+height: {{section.settings.m-img-height}}px
+}
+{% endif %}
+.ma-shopify-page-section-{{ section.id }} .half-width-section {
+width: 100%;
+}
+.ma-shopify-page-section-{{ section.id }} .full-width-container {
+flex-direction: column-reverse;
+}
+.ma-shopify-page-section-{{ section.id }} .left-section .half-width-section-inner {
+padding: 24px;
+}
+#shopify-section-template--15277392887937__text_with_image_kU9cHi  .full-width-container {
+flex-direction: column;
+
+}
+.ma-shopify-page-section-{{ section.id }} .left-section{
+background: #f8f8f8;
+}
+}
+{% endstyle %}

@@ -1,0 +1,75 @@
+<style>
+.review-count {
+font-family: Inter;
+font-weight: 500;
+font-style: Medium;
+font-size: 10px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+color: #545453;
+}
+.star-rating-cc {
+display: flex;
+align-items: center;
+gap: 15px;
+}
+.star-rating-inc p {
+font-family: Inter;
+font-weight: 500;
+font-style: Medium;
+font-size: 10px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+color: #545453;
+}
+.star-rating-inc p a {
+  font-family: Inter, sans-serif;
+  color: #545453;
+  font-weight: 500;
+  font-style: normal;
+  font-size: 10px;
+  line-height: 1.2;
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-color: #545453;
+  text-decoration-thickness: 1px;
+  text-decoration-skip-ink: auto;
+}
+
+.star-rating {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 0;
+}
+@media screen and (max-width:750px){
+.star-rating-cc {
+    display: none;
+}
+}
+</style>
+<div
+  class="star-rating"
+  style="padding-top: {{ block.settings.padding_top }}px; padding-bottom: {{ block.settings.padding_bottom }}px;"
+>
+  <div
+  class="star-rating-cc">
+ <svg xmlns="http://www.w3.org/2000/svg" width="81" height="17" viewBox="0 0 81 17" fill="none">
+<path d="M8.0198 0L10.3108 5.10989L15.6471 5.81862L11.7267 9.68544L12.7337 15.2334L8.0198 12.5133L3.30588 15.2334L4.31294 9.68544L0.392517 5.81862L5.72884 5.10989L8.0198 0Z" fill="#3C3C3C"/>
+<path d="M24.0594 0L26.3503 5.10989L31.6866 5.81862L27.7662 9.68544L28.7733 15.2334L24.0594 12.5133L19.3454 15.2334L20.3525 9.68544L16.4321 5.81862L21.7684 5.10989L24.0594 0Z" fill="#3C3C3C"/>
+<path d="M40.4999 0L42.9054 5.10989L48.5085 5.81862L44.3921 9.68544L45.4495 15.2334L40.4999 12.5133L35.5503 15.2334L36.6077 9.68544L32.4912 5.81862L38.0944 5.10989L40.4999 0Z" fill="#3C3C3C"/>
+<path d="M56.9407 0L59.2317 5.10989L64.568 5.81862L60.6476 9.68544L61.6546 15.2334L56.9407 12.5133L52.2268 15.2334L53.2338 9.68544L49.3134 5.81862L54.6497 5.10989L56.9407 0Z" fill="#3C3C3C"/>
+<path d="M72.9803 0L75.2712 5.10989L80.6075 5.81862L76.6871 9.68544L77.6942 15.2334L72.9803 12.5133L68.2663 15.2334L69.2734 9.68544L65.353 5.81862L70.6893 5.10989L72.9803 0Z" fill="#3C3C3C"/>
+</svg>
+  <span class="review-count">
+    {{ block.settings.review_count_text }}
+  </span>
+  </div>
+    <div
+  class="star-rating-inc">
+      {{ block.settings.inc }}
+  </div>
+</div>

@@ -1,0 +1,31 @@
+{% if cart == empty %}
+  <span class="svg-wrapper"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="20" viewBox="0 0 19 20" fill="none">
+<mask id="mask0_288_159" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="17" height="17">
+<path d="M17.2464 1.65829H1.32682V17.5779H17.2464V1.65829Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_288_159)">
+<path d="M14.5931 5.37195H3.98002V16.4493H14.5931V5.37195Z" stroke="#3C3C3C" stroke-width="0.994974" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M7.62828 7.03128V3.64837C7.62828 3.18405 8.02627 2.78606 8.49059 2.78606H10.2152C10.6795 2.78606 11.0775 3.18405 11.0775 3.64837V7.09761" stroke="#3C3C3C" stroke-width="0.994974" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</svg></span>
+{% else %}
+  <span class="svg-wrapper"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="20" viewBox="0 0 19 20" fill="none">
+<mask id="mask0_288_159" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="17" height="17">
+<path d="M17.2464 1.65829H1.32682V17.5779H17.2464V1.65829Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_288_159)">
+<path d="M14.5931 5.37195H3.98002V16.4493H14.5931V5.37195Z" stroke="#3C3C3C" stroke-width="0.994974" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M7.62828 7.03128V3.64837C7.62828 3.18405 8.02627 2.78606 8.49059 2.78606H10.2152C10.6795 2.78606 11.0775 3.18405 11.0775 3.64837V7.09761" stroke="#3C3C3C" stroke-width="0.994974" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</svg></span>
+{% endif %}
+
+<span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
+{%- if cart != empty -%}
+  <div class="cart-count-bubble">
+    {%- if cart.item_count < 100 -%}
+      <span class="bubble-scs" aria-hidden="true">{{ cart.item_count }}</span>
+    {%- endif -%}
+    <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+  </div>
+{%- endif -%}

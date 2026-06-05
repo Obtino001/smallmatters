@@ -1,0 +1,518 @@
+
+<style>
+  .video-thumbnails .swiper-slide video{width:100%;height:auto;object-fit:cover;border:2px solid transparent;cursor:pointer;}
+  .video-popup{position:fixed;top:0;left:0;right:0;bottom:0;margin:0 !important;inset:0;z-index:20000;display:none;justify-content:center;align-items:center;transform:none !important;background:rgba(0,0,0,0.8);width:100%;height:100%;backdrop-filter:blur(25px);}
+  .swiper-wrapper-md{padding-block:10px;display:flex;align-items:center;gap:15px;margin-top:var(--video-margin-top,20px);margin-bottom:var(--video-margin-bottom,20px);flex-wrap:nowrap;overflow-x:scroll !important;overflow-y:hidden;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;transform:translate3d(0,0,0);right:-100%;scrollbar-width:none;}
+  .headingCustom span{z-index:2;}
+.headingCustom {
+    position: relative;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    font-size: .95em;
+    font-family: Inter;
+    font-weight: 600;
+    font-style: Semi Bold;
+    font-size: 12px;
+    leading-trim: NONE;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-transform: uppercase;
+    color: #545453;
+}
+.video-thumbnails-container {
+    margin-top: 50px !important;
+}
+  .preview-title-story{font-size:12px;line-height:16px;max-width:128px !important;font-weight:400;text-align:center;word-wrap:break-word;}
+  .video-popup.active{display:flex !important;}
+  body:has(.video-popup.active){overflow:hidden;height:100vh;position:fixed;width:100%;}
+  body:has(.video-popup.active) header{display:none !important;}
+  body:has(.video-popup.active) .MA-announcement-container{display:none !important;}
+  body:has(.video-popup.active) .MA-swiper-header{display:none !important;}
+  .video-popup .main-video{max-width:38%;height:100%;margin:auto;z-index:10001;}
+  video.mainPopupVideoEl{height:100%;width:100%;object-fit:cover;}
+  .video-popup .thumbnail-strip{position:absolute;left:40px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:10001;}
+  .video-popup .thumbnail-strip .swiper-slide img{width:84px;height:84px;object-fit:cover;cursor:pointer;transition:transform 0.2s;display:block;background:#ffffff45;color:transparent;}
+  .video-popup .thumbnail-strip .swiper-slide-thumb-active img{border:2px solid #fff;}
+  .video-popup .thumbnail-strip .swiper-button-disabled{display:none;}
+  .swiper-popup-thumbs{height:300px !important;overflow:hidden;}
+  .swiper-popup-thumbs .swiper-slide{height:auto;}
+  .swiper-button-lock{display:block !important;opacity:1;pointer-events:auto;}
+  .swiper-popup-thumbs .swiper-wrapper{flex-direction:column !important;}
+  .video-popup .thumbnail-strip{width:auto;margin-left:20px;position:absolute;left:0;top:50%;display:flex;align-items:center;flex-direction:column;gap:6px;}
+  .video-popup .thumbnail-strip .swiper-slide video{width:84px;height:84px;object-fit:cover;}
+  #closeVideoModal{position:fixed;top:20px;left:20px;font-size:30px;color:#fff;background:none;border:none;cursor:pointer;z-index:200001;width:40px;height:40px;}
+  .video-popup.active{display:flex !important;}
+  .swiper-button-prev-thumb,.swiper-button-next-thumb{color:#fff;width:28px;height:28px;border-radius:50%;position:absolute;z-index:10;display:flex;justify-content:center;align-items:center;font-size:18px;cursor:pointer;}
+  .swiper-button-prev-thumb{top:-50px;transform:rotate(180deg);}
+  .swiper-button-next-thumb{bottom:-45px;}
+  video.desktop-video-md{width:100%;height:200px;cursor:pointer;}
+  .swiper-popup-thumbs .swiper-slide-active video{border:1px solid #fff;}
+  .swiper-slide-md{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;cursor:pointer;}
+  .swiper-slide-md video{aspect-ratio:9/16;width:unset !important;margin:0 auto;overflow:hidden;height:227px;object-fit:cover;}
+  .swiper-main-video button{position:absolute;top:14px;right:7px;background-color:transparent;border:1px solid transparent;border-radius:50%;cursor:pointer;display:flex;height:48px;justify-content:center;width:48px;z-index:9999;}
+  .swiper-slide-md:hover video{transform:scale(1.04);transition:transform 0.18s ease-in-out;}
+  .swiper-main-video .speaker-btn .mute-btn{display:none;}
+  .swiper-main-video .pause-overlay{position:absolute;top:0;left:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;cursor:pointer;background:rgba(0,0,0,0.2);}
+  .swiper-main-video .pause-overlay svg{width:74px;height:74px;}
+  .swiper-main-video .pause-overlay.show-overlay{display:flex;}
+  .swiper-main-video .speaker-btn.unmuted .unmute-btn{display:none;}
+  .swiper-main-video .speaker-btn.unmuted .mute-btn{display:inline-block;}
+  @media screen and (max-width:1024px){
+    .video-popup .main-video{max-width:100%;}
+    .thumbnail-strip{display:none !important;}
+  }
+</style>
+<div class="video-thumbnails-container">
+  <div class="headingCustom">
+    <span
+      ><strong>{{ block.settings.Heading }}</strong></span
+    >
+  </div>
+  <div
+    class="video-thumbnails"
+    style="--video-margin-top: {{ block.settings.video_margin_top }}px; --video-margin-bottom: {{ block.settings.video_margin_bottom }}px;"
+  >
+    <div class=" swiper-thumbs">
+      <div class="swiper-wrapper-md">
+        {% assign video_sources = '' %}
+
+        {% if block.settings.use_metafields %}
+          {% assign video_sources = product.metafields.custom.video_thumbnails.value %}
+          {% for video in video_sources %}
+            <div class="swiper-slide-md">
+              {{
+                video
+                | video_tag:
+                  autoplay: true,
+                  loop: true,
+                  muted: true,
+                  controls: false,
+                  class: 'desktop-video-md',
+                  loading: lazy
+              }}
+            </div>
+          {% endfor %}
+        {% else %}
+          {%- for i in (1..5) -%}
+            {%- capture video_key -%}video_{{ i }}{%- endcapture -%}
+            {%- capture text_key -%}video_text_{{ i }}{%- endcapture -%}
+            {%- assign video_file = block.settings[video_key] -%}
+            {%- assign video_text = block.settings[text_key] -%}
+            {%- if video_file != blank -%}
+              <div class="swiper-slide-md">
+                {{
+                  video_file
+                  | video_tag:
+                    autoplay: true,
+                    loop: true,
+                    muted: true,
+                    controls: false,
+                    class: 'desktop-video-md',
+                    loading: lazy
+                }}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="video-popup" id="videoModal">
+    <div class="close-btn" id="closeVideoModal">
+      <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g filter="url(#filter0_dd_3986_1781)"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.5297 10.4697C11.2368 10.1768 10.762 10.1768 10.4691 10.4697C10.1762 10.7626 10.1762 11.2374 10.4691 11.5303L20.9389 22.0001L10.4692 32.4698C10.1763 32.7627 10.1763 33.2376 10.4692 33.5305C10.7621 33.8234 11.2369 33.8234 11.5298 33.5305L21.9995 23.0608L32.4691 33.5303C32.762 33.8232 33.2368 33.8232 33.5297 33.5303C33.8226 33.2374 33.8226 32.7626 33.5297 32.4697L23.0602 22.0001L33.5298 11.5305C33.8227 11.2376 33.8227 10.7627 33.5298 10.4698C33.2369 10.1769 32.7621 10.1769 32.4692 10.4698L21.9995 20.9395L11.5297 10.4697Z" fill="white"></path></g><defs><filter id="filter0_dd_3986_1781" x="0.249512" y="0.25" width="43.5" height="43.5" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></feColorMatrix><feOffset></feOffset><feGaussianBlur stdDeviation="5"></feGaussianBlur><feComposite in2="hardAlpha" operator="out"></feComposite><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0"></feColorMatrix><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3986_1781"></feBlend><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></feColorMatrix><feOffset dy="1"></feOffset><feGaussianBlur stdDeviation="0.5"></feGaussianBlur><feComposite in2="hardAlpha" operator="out"></feComposite><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.06 0"></feColorMatrix><feBlend mode="normal" in2="effect1_dropShadow_3986_1781" result="effect2_dropShadow_3986_1781"></feBlend><feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_3986_1781" result="shape"></feBlend></filter></defs>
+      </svg>
+    </div>
+    <div class="main-video swiper swiper-main-video">
+      <div class="swiper-wrapper">
+        {% if block.settings.use_metafields %}
+          {% assign videos = product.metafields.custom.video_thumbnails.value %}
+          {% for video in videos %}
+            {% if video %}
+              <div class="swiper-slide">
+                {{
+                  video
+                  | video_tag:
+                    autoplay: true,
+                    loop: true,
+                    muted: true,
+                    controls: false,
+                    class: 'mainPopupVideoEl',
+                    loading: lazy
+                }}
+                <div class="pause-overlay">
+                  <svg width="100%" height="100%" viewBox="0 0 80 80" fill="none">
+                    <circle opacity="0.96" cx="40" cy="40" r="40" fill="black"/>
+                    <path d="M31.25 25.5162C31.25 24.7389 32.098 24.2588 32.7645 24.6587L57.6188 39.5713C57.9424 39.7655 57.9424 40.2345 57.6188 40.4287L32.7645 55.3413C32.098 55.7412 31.25 55.2611 31.25 54.4838V25.5162Z" fill="white"/>
+                  </svg>
+                </div>
+                <button class="speaker-btn" aria-label="Toggle mute">
+                  <span class="unmute-btn">
+                    <svg width="28" height="26" viewBox="0 0 28 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 16.5001H5.64304C6.22014 16.5001 6.77947 16.6997 7.22613 17.0652L15.5 23.8347V2.16542L7.22613 8.93495C6.77948 9.30039 6.22014 9.50005 5.64304 9.50005H1.5V16.5001ZM5.64304 8.00005H1C0.447716 8.00005 0 8.44777 0 9.00005V17.0001C0 17.5523 0.447716 18.0001 1 18.0001H5.64304C5.87388 18.0001 6.09761 18.0799 6.27627 18.2261L15.3668 25.6638C16.0197 26.198 17 25.7334 17 24.8898V1.1103C17 0.266669 16.0197 -0.197879 15.3668 0.336337L6.27627 7.77401C6.09761 7.92019 5.87388 8.00005 5.64304 8.00005ZM24.6488 4.33732C25.0149 4.1434 25.4688 4.28292 25.6627 4.64894C27 7.17317 27.7187 10.0536 27.7499 12.9921L27.75 13.0001L27.7499 13.008C27.7187 15.9465 27 18.8269 25.6627 21.3512C25.4688 21.7172 25.0149 21.8567 24.6488 21.6628C24.2828 21.4689 24.1433 21.015 24.3372 20.6489C25.5575 18.3456 26.2199 15.7045 26.2499 13.0001C26.2199 10.2956 25.5575 7.65448 24.3372 5.35117C24.1433 4.98515 24.2828 4.53123 24.6488 4.33732ZM21.6382 8.60612C21.4206 8.25365 20.9585 8.14427 20.606 8.36184C20.2536 8.5794 20.1442 9.0415 20.3617 9.39398C20.9677 10.3757 21.2924 11.6527 21.2455 12.9735L21.2446 13.0001L21.2455 13.0266C21.2924 14.3474 20.9677 15.6244 20.3617 16.6061C20.1442 16.9586 20.2536 17.4207 20.606 17.6383C20.9585 17.8558 21.4206 17.7465 21.6382 17.394C22.4114 16.1412 22.7965 14.576 22.7455 13.0001C22.7965 11.4241 22.4114 9.85891 21.6382 8.60612Z" fill="white"></path>
+                    </svg>
+                  </span>
+                  <span class="mute-btn">
+                    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M1.53033 0.46967C1.23744 0.176777 0.762564 0.176777 0.469669 0.46967C0.176777 0.762563 0.176777 1.23744 0.469669 1.53033L8.06667 9.12733L7.27627 9.77401C7.09761 9.92019 6.87388 10.0001 6.64304 10.0001H2C1.44772 10.0001 1 10.4478 1 11.0001V19.0001C1 19.5523 1.44772 20.0001 2 20.0001H6.64304C6.87388 20.0001 7.09761 20.0799 7.27627 20.2261L16.3668 27.6638C17.0197 28.198 18 27.7334 18 26.8898V19.0607L28.4697 29.5303C28.7626 29.8232 29.2374 29.8232 29.5303 29.5303C29.8232 29.2374 29.8232 28.7626 29.5303 28.4697L18 16.9393V3.1103C18 2.26667 17.0197 1.80212 16.3668 2.33634L9.23339 8.17273L1.53033 0.46967ZM10.2993 9.23868L16.5 4.16542V15.4393L10.2993 9.23868ZM16.5 17.5607V25.8347L8.22613 19.0652C7.77947 18.6997 7.22014 18.5001 6.64304 18.5001H2.5V11.5001H6.64304C7.22014 11.5001 7.77948 11.3004 8.22613 10.9349L9.13262 10.1933L16.5 17.5607ZM26.6627 6.64894C26.4688 6.28292 26.0149 6.1434 25.6488 6.33732C25.2828 6.53123 25.1433 6.98515 25.3372 7.35117C26.5575 9.65448 27.2199 12.2956 27.2499 15.0001C27.2199 17.7045 26.5575 20.3456 25.3372 22.6489C25.1433 23.015 25.2828 23.4689 25.6488 23.6628C26.0149 23.8567 26.4688 23.7172 26.6627 23.3512C28 20.8269 28.7187 17.9465 28.7499 15.008L28.75 15.0001L28.7499 14.9921C28.7187 12.0536 28 9.17317 26.6627 6.64894ZM21.606 10.3618C21.9585 10.1443 22.4206 10.2536 22.6382 10.6061C23.4114 11.8589 23.7965 13.4241 23.7455 15.0001C23.7965 16.576 23.4114 18.1412 22.6382 19.394C22.4206 19.7465 21.9585 19.8558 21.606 19.6383C21.2536 19.4207 21.1442 18.9586 21.3617 18.6061C21.9677 17.6244 22.2924 16.3474 22.2455 15.0266L22.2446 15.0001L22.2455 14.9735C22.2924 13.6527 21.9677 12.3757 21.3617 11.394C21.1442 11.0415 21.2536 10.5794 21.606 10.3618Z" fill="white"></path>
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          {% for i in (1..5) %}
+            {% assign video_key = 'video_' | append: i %}
+            {% assign video_file = block.settings[video_key] %}
+            {% if video_file %}
+              <div class="swiper-slide">
+                {{
+                  video_file
+                  | video_tag:
+                    autoplay: true,
+                    loop: true,
+                    muted: true,
+                    controls: false,
+                    class: 'mainPopupVideoEl',
+                    loading: lazy
+                }}
+                <div class="pause-overlay">
+                  <svg width="100%" height="100%" viewBox="0 0 80 80" fill="none">
+                    <circle opacity="0.96" cx="40" cy="40" r="40" fill="black"/>
+                    <path d="M31.25 25.5162C31.25 24.7389 32.098 24.2588 32.7645 24.6587L57.6188 39.5713C57.9424 39.7655 57.9424 40.2345 57.6188 40.4287L32.7645 55.3413C32.098 55.7412 31.25 55.2611 31.25 54.4838V25.5162Z" fill="white"/>
+                  </svg>
+                </div>
+                <button class="speaker-btn" aria-label="Toggle mute">
+                  <span class="unmute-btn">
+                    <svg width="28" height="26" viewBox="0 0 28 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 16.5001H5.64304C6.22014 16.5001 6.77947 16.6997 7.22613 17.0652L15.5 23.8347V2.16542L7.22613 8.93495C6.77948 9.30039 6.22014 9.50005 5.64304 9.50005H1.5V16.5001ZM5.64304 8.00005H1C0.447716 8.00005 0 8.44777 0 9.00005V17.0001C0 17.5523 0.447716 18.0001 1 18.0001H5.64304C5.87388 18.0001 6.09761 18.0799 6.27627 18.2261L15.3668 25.6638C16.0197 26.198 17 25.7334 17 24.8898V1.1103C17 0.266669 16.0197 -0.197879 15.3668 0.336337L6.27627 7.77401C6.09761 7.92019 5.87388 8.00005 5.64304 8.00005ZM24.6488 4.33732C25.0149 4.1434 25.4688 4.28292 25.6627 4.64894C27 7.17317 27.7187 10.0536 27.7499 12.9921L27.75 13.0001L27.7499 13.008C27.7187 15.9465 27 18.8269 25.6627 21.3512C25.4688 21.7172 25.0149 21.8567 24.6488 21.6628C24.2828 21.4689 24.1433 21.015 24.3372 20.6489C25.5575 18.3456 26.2199 15.7045 26.2499 13.0001C26.2199 10.2956 25.5575 7.65448 24.3372 5.35117C24.1433 4.98515 24.2828 4.53123 24.6488 4.33732ZM21.6382 8.60612C21.4206 8.25365 20.9585 8.14427 20.606 8.36184C20.2536 8.5794 20.1442 9.0415 20.3617 9.39398C20.9677 10.3757 21.2924 11.6527 21.2455 12.9735L21.2446 13.0001L21.2455 13.0266C21.2924 14.3474 20.9677 15.6244 20.3617 16.6061C20.1442 16.9586 20.2536 17.4207 20.606 17.6383C20.9585 17.8558 21.4206 17.7465 21.6382 17.394C22.4114 16.1412 22.7965 14.576 22.7455 13.0001C22.7965 11.4241 22.4114 9.85891 21.6382 8.60612Z" fill="white"></path>
+                    </svg>
+                  </span>
+                  <span class="mute-btn">
+                    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M1.53033 0.46967C1.23744 0.176777 0.762564 0.176777 0.469669 0.46967C0.176777 0.762563 0.176777 1.23744 0.469669 1.53033L8.06667 9.12733L7.27627 9.77401C7.09761 9.92019 6.87388 10.0001 6.64304 10.0001H2C1.44772 10.0001 1 10.4478 1 11.0001V19.0001C1 19.5523 1.44772 20.0001 2 20.0001H6.64304C6.87388 20.0001 7.09761 20.0799 7.27627 20.2261L16.3668 27.6638C17.0197 28.198 18 27.7334 18 26.8898V19.0607L28.4697 29.5303C28.7626 29.8232 29.2374 29.8232 29.5303 29.5303C29.8232 29.2374 29.8232 28.7626 29.5303 28.4697L18 16.9393V3.1103C18 2.26667 17.0197 1.80212 16.3668 2.33634L9.23339 8.17273L1.53033 0.46967ZM10.2993 9.23868L16.5 4.16542V15.4393L10.2993 9.23868ZM16.5 17.5607V25.8347L8.22613 19.0652C7.77947 18.6997 7.22014 18.5001 6.64304 18.5001H2.5V11.5001H6.64304C7.22014 11.5001 7.77948 11.3004 8.22613 10.9349L9.13262 10.1933L16.5 17.5607ZM26.6627 6.64894C26.4688 6.28292 26.0149 6.1434 25.6488 6.33732C25.2828 6.53123 25.1433 6.98515 25.3372 7.35117C26.5575 9.65448 27.2199 12.2956 27.2499 15.0001C27.2199 17.7045 26.5575 20.3456 25.3372 22.6489C25.1433 23.015 25.2828 23.4689 25.6488 23.6628C26.0149 23.8567 26.4688 23.7172 26.6627 23.3512C28 20.8269 28.7187 17.9465 28.7499 15.008L28.75 15.0001L28.7499 14.9921C28.7187 12.0536 28 9.17317 26.6627 6.64894ZM21.606 10.3618C21.9585 10.1443 22.4206 10.2536 22.6382 10.6061C23.4114 11.8589 23.7965 13.4241 23.7455 15.0001C23.7965 16.576 23.4114 18.1412 22.6382 19.394C22.4206 19.7465 21.9585 19.8558 21.606 19.6383C21.2536 19.4207 21.1442 18.9586 21.3617 18.6061C21.9677 17.6244 22.2924 16.3474 22.2455 15.0266L22.2446 15.0001L22.2455 14.9735C22.2924 13.6527 21.9677 12.3757 21.3617 11.394C21.1442 11.0415 21.2536 10.5794 21.606 10.3618Z" fill="white"></path>
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="thumbnail-strip">
+      <div class="swiper-button-prev-thumb">
+        <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1.11089 1.55567L9.99978 10.4446L18.8887 1.55566" stroke="white" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="round"></path>
+        </svg>
+      </div>
+
+      <div class="swiper swiper-popup-thumbs">
+        <div class="swiper-wrapper">
+          {% if block.settings.use_metafields %}
+            {% assign thumbs = product.metafields.custom.video_thumbnails.value %}
+            {% for video in thumbs %}
+              {% if video and thumb %}
+                <div class="swiper-slide">
+                  <img
+                    src="{{ thumb | strip }}"
+                    class="popup-thumb"
+                    data-video="{{ video | strip }}"
+                    alt="Thumbnail"
+                    loading="lazy"
+                  >
+                </div>
+              {% endif %}
+              {% if thumb %}
+                <div class="swiper-slide">
+                  <img
+                    src="{{ thumb | strip }}"
+                    class="popup-thumb"
+                    data-video="{{ video_file | file_url }}"
+                    alt="Thumbnail"
+                    loading="lazy"
+                  >
+                </div>
+              {% elsif video %}
+                {% assign thumb_pre = video.preview_image | img_url: '100x' %}
+                <div class="swiper-slide">
+                  <img
+                    src="{{ thumb_pre }}"
+                    class="popup-thumb"
+                    data-video="{{ video_file | file_url }}"
+                    alt="Thumbnail"
+                    loading="lazy"
+                  >
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            {% for i in (1..5) %}
+              {% assign video_key = 'video_' | append: i %}
+              {% assign thumb_key = 'thumb_' | append: i %}
+              {% assign video_file = block.settings[video_key] %}
+              {% assign mp4_source = video_file.sources | where: 'format', 'mp4' | first %}
+              {% assign thumb_image = block.settings[thumb_key] %}
+
+              {% if thumb_image %}
+                <div class="swiper-slide">
+                  <img
+                    src="{{ thumb_image | image_url }}"
+                    class="popup-thumb"
+                    data-video="{{ video_file | file_url }}"
+                    alt="Thumbnail"
+                    loading="lazy"
+                  >
+                </div>
+              {% elsif video_file %}
+                {% assign thumb = video_file.preview_image | img_url: '100x' %}
+                <div class="swiper-slide">
+                  <img
+                    class="popup-thumb-generated"
+                    data-video="{{ thumb }}"
+                    alt="Thumbnail"
+                    loading="lazy"
+                    src="thumb"
+                  >
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="swiper-button-next-thumb">
+        <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1.11089 1.55567L9.99978 10.4446L18.8887 1.55566" stroke="white" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="round"></path>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+  const popup = document.querySelector('.video-popup');
+if (popup && popup.parentElement !== document.body) {
+  document.body.appendChild(popup);
+}
+
+    document.addEventListener("DOMContentLoaded", function () {
+      function bindVideoControls() {
+        document.querySelectorAll('.swiper-main-video .swiper-slide').forEach(slide => {
+          const video   = slide.querySelector('video');
+          const btn     = slide.querySelector('.speaker-btn');
+          const overlay = slide.querySelector('.pause-overlay');
+          if (!video || !btn || !overlay) return;
+
+          // 1) Toggle play/pause when clicking the video or the overlay
+          const togglePlay = () => {
+            if (video.paused) video.play().catch(console.warn);
+            else              video.pause();
+          };
+          video.addEventListener('click', togglePlay);
+          overlay.addEventListener('click', togglePlay);
+
+          // 2) Show overlay on pause, hide on play
+          video.addEventListener('pause', () => {
+            overlay.classList.add('show-overlay');
+          });
+          video.addEventListener('play', () => {
+            overlay.classList.remove('show-overlay');
+          });
+
+          // 3) Mute/unmute via speaker button
+          btn.addEventListener('click', e => {
+            e.preventDefault();
+            e.stopPropagation();
+            video.muted = !video.muted;
+            btn.classList.toggle('unmuted', !video.muted);
+          });
+
+          // If the video starts out paused (e.g. autoplay blocked), show overlay:
+          if (video.paused) overlay.classList.add('show-overlay');
+        });
+      }
+      bindVideoControls();
+
+      // 1) popup thumbs Swiper (vertical list of 3, freeMode)
+  const popupThumbs = new Swiper(".swiper-popup-thumbs", {
+    direction:           "vertical",
+    slidesPerView:       3,
+    spaceBetween:        10,
+    freeMode:            true,
+    watchSlidesProgress: true,
+    watchSlidesVisibility: true,
+    slideToClickedSlide: true,
+    navigation: {
+      nextEl: ".swiper-button-next-thumb",
+      prevEl: ".swiper-button-prev-thumb",
+    },
+  });
+
+  // 2) main Swiper with thumbs linkage
+  const mainSwiper = new Swiper(".swiper-main-video", {
+    slidesPerView: 1,
+    loop:          true,
+    direction:     "vertical",
+    speed:         500,
+    thumbs: {
+      swiper: popupThumbs,
+    },
+  });
+
+  // 3) sync playing/pausing videos in the main slider
+  function syncSlideVideos() {
+    const realIdx = mainSwiper.realIndex;
+    document
+      .querySelectorAll(".swiper-main-video .swiper-slide video")
+      .forEach((video, i) => {
+        if (i === realIdx) {
+          video.currentTime = 0;
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+          video.currentTime = 0;
+        }
+      });
+
+
+  }
+
+  mainSwiper.on("slideChange", syncSlideVideos);
+
+  // 4) clicking in the popupThumbs still seeks the main & plays
+  popupThumbs.on("click", (swiper) => {
+    const idx = swiper.clickedIndex;
+    if (typeof idx === "number") {
+      mainSwiper.slideToLoop(idx);
+      syncSlideVideos();
+    }
+  });
+
+  // 5) popup open/close helpers
+  window.toggleVideoPopup = function (show) {
+    const modal = document.getElementById("videoModal");
+    if (!modal) return;
+    modal.classList.toggle("active", !!show);
+
+    if (!show) {
+      document
+        .querySelectorAll(".swiper-main-video .swiper-slide video")
+        .forEach(v => {
+          v.pause();
+          v.currentTime = 0;
+        });
+    }
+  };
+
+  document
+    .getElementById("closeVideoModal")
+    ?.addEventListener("click", () => {
+      toggleVideoPopup(false);
+    });
+
+  // 6) play any main slide by index
+  function playVideoAt(index) {
+    mainSwiper.slideToLoop(index);
+    syncSlideVideos();
+
+    const videos = document.querySelectorAll(
+      ".swiper-main-video .swiper-slide video"
+    );
+    const video = videos[index];
+    if (video) {
+      video.muted = true;
+      video.currentTime = 0;
+      video.play().catch(console.warn);
+
+      // update input URL if you have one
+      const source = video.querySelector("source");
+      const input = document.getElementById("video-url");
+      if (input && source) {
+        input.value = window.location.origin + source.getAttribute("src");
+      }
+    }
+  }
+
+  // 7) clicking a thumb inside popupThumbs still works:
+  document
+    .querySelectorAll(".swiper-popup-thumbs .swiper-slide video")
+    .forEach((vid, index) => {
+      vid.addEventListener("click", () => {
+        playVideoAt(index);
+      });
+    });
+
+  // 8) NEW: static video-thumbnails grid
+  document
+    .querySelectorAll(".video-thumbnails video")
+    .forEach((vid, idx) => {
+      vid.addEventListener("click", () => {
+        // 6a) open the popup
+        toggleVideoPopup(true);
+        // 6b) jump both Swipers to that index
+        mainSwiper.slideToLoop(idx);
+        popupThumbs.slideTo(idx);
+        // 6c) restart the video
+        syncSlideVideos();
+      });
+    });
+
+  // don't forget to manually init the mainSwiper so your "init" handler fires:
+  mainSwiper.on("init", syncSlideVideos);
+  mainSwiper.init();
+
+       document.querySelectorAll(".popup-thumb-generated").forEach(img => {
+    if (img.getAttribute("src")) return;
+
+    const videoUrl = img.dataset.video;
+    if (!videoUrl) return;
+
+    const video = document.createElement("video");
+    video.crossOrigin = "anonymous";
+    video.preload     = "metadata";
+    video.muted       = true;
+    video.playsInline = true;
+    video.src         = videoUrl;
+
+    video.addEventListener("loadedmetadata", () => {
+      // jump just a hair into the video so we can grab a real frame
+      video.currentTime = 0.1;
+    });
+
+    video.addEventListener("seeked", () => {
+      // calculate scaled dimensions
+      const aspectRatio  = video.videoWidth / video.videoHeight;
+      const targetHeight = 100;
+      const targetWidth  = Math.round(targetHeight * aspectRatio);
+
+      // draw into a canvas of the scaled size
+      const canvas = document.createElement("canvas");
+      canvas.width  = targetWidth;
+      canvas.height = targetHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(video, 0, 0, targetWidth, targetHeight);
+
+      // bake the PNG into the <img>
+      img.src = canvas.toDataURL("image/png");
+      img.alt = "Video thumbnail";
+
+      // cleanup
+      video.remove();
+      canvas.remove();
+    });
+
+    // start loading metadata
+    video.load();
+  });
+
+
+
+    });
+</script>

@@ -1,0 +1,259 @@
+<div
+  class="mega-menu mega-menu_body {% if block.settings.images_position == 'left' %}mega-menu--reverse{% endif %}"
+  {{ block.shopify_attributes }}
+>
+  <div class="mega-menu_body__inner">
+    {% assign img_1 = block.settings.image_1 %}
+    {% assign img_2 = block.settings.image_2 %}
+    {% assign img_3 = block.settings.image_3 %}
+    {% assign menu_1 = block.settings.menu_1 %}
+    {% assign menu_2 = block.settings.menu_2 %}
+    {% assign menu_3 = block.settings.menu_3 %}
+    {% assign title_1 = block.settings.title_1 %}
+    {% assign title_2 = block.settings.title_2 %}
+    {% assign title_3 = block.settings.title_3 %}
+    {% assign title_1_link = block.settings.title_1_link %}
+    {% assign title_2_link = block.settings.title_2_link %}
+    {% assign title_3_link = block.settings.title_3_link %}
+
+    {%- if menu_1.levels > 0 -%}
+    <ul class="mega-menu__linklist custom_wrapper-column mega_menu___column__box">
+        <div class="mega-menu_title-body" href="{{ title_1_link }}">
+            {{ title_1 }}
+            {% render 'chevron-icon' %}
+        </div>
+        <div class="mega-menu__linklist_____inner">
+            {%- for sub_link in menu_1.links -%}
+                <li class="custom_wrapper_item">
+                    {%- if sub_link.links.size > 0 -%}
+                    <div class="menu_wrapper----col">
+                        <a class="h6 menu_wrapper" href="{{ sub_link.url }}">
+                        {{ sub_link.title | escape }}
+                        </a>
+                        <span>
+                        {% render 'chevron-icon' %}
+                        </span>
+                    </div>
+                    {% else %}
+                    <a href="{{ sub_link.url }}" class="h6 menu_wrapper">{{ sub_link.title | escape }}</a>
+                    {% endif %}
+                    {%- if sub_link.links.size > 0 -%}
+                    <ul class="custom_wrapper_item_ul">
+                        {%- for sub_sub_link in sub_link.links -%}
+                        <li class="item_menu_wrapper">
+                            {% if sub_sub_link.links != blank %}
+                            <div class="link-faded sub_menu_wrapper">
+                                {{ sub_sub_link.title | escape }}
+                                {% render 'chevron-icon' %}
+                            </div>
+                            {% else %}
+                            <a href="{{ sub_sub_link.url }}" class="link-faded sub_menu_wrapper">{{ sub_sub_link.title | escape }}</a>
+                            {% endif %}
+                            {% if sub_sub_link.links != blank %}
+                            <ul class="grandchild">
+                                {% for grandchild_link in sub_sub_link.links %}
+                                <li>
+                                    <a href="{{ grandchild_link.url }}">{{ grandchild_link.title | escape }}</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </li>
+                        {%- endfor -%}
+                    </ul>
+                    {%- endif -%}
+                </li>
+            {%- endfor -%}
+        </div>
+    </ul>
+    {%- endif -%}
+
+    {%- if menu_2.levels > 0 -%}
+    <ul class="mega-menu__linklist custom_wrapper-column mega_menu___column__box">
+        <div class="mega-menu_title-body" href="{{ title_2_link }}">
+            {{ title_2 }}
+            {% render 'chevron-icon' %}
+        </div>
+        <div class="mega-menu__linklist_____inner">
+        {%- for sub_link in menu_2.links -%}
+        <li class="custom_wrapper_item">
+            {%- if sub_link.links.size > 0 -%}
+            <div class="menu_wrapper----col">
+                <a class="h6 menu_wrapper" href="{{ sub_link.url }}">
+                {{ sub_link.title | escape }}
+                </a>
+                <span>
+                {% render 'chevron-icon' %}
+                </span>
+            </div>
+            {% else %}
+            <a href="{{ sub_link.url }}" class="h6 menu_wrapper">{{ sub_link.title | escape }}</a>
+            {% endif %}
+            {%- if sub_link.links.size > 0 -%}
+            <ul class="custom_wrapper_item_ul">
+                {%- for sub_sub_link in sub_link.links -%}
+                <li class="item_menu_wrapper">
+                    {% if sub_sub_link.links != blank %}
+                    <div class="link-faded sub_menu_wrapper">
+                        {{ sub_sub_link.title | escape }}
+                        {% render 'chevron-icon' %}
+                    </div>
+                    {% else %}
+                    <a href="{{ sub_sub_link.url }}" class="link-faded sub_menu_wrapper">{{ sub_sub_link.title | escape }}</a>
+                    {% endif %}
+                    {% if sub_sub_link.links != blank %}
+                    <ul class="grandchild">
+                        {% for grandchild_link in sub_sub_link.links %}
+                        <li>
+                            <a href="{{ grandchild_link.url }}">{{ grandchild_link.title | escape }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </li>
+                {%- endfor -%}
+            </ul>
+            {%- endif -%}
+        </li>
+        {%- endfor -%}
+    </div>
+    </ul>
+    {%- endif -%}
+
+    {%- if menu_3.levels > 0 -%}
+    <ul class="mega-menu__linklist custom_wrapper-column mega_menu___column__box">
+        <div class="mega-menu_title-body" href="{{ title_3_link }}">
+            {{ title_3 }}
+            {% render 'chevron-icon' %}
+        </div>
+        <div class="mega-menu__linklist_____inner">
+        {%- for sub_link in menu_3.links -%}
+        <li class="custom_wrapper_item">
+            {%- if sub_link.links.size > 0 -%}
+            <div class="menu_wrapper----col">
+                <a class="h6 menu_wrapper" href="{{ sub_link.url }}">
+                {{ sub_link.title | escape }}
+                </a>
+                <span>
+                {% render 'chevron-icon' %}
+                </span>
+            </div>
+            {% else %}
+            <a href="{{ sub_link.url }}" class="h6 menu_wrapper">{{ sub_link.title | escape }}</a>
+            {% endif %}
+            {%- if sub_link.links.size > 0 -%}
+            <ul class="custom_wrapper_item_ul">
+                {%- for sub_sub_link in sub_link.links -%}
+                <li class="item_menu_wrapper">
+                    {% if sub_sub_link.links != blank %}
+                    <div class="link-faded sub_menu_wrapper">
+                        {{ sub_sub_link.title | escape }}
+                        {% render 'chevron-icon' %}
+                    </div>
+                    {% else %}
+                    <a href="{{ sub_sub_link.url }}" class="link-faded sub_menu_wrapper">{{ sub_sub_link.title | escape }}</a>
+                    {% endif %}
+                    {% if sub_sub_link.links != blank %}
+                    <ul class="grandchild">
+                        {% for grandchild_link in sub_sub_link.links %}
+                        <li>
+                            <a href="{{ grandchild_link.url }}">{{ grandchild_link.title | escape }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </li>
+                {%- endfor -%}
+            </ul>
+            {%- endif -%}
+        </li>
+        {%- endfor -%}
+    </div>
+    </ul>
+    {%- endif -%}
+
+    {% comment %} --- IMAGES LOOP (1 to 3) --- {% endcomment %}
+    {% for i in (1..3) %}
+        {% assign image_key = "image_" | append: i %}
+        {% assign image = block.settings[image_key] %}
+
+        {% assign link_key = "image_" | append: i | append: "_link" %}
+        {% assign link = block.settings[link_key] %}
+
+        {% assign title_key = "image_" | append: i | append: "_title" %}
+        {% assign title = block.settings[title_key] %}
+
+        {% assign text_key = "image_" | append: i | append: "_text" %}
+        {% assign text = block.settings[text_key] %}
+
+        {% if image != blank %}
+        <a class="custom_menu_image_item mega_menu___column__box {% if img_1 != blank and img_2 == blank and img_3 == blank %}only_one_image{% endif %}" href="{{ link }}">
+            <div class="custom_menu_image_item-image">
+                {% render 'lx-liquid-image', image: image %}
+            </div>
+            {% if title != blank %}
+            <div class="custom_menu_image_item_info">
+                <h3 class="custom_menu_image_title">{{ title }}</h3>
+                {% if text != blank %}
+                    <p class="custom_menu_image_text">{{ text }}</p>
+                {% endif %}
+            </div>
+        {% endif %}
+        </a>
+        {% endif %}
+    {% endfor %}
+
+    {% comment %} --- PRODUCTS LOOP (INCREASED TO 5) --- {% endcomment %}
+    {% for i in (1..5) %}
+        {% assign product_key = "product_" | append: i %}
+        {% assign product_item = block.settings[product_key] %}
+        
+        {% if product_item != blank %}
+            <div class="custom_menu_product_item mega_menu___column__box">
+                      {% render 'card-product-color-swatches',
+                      show_swatches: true,
+                      swatch_limit: 3,
+                      card_product: product_item,
+                      media_aspect_ratio: section.settings.image_ratio,
+                      image_shape: section.settings.image_shape,
+                      lazy_load: false,
+                      show_secondary_image: section.settings.show_secondary_image,
+                      show_vendor: section.settings.show_vendor,
+                      show_rating: section.settings.show_rating,
+                      section_id: section.id,
+                      quick_add: section.settings.quick_add
+                    %}
+            </div>
+        {% endif %}
+    {% endfor %}
+
+    {% for i in (1..5) %}
+        {% assign article_key = "article_" | append: i %}
+        {% assign article_item = block.settings[article_key] %}
+
+        {% if article_item != blank %}
+            <div class="custom_menu_article_item mega_menu___column__box">
+                {%- render 'article-card',
+                    article: article_item,
+                    media_height: block.settings.image_height,
+                    media_aspect_ratio: article_item.image.aspect_ratio,
+                    show_image: block.settings.show_image,
+                    show_date: block.settings.show_date,
+                    show_author: block.settings.show_author,
+                    show_excerpt: true
+                -%}
+            </div>
+        {% endif %}
+    {% endfor %}
+
+
+<div class="mobileMega-block">
+{% if block.settings.heading != blank %}
+<div class="mobileMega-block-heading">{{ block.settings.heading }}</div>
+{% endif %}
+{% render 'images-grid', block: block %}
+</div>
+
+
+  </div>
+</div>

@@ -1,0 +1,566 @@
+
+
+{% schema %}
+{
+  "name": "Reviews Slider",
+  "settings": [
+     {
+      "type": "header",
+      "content": "Paddding Heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Bottom",
+      "default": 0
+    },
+        {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Top Mobile",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Bottom Mobile",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#EBE8E3"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Customer reviews"
+    },
+    {
+      "type": "text",
+      "id": "trust_text",
+      "label": "Trust Label",
+      "default": "Trustpilot"
+    },
+    {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Rating Text",
+      "default": "4.8 stars | 200+ reviews"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable Autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 2000,
+      "max": 8000,
+      "step": 500,
+      "unit": "ms",
+      "label": "Autoplay Speed",
+      "default": 4000
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "date",
+          "label": "Date",
+          "default": "Oct, 2025"
+        },
+        {
+        "type": "image_picker",
+        "id": "stars_image",
+        "label": "Stars Image"
+      },
+        {
+          "type": "text",
+          "id": "headline",
+          "label": "Review Headline",
+          "default": "Minimal, elegant, and versatile."
+        },
+        {
+          "type": "textarea",
+          "id": "content",
+          "label": "Review Content",
+          "default": "The quality is exceptional — soft, warm, and beautifully made. I've never worn anything this comfortable."
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author Name",
+          "default": "Lorem Ipsum"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reviews Slider",
+      "blocks": [
+        { "type": "review" },
+        { "type": "review" },
+        { "type": "review" },
+        { "type": "review" }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+#shopify-section-{{ section.id }} .rev-section {
+background-color: {{ section.settings.bg_color }};
+overflow: hidden; /* Safety wrapper */
+}
+
+#shopify-section-{{ section.id }} .rev-container {
+display: flex;
+gap: 0; 
+}
+
+#shopify-section-{{ section.id }} .rev-left {
+  width: 22%;
+flex-shrink: 0;
+padding-inline: 40px;
+display: flex;
+flex-direction: column;
+justify-content: center;
+box-sizing: border-box;
+justify-content: center;
+align-items: center;
+}
+
+#shopify-section-{{ section.id }} .rev-heading {
+font-family: Neue Haas Grotesk Display Pro;
+font-weight: 500;
+font-style: 55 Roman;
+font-size: 32px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+color:#3C3C3C;
+}
+
+#shopify-section-{{ section.id }} .rev-right {
+width: 78%;
+position: relative;
+overflow: hidden; /* THIS IS THE FIX: Keeps slider inside the 70% box */
+min-width: 0;     /* Flexbox safety fix */
+}
+
+/* Swiper Container */
+#shopify-section-{{ section.id }} .swiper-container-{{ section.id }} {
+width: 100%;
+height: 100%;
+overflow: visible; /* Allows cards to overflow rightwards off screen if needed */
+}
+
+/* Review Card Styling */
+#shopify-section-{{ section.id }} .swiper-slide {
+width: 350px;
+height: 300px;
+background: #F8F6F3;
+border-radius: 8px;
+padding: 30px;
+box-sizing: border-box;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+transition: transform 0.3s;
+border: 1px solid #D8CFC4;
+}
+
+/* Trustpilot Mockup */
+#shopify-section-{{ section.id }} .rev-trust-wrap {
+display: flex;
+align-items: center;
+gap: 8px;
+margin-bottom: 8px;
+flex-direction: column;
+}
+
+#shopify-section-{{ section.id }} .rev-star-icon {
+width: 20px;
+height: 20px;
+fill: #00b67a;
+}
+
+#shopify-section-{{ section.id }} .rev-trust-text {
+font-weight: 600;
+font-size: 16px;
+}
+
+#shopify-section-{{ section.id }} .rev-rating-details {
+font-weight: 500;
+font-style: Medium;
+font-size: 14px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+text-decoration: underline;
+text-decoration-style: solid;
+text-decoration-offset: 0%;
+text-decoration-thickness: 0%;
+text-decoration-skip-ink: auto;
+color: #545453;
+}
+
+/* Navigation Buttons */
+#shopify-section-{{ section.id }} .rev-nav-wrapper {
+display: flex;
+gap: 7px;
+margin-top: 10px;
+}
+
+#shopify-section-{{ section.id }} .rev-nav-btn {
+width: 40px;
+height: 20px;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: opacity 0.3s;
+}
+
+#shopify-section-{{ section.id }} .rev-nav-btn:hover {
+opacity: 0.6;
+}
+
+#shopify-section-{{ section.id }} .rev-card-top {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-block: 10px;
+}
+
+#shopify-section-{{ section.id }} .rev-stars-row {
+display: flex;
+gap: 2px;
+}
+
+#shopify-section-{{ section.id }} .rev-card-date {
+font-family: Helvetica;
+font-weight: 400;
+font-style: Regular;
+font-size: 12px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+color: #000000;
+}
+
+#shopify-section-{{ section.id }} .rev-card-headline {
+font-family: Neue Haas Grotesk Display Pro;
+font-weight: 500;
+font-style: 55 Roman;
+font-size: 18px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+color: #000000;
+}
+
+#shopify-section-{{ section.id }} .rev-card-content {
+font-family: Lato;
+font-weight: 400;
+font-style: Regular;
+font-size: 14px;
+leading-trim: NONE;
+line-height: 140%;
+letter-spacing: 0%;
+color: #000000;
+}
+
+#shopify-section-{{ section.id }} .rev-card-author {
+font-family: Lato;
+font-weight: 500;
+font-style: Medium;
+font-size: 14px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+color: #000000;
+}
+.rev-stars-image {
+width: auto;
+height: 20px;
+display: block;
+}
+
+#shopify-section-{{ section.id }} .rev-right-wrapper .rev-right-slide:nth-child(even) {
+    background: transparent !important;
+}
+
+.rev-nav-wrapper._desktop {
+    display: flex !important;
+}
+.rev-nav-wrapper._mobile {
+    display: none !important;
+}
+
+.rev-nav-btn {
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.rev-nav-btn.swiper-button-disabled {
+  opacity: 0.5;           /* Change to 0.3 if you want it slightly visible instead of hidden */
+  pointer-events: none; /* Prevents clicking */
+  cursor: not-allowed !important;
+}
+@media screen and (max-width: 900px) {
+  #shopify-section-{{ section.id }} .rev-trust-wrap {
+    align-items: end;
+
+  }
+  .rev-nav-wrapper._desktop {
+    display: none !important;
+}
+ #shopify-section-{{ section.id }} .rev-nav-wrapper._mobile {
+    display: flex !important;
+    margin-top: 25px;
+    justify-content: center;
+}
+
+#shopify-section-{{ section.id }} .rev-heading {
+  font-size: 24px;
+}
+  #shopify-section-{{ section.id }} .rev-left {
+    width: 100%;
+    padding: 0;
+    margin-bottom: 30px;
+    align-items: flex-end;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+#shopify-section-{{ section.id }} .rev-container {
+    flex-direction: column;
+    padding-inline: 10px;
+}
+  #shopify-section-{{ section.id }} .rev-right {
+    width: 100%;
+    overflow: visible; 
+  }
+
+  #shopify-section-{{ section.id }} .swiper-slide {
+    width: 85vw;
+  }
+}
+</style>
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+  .section-{{ section.id }}-title{
+    text-align: {{section.settings.title-align}};
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+<div class="rev-section section-{{ section.id }}-padding">
+  <div class="rev-container">
+    <div class="rev-left">
+      <h2 class="rev-heading">{{ section.settings.heading }}</h2>
+      <div class="rev-trust-wrap">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="96"
+          height="24"
+          viewBox="0 0 96 24"
+          fill="none"
+        >
+          <g clip-path="url(#clip0_288_438)">
+            <path
+              d="M25.2288 8.3562H34.9491V10.1698H31.1271V20.3647H29.0254V10.1698H25.2203V8.3562H25.2288ZM34.5339 11.6698H36.3305V13.3477H36.3644C36.4237 13.1104 36.5339 12.8816 36.6949 12.6613C36.8559 12.4409 37.0508 12.2291 37.2797 12.0511C37.5085 11.8647 37.7627 11.7206 38.0424 11.602C38.322 11.4918 38.6102 11.4325 38.8983 11.4325C39.1186 11.4325 39.2797 11.4409 39.3644 11.4494C39.4491 11.4579 39.5339 11.4748 39.6271 11.4833V13.3308C39.4915 13.3054 39.3559 13.2884 39.2119 13.2715C39.0678 13.2545 38.9322 13.246 38.7966 13.246C38.4746 13.246 38.1695 13.3138 37.8814 13.4409C37.5932 13.5681 37.3475 13.763 37.1356 14.0087C36.9237 14.263 36.7542 14.5681 36.6271 14.9409C36.5 15.3138 36.4407 15.7376 36.4407 16.2206V20.3562H34.5254V11.6698H34.5339ZM48.4322 20.3647H46.5508V19.1528H46.5169C46.2797 19.5935 45.9322 19.9409 45.4661 20.2037C45 20.4664 44.5254 20.602 44.0424 20.602C42.8983 20.602 42.0678 20.3223 41.5593 19.7545C41.0508 19.1867 40.7966 18.3308 40.7966 17.1867V11.6698H42.7119V17.0003C42.7119 17.763 42.8559 18.3054 43.1525 18.6189C43.4407 18.9325 43.8559 19.0935 44.3814 19.0935C44.7881 19.0935 45.1186 19.0342 45.3898 18.907C45.661 18.7799 45.8814 18.6189 46.0424 18.407C46.2119 18.2037 46.3305 17.9494 46.4068 17.6613C46.483 17.3731 46.5169 17.0596 46.5169 16.7206V11.6782H48.4322V20.3647ZM51.6949 17.5765C51.7542 18.1359 51.9661 18.5257 52.3305 18.7545C52.7034 18.9748 53.1441 19.0935 53.661 19.0935C53.839 19.0935 54.0424 19.0765 54.2712 19.0511C54.5 19.0257 54.7203 18.9664 54.9152 18.8901C55.1186 18.8138 55.2797 18.6952 55.4153 18.5426C55.5424 18.3901 55.6017 18.1952 55.5932 17.9494C55.5847 17.7037 55.4915 17.5003 55.322 17.3477C55.1525 17.1867 54.9407 17.0681 54.678 16.9664C54.4153 16.8732 54.1186 16.7884 53.7797 16.7206C53.4407 16.6528 53.1017 16.5765 52.7542 16.5003C52.3983 16.424 52.0508 16.3223 51.7203 16.2121C51.3898 16.102 51.0932 15.9494 50.8305 15.7545C50.5678 15.5681 50.3559 15.3223 50.2034 15.0257C50.0424 14.7291 49.9661 14.3647 49.9661 13.924C49.9661 13.4494 50.0847 13.0596 50.3136 12.7376C50.5424 12.4155 50.839 12.1613 51.1864 11.9664C51.5424 11.7715 51.9322 11.6359 52.3644 11.5511C52.7966 11.4748 53.2119 11.4325 53.6017 11.4325C54.0508 11.4325 54.483 11.4833 54.8898 11.5765C55.2966 11.6698 55.6695 11.8223 56 12.0426C56.3305 12.2545 56.6017 12.5342 56.822 12.8731C57.0424 13.2121 57.178 13.6274 57.2373 14.1104H55.2373C55.1441 13.6528 54.9407 13.3393 54.6102 13.1867C54.2797 13.0257 53.8983 12.9494 53.4746 12.9494C53.339 12.9494 53.178 12.9579 52.9915 12.9833C52.8051 13.0087 52.6356 13.0511 52.4661 13.1104C52.3051 13.1698 52.1695 13.263 52.0508 13.3816C51.9407 13.5003 51.8814 13.6528 51.8814 13.8477C51.8814 14.085 51.9661 14.2715 52.1271 14.4155C52.2881 14.5596 52.5 14.6782 52.7627 14.7799C53.0254 14.8731 53.322 14.9579 53.661 15.0257C54 15.0935 54.3475 15.1698 54.7034 15.246C55.0508 15.3223 55.3898 15.424 55.7288 15.5342C56.0678 15.6443 56.3644 15.7969 56.6271 15.9918C56.8898 16.1867 57.1017 16.424 57.2627 16.7121C57.4237 17.0003 57.5085 17.3647 57.5085 17.7884C57.5085 18.3054 57.3898 18.7376 57.1525 19.102C56.9153 19.4579 56.6102 19.7545 56.2373 19.9748C55.8644 20.1952 55.4407 20.3647 54.983 20.4664C54.5254 20.5681 54.0678 20.6189 53.6186 20.6189C53.0678 20.6189 52.5593 20.5596 52.0932 20.4325C51.6271 20.3054 51.2203 20.1189 50.8814 19.8731C50.5424 19.6189 50.2712 19.3054 50.0763 18.9325C49.8814 18.5596 49.7797 18.1104 49.7627 17.5935H51.6949V17.5765ZM58.0169 11.6698H59.4661V9.05959H61.3814V11.6698H63.1102V13.102H61.3814V17.746C61.3814 17.9494 61.3898 18.1189 61.4068 18.2715C61.4237 18.4155 61.4661 18.5426 61.5254 18.6443C61.5847 18.746 61.678 18.8223 61.8051 18.8732C61.9322 18.924 62.0932 18.9494 62.3136 18.9494C62.4491 18.9494 62.5847 18.9494 62.7203 18.9409C62.8559 18.9325 62.9915 18.9155 63.1271 18.8816V20.3647C62.9153 20.3901 62.7034 20.407 62.5085 20.4325C62.3051 20.4579 62.1017 20.4664 61.8898 20.4664C61.3814 20.4664 60.9746 20.4155 60.6695 20.3223C60.3644 20.2291 60.1186 20.085 59.9492 19.8986C59.7712 19.7121 59.661 19.4833 59.5932 19.2037C59.5339 18.924 59.4915 18.602 59.483 18.246V13.1189H58.0339V11.6698H58.0169ZM64.4661 11.6698H66.2797V12.8477H66.3136C66.5847 12.3393 66.9576 11.9833 67.4407 11.763C67.9237 11.5426 68.4407 11.4325 69.0085 11.4325C69.6949 11.4325 70.2881 11.5511 70.7966 11.7969C71.3051 12.0342 71.7288 12.3647 72.0678 12.7884C72.4068 13.2121 72.6525 13.7037 72.822 14.263C72.9915 14.8223 73.0763 15.424 73.0763 16.0596C73.0763 16.6443 73 17.2121 72.8475 17.7545C72.6949 18.3054 72.4661 18.7884 72.161 19.2121C71.8559 19.6359 71.4661 19.9664 70.9915 20.2206C70.5169 20.4748 69.9661 20.602 69.322 20.602C69.0424 20.602 68.7627 20.5765 68.483 20.5257C68.2034 20.4748 67.9322 20.3901 67.678 20.2799C67.4237 20.1698 67.178 20.0257 66.9661 19.8477C66.7458 19.6698 66.5678 19.4664 66.4152 19.2376H66.3814V23.5765H64.4661V11.6698ZM71.161 16.0257C71.161 15.6359 71.1102 15.2545 71.0085 14.8816C70.9068 14.5087 70.7542 14.1867 70.5508 13.8986C70.3475 13.6104 70.0932 13.3816 69.7966 13.2121C69.4915 13.0426 69.1441 12.9494 68.7542 12.9494C67.9491 12.9494 67.339 13.2291 66.9322 13.7884C66.5254 14.3477 66.322 15.0935 66.322 16.0257C66.322 16.4664 66.3729 16.8732 66.483 17.246C66.5932 17.6189 66.7458 17.9409 66.9661 18.2121C67.178 18.4833 67.4322 18.6952 67.7288 18.8477C68.0254 19.0087 68.3729 19.085 68.7627 19.085C69.2034 19.085 69.5678 18.9918 69.8729 18.8138C70.178 18.6359 70.4237 18.3986 70.6186 18.1189C70.8135 17.8308 70.9576 17.5087 71.0424 17.1443C71.1186 16.7799 71.161 16.407 71.161 16.0257ZM74.5424 8.3562H76.4576V10.1698H74.5424V8.3562ZM74.5424 11.6698H76.4576V20.3647H74.5424V11.6698ZM78.1695 8.3562H80.0847V20.3647H78.1695V8.3562ZM85.9576 20.602C85.2627 20.602 84.6441 20.4833 84.1017 20.2545C83.5593 20.0257 83.1017 19.7037 82.7203 19.3054C82.3475 18.8986 82.0593 18.4155 81.8644 17.8562C81.6695 17.2969 81.5678 16.6782 81.5678 16.0087C81.5678 15.3477 81.6695 14.7376 81.8644 14.1782C82.0593 13.6189 82.3475 13.1359 82.7203 12.7291C83.0932 12.3223 83.5593 12.0087 84.1017 11.7799C84.6441 11.5511 85.2627 11.4325 85.9576 11.4325C86.6525 11.4325 87.2712 11.5511 87.8136 11.7799C88.3559 12.0087 88.8136 12.3308 89.1949 12.7291C89.5678 13.1359 89.8559 13.6189 90.0508 14.1782C90.2458 14.7376 90.3475 15.3477 90.3475 16.0087C90.3475 16.6782 90.2458 17.2969 90.0508 17.8562C89.8559 18.4155 89.5678 18.8986 89.1949 19.3054C88.822 19.7121 88.3559 20.0257 87.8136 20.2545C87.2712 20.4833 86.6525 20.602 85.9576 20.602ZM85.9576 19.085C86.3813 19.085 86.7542 18.9918 87.0678 18.8138C87.3814 18.6359 87.6356 18.3986 87.839 18.1104C88.0424 17.8223 88.1864 17.4918 88.2881 17.1274C88.3814 16.763 88.4322 16.3901 88.4322 16.0087C88.4322 15.6359 88.3814 15.2715 88.2881 14.8986C88.1949 14.5257 88.0424 14.2037 87.839 13.9155C87.6356 13.6274 87.3814 13.3986 87.0678 13.2206C86.7542 13.0426 86.3813 12.9494 85.9576 12.9494C85.5339 12.9494 85.161 13.0426 84.8475 13.2206C84.5339 13.3986 84.2797 13.6359 84.0763 13.9155C83.8729 14.2037 83.7288 14.5257 83.6271 14.8986C83.5339 15.2715 83.483 15.6359 83.483 16.0087C83.483 16.3901 83.5339 16.763 83.6271 17.1274C83.7203 17.4918 83.8729 17.8223 84.0763 18.1104C84.2797 18.3986 84.5339 18.6359 84.8475 18.8138C85.161 19.0003 85.5339 19.085 85.9576 19.085ZM90.9068 11.6698H92.3559V9.05959H94.2712V11.6698H96V13.102H94.2712V17.746C94.2712 17.9494 94.2797 18.1189 94.2966 18.2715C94.3136 18.4155 94.3559 18.5426 94.4152 18.6443C94.4746 18.746 94.5678 18.8223 94.6949 18.8732C94.822 18.924 94.983 18.9494 95.2034 18.9494C95.339 18.9494 95.4746 18.9494 95.6102 18.9409C95.7458 18.9325 95.8813 18.9155 96.0169 18.8816V20.3647C95.8051 20.3901 95.5932 20.407 95.3983 20.4325C95.1949 20.4579 94.9915 20.4664 94.7797 20.4664C94.2712 20.4664 93.8644 20.4155 93.5593 20.3223C93.2542 20.2291 93.0085 20.085 92.839 19.8986C92.661 19.7121 92.5508 19.4833 92.483 19.2037C92.4237 18.924 92.3814 18.602 92.3729 18.246V13.1189H90.9237V11.6698H90.9068Z"
+              fill="#191919"
+            />
+            <path
+              d="M22.9915 8.35593H14.2119L11.5 0L8.77966 8.35593L0 8.34746L7.11017 13.5169L4.38983 21.8644L11.5 16.7034L18.6017 21.8644L15.8898 13.5169L22.9915 8.35593Z"
+              fill="#00B67A"
+            />
+            <path
+              d="M16.5 15.4072L15.8898 13.5173L11.5 16.7038L16.5 15.4072Z"
+              fill="#005128"
+            />
+          </g>
+          <defs>
+            <clipPath id="clip0_288_438">
+              <rect width="96" height="23.5763" fill="white" />
+            </clipPath>
+          </defs>
+        </svg>
+        <p class="rev-rating-details">{{ section.settings.rating_text }}</p>
+        <div class="rev-nav-wrapper _desktop">
+          <div class="rev-nav-btn" id="prev-btn-{{ section.id }}">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="26"
+              height="12"
+              viewBox="0 0 26 12"
+              fill="none"
+            >
+              <path
+                d="M0.219669 6.05328C-0.0732231 5.76039 -0.0732231 5.28551 0.219669 4.99262L4.99264 0.219648C5.28553 -0.073245 5.76041 -0.073245 6.0533 0.219648C6.34619 0.512542 6.34619 0.987415 6.0533 1.28031L1.81066 5.52295L6.0533 9.76559C6.34619 10.0585 6.34619 10.5334 6.0533 10.8263C5.76041 11.1191 5.28553 11.1191 4.99264 10.8263L0.219669 6.05328ZM25.75 5.52295V6.27295H0.75V5.52295V4.77295H25.75V5.52295Z"
+                fill="black"
+                fill-opacity="1"
+              />
+            </svg>
+          </div>
+          <div class="rev-nav-btn" id="next-btn-{{ section.id }}">
+            <svg
+              width="26"
+              height="12"
+              viewBox="0 0 26 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M25.5303 6.05328C25.8232 5.76039 25.8232 5.28551 25.5303 4.99262L20.7574 0.219648C20.4645 -0.073245 19.9896 -0.073245 19.6967 0.219648C19.4038 0.512542 19.4038 0.987415 19.6967 1.28031L23.9393 5.52295L19.6967 9.76559C19.4038 10.0585 19.4038 10.5334 19.6967 10.8263C19.9896 11.1191 20.4645 11.1191 20.7574 10.8263L25.5303 6.05328ZM0 5.52295V6.27295H25V5.52295V4.77295H0V5.52295Z"
+                fill="black"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rev-right">
+      <div class="swiper swiper-container-{{ section.id }} rev-right-cc">
+        <div class="swiper-wrapper rev-right-wrapper">
+          {% for block in section.blocks %}
+          <div class="swiper-slide rev-right-slide" {{ block.shopify_attributes }}>
+            <div class="rev-card-top">
+              <div class="rev-stars-row">
+                {% if block.settings.stars_image != blank %}
+                <img
+                  src="{{ block.settings.stars_image | image_url }}"
+                  alt="Review stars"
+                  class="rev-stars-image"
+                />
+                {% endif %}
+              </div>
+
+              <span class="rev-card-date">{{ block.settings.date }}</span>
+            </div>
+            <div class="rev-card-headline">"{{ block.settings.headline }}"</div>
+            <div class="rev-card-content">{{ block.settings.content }}</div>
+            <div class="rev-card-author">{{ block.settings.author }}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+           <div class="rev-nav-wrapper _mobile">
+          <div class="rev-nav-btn" id="prev-btn-{{ section.id }}">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="26"
+              height="12"
+              viewBox="0 0 26 12"
+              fill="none"
+            >
+              <path
+                d="M0.219669 6.05328C-0.0732231 5.76039 -0.0732231 5.28551 0.219669 4.99262L4.99264 0.219648C5.28553 -0.073245 5.76041 -0.073245 6.0533 0.219648C6.34619 0.512542 6.34619 0.987415 6.0533 1.28031L1.81066 5.52295L6.0533 9.76559C6.34619 10.0585 6.34619 10.5334 6.0533 10.8263C5.76041 11.1191 5.28553 11.1191 4.99264 10.8263L0.219669 6.05328ZM25.75 5.52295V6.27295H0.75V5.52295V4.77295H25.75V5.52295Z"
+                fill="black"
+                fill-opacity="1"
+              />
+            </svg>
+          </div>
+          <div class="rev-nav-btn" id="next-btn-{{ section.id }}">
+            <svg
+              width="26"
+              height="12"
+              viewBox="0 0 26 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M25.5303 6.05328C25.8232 5.76039 25.8232 5.28551 25.5303 4.99262L20.7574 0.219648C20.4645 -0.073245 19.9896 -0.073245 19.6967 0.219648C19.4038 0.512542 19.4038 0.987415 19.6967 1.28031L23.9393 5.52295L19.6967 9.76559C19.4038 10.0585 19.4038 10.5334 19.6967 10.8263C19.9896 11.1191 20.4645 11.1191 20.7574 10.8263L25.5303 6.05328ZM0 5.52295V6.27295H25V5.52295V4.77295H0V5.52295Z"
+                fill="black"
+              />
+            </svg>
+          </div>
+        </div>
+  </div>
+</div>
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    new Swiper('.swiper-container-{{ section.id }}', {
+      slidesPerView: 1,  // Default: 1 slide (Matches your 100% mobile width)
+      spaceBetween: 10,
+      loop: false, 
+      {% if section.settings.autoplay %}
+      autoplay: {
+        delay: {{ section.settings.autoplay_speed }},
+        disableOnInteraction: false,
+      },
+      {% endif %}
+      navigation: {
+        nextEl: '#next-btn-{{ section.id }}',
+        prevEl: '#prev-btn-{{ section.id }}',
+      },
+      breakpoints: {
+        // Mobile (> 450px)
+        450: {
+          slidesPerView: 1.3, 
+          spaceBetween: 10
+        },
+        // Tablet (> 750px)
+        750: {
+          slidesPerView: 2,
+          spaceBetween: 10
+        },
+        // Desktop (> 990px)
+        990: {
+          slidesPerView: 3, // Matches your 25% desktop width
+          spaceBetween: 10
+        },
+           1200: {
+          slidesPerView: 4, // Matches your 25% desktop width
+          spaceBetween: 10
+        }
+      }
+    });
+  });
+</script>

@@ -1,0 +1,752 @@
+
+
+<div class="hp-hero" style="
+  padding-top: {{ section.settings.padding_top_desktop }}px;
+  padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+  background-color: {{ section.settings.background_color }};
+">
+  <div class="hp-hero__container container-x">
+    
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        
+        {%- when 'hero_split' -%}
+          <div class="hp-hero__split" {{ block.shopify_attributes }}>
+            <div class="hp-hero__split-grid">
+              <div class="hp-hero__split-content">
+                {%- if block.settings.label != blank -%}
+                  <p class="hp-hero__label">
+                    {{ block.settings.label }}
+                  </p>
+                {%- endif -%}
+                
+                {%- if block.settings.heading != blank -%}
+                  <h1 class="hp-hero__heading">
+                    {{ block.settings.heading }}
+                  </h1>
+                {%- endif -%}
+                
+                {%- if block.settings.description != blank -%}
+                  <div class="hp-hero__description">
+                    {{ block.settings.description }}
+                  </div>
+                {%- endif -%}
+                
+                {%- if block.settings.button_text != blank -%}
+                  <a 
+                    href="{{ block.settings.button_link }}" 
+                    class="button button--primary"
+                  >
+                    {{ block.settings.button_text }}
+                  </a>
+                {%- endif -%}
+              </div>
+              
+              <div class="hp-hero__split-image">
+           <div class="hp-hero__img-wrap">
+  {%- if block.settings.video != blank -%}
+    {{
+      block.settings.video
+      | video_tag:
+        autoplay: true,
+        loop: true,
+        muted: true,
+        controls: false,
+        playsinline: true,
+        class: 'hp-hero__video desktop-video-md',
+        loading: 'lazy'
+    }}
+  {%- elsif block.settings.image != blank -%}
+    <img
+      src="{{ block.settings.image | image_url }}"
+      alt="{{ block.settings.image.alt | escape }}"
+      loading="lazy"
+      width="{{ block.settings.image.width }}"
+      height="{{ block.settings.image.height }}"
+      class="hp-hero__img"
+    >
+  {%- else -%}
+    {{ 'lifestyle-1' | placeholder_svg_tag: 'hp-hero__placeholder' }}
+  {%- endif -%}
+</div>
+
+
+              </div>
+            </div>
+          </div>
+        
+        {%- when 'banner_full' -%}
+          <div class="hp-hero__banner" {{ block.shopify_attributes }}>
+           <div class="hp-hero__banner-wrap">
+ {%- if block.settings.video != blank -%}
+  {{
+    block.settings.video
+    | video_tag:
+      autoplay: true,
+      loop: true,
+      muted: true,
+      controls: false,
+      playsinline: true,
+      class: 'hp-hero__banner-video',
+      loading: 'lazy'
+  }}
+{%- elsif block.settings.image != blank -%}
+  <img
+    src="{{ block.settings.image | image_url }}"
+    alt="{{ block.settings.image.alt | escape }}"
+    loading="lazy"
+    width="{{ block.settings.image.width }}"
+    height="{{ block.settings.image.height }}"
+    class="hp-hero__banner-img"
+  >
+{%- else -%}
+  {{ 'lifestyle-2' | placeholder_svg_tag: 'hp-hero__placeholder' }}
+{%- endif -%}
+
+
+  <div class="hp-hero__banner-overlay" style="
+    background: {{ block.settings.overlay_color }};
+    opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};
+  "></div>
+</div>
+
+                  <div class="hp-hero__products" {{ block.shopify_attributes }}>
+            <div class="hp-hero__prod-grid">
+              {%- if block.settings.product_1 != blank -%}
+                {%- assign product = block.settings.product_1 -%}
+                <a href="{{ product.url }}" class="hp-hero__prod-card">
+                <div class="hp-hero__prod-img-wrap">
+  {%- assign main_image = product.featured_image -%}
+  {%- assign hover_image = product.images[1] -%}
+
+  {%- if product.variants.size > 0 and product.variants.first.image -%}
+    {%- assign hover_image = product.variants.first.image -%}
+  {%- endif -%}
+
+  <img
+    src="{{ main_image | image_url }}"
+    alt="{{ main_image.alt | escape }}"
+    loading="lazy"
+    class="hp-hero__prod-img"
+  >
+
+  {%- if hover_image -%}
+    <img
+      src="{{ hover_image | image_url }}"
+      alt="{{ hover_image.alt | escape }}"
+      loading="lazy"
+      class="hp-hero__prod-img-hover"
+    >
+  {%- endif -%}
+</div>
+<div class="hp-hero__prod-info"> <h3 class="hp-hero__prod-title" style="color: {{ block.settings.product_title_color }};"> {{ product.title }} </h3> <div class="hp-hero__prod-price" style="color: {{ block.settings.product_price_color }};"> <span class="hp-hero__prod-price-current">{{ product.price | money }}</span> {%- if product.compare_at_price > product.price -%} <span class="hp-hero__prod-price-compare">{{ product.compare_at_price | money }}</span> {%- endif -%} </div> </div>
+
+                </a>
+              {%- endif -%}
+              
+              {%- if block.settings.product_2 != blank -%}
+                {%- assign product = block.settings.product_2 -%}
+                <a href="{{ product.url }}" class="hp-hero__prod-card">
+                <div class="hp-hero__prod-img-wrap">
+  {%- assign main_image = product.featured_image -%}
+  {%- assign hover_image = product.images[1] -%}
+
+  {%- if product.variants.size > 0 and product.variants.first.image -%}
+    {%- assign hover_image = product.variants.first.image -%}
+  {%- endif -%}
+
+  <img
+    src="{{ main_image | image_url }}"
+    alt="{{ main_image.alt | escape }}"
+    loading="lazy"
+    class="hp-hero__prod-img"
+  >
+
+  {%- if hover_image -%}
+    <img
+      src="{{ hover_image | image_url }}"
+      alt="{{ hover_image.alt | escape }}"
+      loading="lazy"
+      class="hp-hero__prod-img-hover"
+    >
+  {%- endif -%}
+</div>
+<div class="hp-hero__prod-info"> <h3 class="hp-hero__prod-title" style="color: {{ block.settings.product_title_color }};"> {{ product.title }} </h3> <div class="hp-hero__prod-price" style="color: {{ block.settings.product_price_color }};"> <span class="hp-hero__prod-price-current">{{ product.price | money }}</span> {%- if product.compare_at_price > product.price -%} <span class="hp-hero__prod-price-compare">{{ product.compare_at_price | money }}</span> {%- endif -%} </div> </div>
+                </a>
+              {%- endif -%}
+            </div>
+          </div>
+          </div>
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+<style>
+.hp-hero__prod-price {
+display: flex;
+gap: 10px;
+}
+video.hp-hero__video.desktop-video-md {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.hp-hero__banner-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+span.hp-hero__prod-price-current {
+font-weight: 500;
+font-style: Medium;
+font-size: 12px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+text-transform: uppercase;
+color: #545453;
+}
+.hp-hero {
+width: 100%;
+}
+.hp-hero__products {
+padding: 5%;
+width: 50%;
+}
+.hp-hero__split-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+align-items: center;
+gap: 80px;
+}
+
+.hp-hero__split-content {
+padding: 10% 10% 10% 15%;
+}
+.hp-hero__label {
+font-family: Inter;
+font-weight: 500;
+font-size: 12px;
+line-height: 100%;
+letter-spacing: 0%;
+text-transform: uppercase;
+color: #545453;
+}
+
+.hp-hero__heading {
+font-weight: 500;
+font-style: Regular;
+font-size: 28px;
+line-height: 100%;
+letter-spacing: 2px;
+text-transform: uppercase;
+color: #545453;
+margin-top: 0px;
+}
+
+.hp-hero__description p {
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 140%;
+    letter-spacing: 0%;
+    color: #545453;
+    max-width: 400px;
+}
+.hp-hero__split-content .button--primary{
+margin-top: 30px;
+}
+
+.hp-hero__btn {
+display: inline-block;
+padding: 14px 36px;
+text-decoration: none;
+font-size: 13px;
+text-transform: uppercase;
+letter-spacing: 1px;
+transition: opacity 0.3s;
+}
+
+
+.hp-hero__split-image {
+position: relative;
+}
+
+.hp-hero__img-wrap {
+    position: relative;
+    height: 856px;
+}
+.hp-hero__img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.hp-hero__badge {
+position: absolute;
+top: 20px;
+left: 20px;
+width: 56px;
+height: 56px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 26px;
+font-weight: bold;
+}
+
+.hp-hero__caption {
+position: absolute;
+top: 50%;
+right: 30px;
+transform: translateY(-50%);
+font-size: 14px;
+line-height: 1.6;
+text-align: right;
+}
+.hp-hero__banner {
+display: flex;
+align-items: center;
+gap: 30px;
+}
+.hp-hero__banner-wrap {
+position: relative;
+width: 50%;
+height: 856px;
+margin-top: -10%;
+}
+
+.hp-hero__banner-img {
+width: 100%;
+height: 100%;
+display: block;
+object-fit: cover;
+}
+
+.hp-hero__banner-overlay {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+pointer-events: none;
+}
+
+.hp-hero__banner-content {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+text-align: center;
+z-index: 2;
+width: 85%;
+}
+
+.hp-hero__banner-label {
+font-size: 14px;
+text-transform: uppercase;
+letter-spacing: 2px;
+margin-bottom: 16px;
+}
+
+.hp-hero__banner-heading {
+  font-size: 36px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  line-height: 1.3;
+}
+
+.hp-hero__prod-grid {
+  display: flex;
+  gap: 20px;
+}
+
+.hp-hero__prod-card {
+  display: block;
+  text-decoration: none;
+  transition: transform 0.3s;
+  width: 50%;
+}
+
+.hp-hero__prod-img-wrap {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 12px;
+  height: 375px;
+}
+.hp-hero__prod-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.hp-hero__prod-info {
+  text-align: left;
+}
+
+.hp-hero__prod-title {
+font-family: Inter;
+font-weight: 500;
+font-size: 12px;
+line-height: 140%;
+letter-spacing: 0%;
+text-transform: uppercase;
+color:#545453;
+}
+
+
+.hp-hero__prod-price-compare {
+font-weight: 500;
+font-style: Medium;
+font-size: 12px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+text-transform: uppercase;
+text-decoration: line-through;
+color: #545453;
+}
+
+.hp-hero__placeholder {
+width: 100%;
+min-height: 400px;
+}
+.hp-hero__prod-img-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.hp-hero__prod-img,
+.hp-hero__prod-img-hover {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: opacity .35s ease;
+}
+
+.hp-hero__prod-img-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.hp-hero__prod-card:hover .hp-hero__prod-img-hover {
+  opacity: 1;
+}
+
+.hp-hero__prod-card:hover .hp-hero__prod-img {
+  opacity: 0;
+}
+
+@media (hover: none) {
+  .hp-hero__prod-img-hover {
+    display: none !important;
+  }
+}
+
+@media (max-width: 989px) {
+.hp-hero__img-wrap {
+    position: relative;
+    height: max-content;
+}
+  .hp-hero {
+    width: 100%;
+    border: 1px solid #00000045;
+}
+.hp-hero__prod-img-wrap {
+    width: 100%;
+    height: 250px;
+}
+.hp-hero__split-content {
+padding: 0px;
+}
+.hp-hero__banner-wrap {
+display: none;
+}
+.hp-hero {
+padding-top: {{ section.settings.padding_top_mobile }}px !important;
+padding-bottom: {{ section.settings.padding_bottom_mobile }}px !important;
+}
+
+
+.hp-hero__split-grid {
+    gap: 30px;
+    grid-template-columns: 1fr;
+}
+
+.hp-hero__heading {
+font-size: 28px;
+}
+
+.hp-hero__banner-heading {
+font-size: 24px;
+}
+
+.hp-hero__banner-img {
+min-height: 350px;
+}
+.hp-hero__caption {
+right: 20px;
+font-size: 12px;
+}
+.hp-hero__products {
+width: 100%;
+padding: 5% 0%;
+}
+}
+
+@media (max-width: 589px) {
+  .hp-hero__prod-grid {
+    display: flex;
+    gap: 18px;
+}
+.hp-hero__products {
+    width: 100%;
+    padding: 10px 0%;
+}
+.hp-hero__heading {
+font-size: 22px;
+}
+
+.hp-hero__banner-heading {
+font-size: 20px;
+}
+
+.hp-hero__badge {
+width: 44px;
+height: 44px;
+font-size: 20px;
+}
+}
+</style>
+
+{% schema %}
+{
+  "name": "Homepage Hero",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#F5F5F0"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top (Desktop)",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom (Desktop)",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top (Mobile)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom (Mobile)",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "hero_split",
+      "name": "Hero Split",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "FEATURED"
+        },
+    
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "OUR CORE PIECES"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Every piece was created to blend into your wardrobe with ease and elegance.</p>"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        },
+        {
+          "type": "color",
+          "id": "button_bg_color",
+          "label": "Button Background",
+          "default": "#8B7355"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "Button Text Color",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+  "type": "video",
+  "id": "video",
+  "label": "Upload Video (optional)",
+  "info": "If both image and video are added, the video will autoplay instead of the image."
+},
+        {
+          "type": "richtext",
+          "id": "caption",
+          "label": "Image Caption",
+          "default": "<p><strong>Ref 1.</strong> Amelia<br>Dark Chocolate<br><br>Toilet-friendly<br>With pockets<br>Longer lenght</p>"
+        },
+        {
+          "type": "color",
+          "id": "caption_color",
+          "label": "Caption Color",
+          "default": "#FFFFFF"
+        }
+      ]
+    },
+    {
+      "type": "banner_full",
+      "name": "Full Banner",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+  "type": "video",
+  "id": "video",
+  "label": "Upload Video (optional)",
+  "info": "If both image and video are added, the video will autoplay instead of the image."
+},
+        {
+          "type": "color",
+          "id": "overlay_color",
+          "label": "Overlay Color",
+          "default": "#000000"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "min": 0,
+          "max": 80,
+          "step": 5,
+          "unit": "%",
+          "label": "Overlay Opacity",
+          "default": 35
+        },
+        {
+          "type": "text",
+          "id": "banner_label",
+          "label": "Label",
+          "default": "ELSA PRESENTS:"
+        },
+        {
+          "type": "color",
+          "id": "banner_label_color",
+          "label": "Label Color",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "textarea",
+          "id": "banner_heading",
+          "label": "Heading",
+          "default": "THE JUMPSUIT THAT IS TOILET FRIENDLY"
+        },
+        {
+          "type": "color",
+          "id": "banner_heading_color",
+          "label": "Heading Color",
+          "default": "#FFFFFF"
+        },
+         {
+          "type": "product",
+          "id": "product_1",
+          "label": "Product 1"
+        },
+        {
+          "type": "product",
+          "id": "product_2",
+          "label": "Product 2"
+        },
+        {
+          "type": "color",
+          "id": "product_title_color",
+          "label": "Product Title Color",
+          "default": "#000000"
+        },
+        {
+          "type": "color",
+          "id": "product_price_color",
+          "label": "Product Price Color",
+          "default": "#000000"
+        },
+      ]
+    },
+  ],
+  "presets": [
+    {
+      "name": "Homepage Hero",
+      "blocks": [
+        {
+          "type": "hero_split"
+        },
+        {
+          "type": "banner_full"
+        },
+      ]
+    }
+  ]
+}
+{% endschema %}

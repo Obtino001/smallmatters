@@ -1,0 +1,59 @@
+{% if block.settings.enable_timer %}
+<div id="countdown-timer" style="padding:10px 0; text-align:center;">
+  <strong class="bb-ff">{{ block.settings.heading }}</strong>
+  <div id="timer-output"></div>
+</div>
+
+<style>
+#countdown-timer {
+    margin: 0px !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+strong.bb-ff {
+    color: #545453;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 100%;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+div#timer-output {
+    color: rgb(84, 84, 83);
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 100%;
+    letter-spacing: 0px;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var endDate = new Date("{{ block.settings.end_date }}").getTime();
+
+  function updateTimer() {
+    var now = new Date().getTime();
+    var distance = endDate - now;
+
+    if (distance < 0) {
+      document.getElementById("timer-output").innerHTML = "{{ block.settings.expired_text }}";
+      return;
+    }
+
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    document.getElementById("timer-output").innerHTML =
+      (days > 0 ? days + "d " : "") +
+      hours + "h " + minutes + "m " + seconds + "s";
+  }
+
+  updateTimer();
+  setInterval(updateTimer, 1000);
+});
+</script>
+{% endif %}

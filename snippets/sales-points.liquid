@@ -1,0 +1,117 @@
+<div
+  class="orange-section-main"
+  style="padding-top: {{ block.settings.padding_top }}px; padding-bottom: {{ block.settings.padding_bottom }}px;"
+>
+    <div class="sales-points-bb product-info__block-item">
+  <p class="important-pdp">Your one-step answer to a perfectly polished outfit. We re-engineered the classic jumpsuit with smart, hidden zippers.</p>
+ {% if block.settings.big-icon  != blank %}
+        <div class="selluxe-pointsbb">
+          <img
+            class="selluxe-icon-imagebb"
+            src="{{ block.settings.big-icon | image_url }}"
+            alt="icon"
+          >
+        </div>
+      {% endif %}
+      </div>
+
+  <div class="sales-points-container">
+    <div class="sales-points">
+
+      {% if block.settings.shipping_text != blank %}
+        <div class="selluxe-points">
+          <img
+            class="selluxe-icon-image"
+            src="{{ block.settings.shipping_icon_url | image_url }}"
+            alt="icon"
+          >
+          <div style="color:#212121" class="selluxe-text-container">
+            <span>{{ block.settings.shipping_text }}</span>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if block.settings.shipping_text1 != blank %}
+        <div class="selluxe-points">
+          <img
+            class="selluxe-icon-image"
+            src="{{ block.settings.shipping_icon_url1 | image_url }}"
+            alt="icon"
+          >
+          <div style="color:#212121" class="selluxe-text-container">
+            <span>{{ block.settings.shipping_text1 }}</span>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if block.settings.return_text != blank %}
+        <div class="selluxe-points">
+           <img
+            class="selluxe-icon-image"
+            src="{{ block.settings.return_icon_url | image_url }}"
+            alt="icon"
+          >
+          <div style="color:#212121" class="selluxe-text-container">
+            <span>{{ block.settings.return_text }}</span>
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+
+
+<style>
+  .selluxe-text-container p {
+    margin: 0;
+}
+.sales-points-container {
+    background: #F1F1F1;
+    padding: 20px;
+    margin-top: 20px;
+}
+.sales-points {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.selluxe-points {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.selluxe-text-container span p {
+font-weight: 500;
+font-size: 12px;
+line-height: 100%;
+letter-spacing: 1px;
+text-align: center;
+color: #545453;
+}
+.selluxe-text-container span p strong {
+font-weight: 700;
+font-size: 12px;
+line-height: 100%;
+letter-spacing: 1px;
+color: #545453;
+}
+.selluxe-points .selluxe-icon-image {
+    width: 17px !important;
+    margin-right: 10px;
+    height: 20px;
+}
+
+@media screen and (max-width: 400px) {
+.selluxe-text-container span p {
+    font-size: 10px !important;
+}
+.sales-points-container {
+    padding: 20px 10px 20px 20px;
+}
+}
+
+</style>

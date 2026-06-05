@@ -1,0 +1,142 @@
+<style>
+.WI_mobileQuickAddDrawer_main *{margin:0;}
+.WI_mobileQuickAddDrawer_main{width: 100%;height:100dvh;position: fixed;top: 0;left: 0;background-color: rgba(0,0,0,0);z-index: 999;display:none;transition: 0.2s ease-out;overflow: hidden;    align-items: end;
+justify-content: center;}
+.WI_mobileQuickAffDrawer_in {
+    max-height: 600px;
+    padding: 15px;
+    background: #EAE5DF;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    overflow-y: auto;
+    transform: translateY(100%);
+    opacity: 0;
+    transition: 0.3s ease-out;
+    backdrop-filter: blur(25px);
+    width: 100% !important;
+}
+.shOw{opacity: 1;visibility: visible;transform: translateY(0);}
+.WI_mobileQuickAffDrawer_cls{    width: 100%;
+height: auto;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+.WI_mobileQuickAffDrawer_pro{width: 100%;height: auto;margin-top: 10px;}
+wi-quickaddproduct-info{width: 100%;height: auto;}
+wi-quickaddproduct-info h5 {
+    width: 100%;
+    font-size: 16px;
+    color: #212121;
+    line-height: 14px;
+    margin-block: 5px !important;
+    text-align: left;
+    margin-top: 0;
+    line-height: 22px;
+    text-transform: capitilize;
+}
+.WI_quickAddProduct_img{display: none;}
+.WI_quickAddProduct_options {
+    display: flex;
+    height: auto;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+    margin-top: 10px;
+    gap: 5px;
+    /* margin-top: 20px; */
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    column-gap: 30px;
+}
+.WI_quickAddProduct_options input{width: 0;height: 0;
+position: absolute;
+top: 0;
+left: 0;
+opacity: 0;
+border: 0;
+
+}
+wi-quickaddproduct-info span {
+width: 100%;
+font-size: 13px;
+color: #212121;
+line-height: 12px;
+margin-bottom: 5px;
+text-align: left;
+}
+.WI_quickAddProduct_options label{
+max-width: 200px;
+height: auto;
+line-height: 14px;
+font-size: 14px;
+padding:5px;
+color: #3C3C3C;
+transition: 0.1s ease-in;
+cursor: pointer;
+}
+.WI_quickAddProduct_options input:checked + label {
+    color: #3C3C3C;
+    border-bottom: 1px solid #3C3C3C;
+}
+.WI_quickAddProduct_options input:disabled + label{opacity: 0.5;pointer-events: none;}
+.quickATC {
+    width: 100%;
+    height: 50px;
+    background-color: #3C3C3C;
+    color: #fff;
+    border: 0;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+}
+.quickATC:disabled{opacity: 0.4;pointer-events: none;}
+.WI_quickAddProduct_form form{display: flex;}
+
+a.WI_moreOptions_proInfo_img img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+display: flex;
+}
+a.WI_moreOptions_proInfo_img {
+width: 25%;
+height: auto;
+overflow: hidden;
+}
+.WI_mobileQuickAffDrawer_cls h3 {
+    color: #3C3C3C;
+}
+.WI_quickAddProduct_title {
+width: 100%;
+height: auto;
+display: flex;
+justify-content: flex-start;
+gap: 15px;
+}
+</style>
+
+<div
+  class="WI_mobileQuickAddDrawer_main"
+  style="display: none; background-color: rgba(0,0, 0, 0.2);"
+>
+  <div class="WI_mobileQuickAffDrawer_in">
+    <div class="WI_mobileQuickAffDrawer_cls">
+      <h3>Choose Sizes</h3>
+      <div id="WI_mQD_cls">
+        <svg
+          class="icon--root icon--cross--small"
+          width="16"
+          height="16"
+          viewBox="0 0 11 11"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M10.48 1.796 9.473.789 5.48 4.78 1.488.79.48 1.796l3.993 3.993L.48 9.78l1.008 1.008L5.48 6.796l3.993 3.993L10.48 9.78 6.488 5.79z" fill="#3C3C3C" fill-rule="nonzero"></path>
+        </svg>
+      </div>
+    </div>
+    <div class="WI_mobileQuickAffDrawer_pro" id="WI_mobileQuickAffDrawer_pro">
+      <div class="WI_quickAddProduct_img"></div>
+      <wi-quickaddproduct-info> </wi-quickaddproduct-info>
+    </div>
+  </div>
+</div>

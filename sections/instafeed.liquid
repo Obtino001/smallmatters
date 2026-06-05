@@ -1,0 +1,360 @@
+<style>
+  .insta-feed {
+    width: 100%;
+    padding-top: var(--section-pt);
+    padding-bottom: var(--section-pb);
+    background-color: var(--section-bg);
+  }
+  
+  
+  .insta-feed__header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .insta-feed__heading {
+font-weight: 500;
+font-style: Medium;
+font-size: 20px;
+line-height: 100%;
+letter-spacing: 0px;
+text-align: center;
+text-transform: uppercase;
+Color: #545453;
+  }
+  
+  .insta-feed__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-cols), 1fr);
+    gap: var(--grid-gap);
+  }
+  
+  .insta-feed__item {
+    position: relative;
+    overflow: hidden;
+    background: #f8f8f8;
+  }
+  
+  .insta-feed__link {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+  }
+  
+  .insta-feed__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+  
+  .insta-feed__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--overlay-color);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+  }
+  
+  .insta-feed__icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: scale(0.8);
+    transition: transform 0.4s ease;
+  }
+  
+  .insta-feed__icon svg {
+    width: 100%;
+    height: 100%;
+    fill: var(--icon-color);
+  }
+  
+  .insta-feed__link:hover .insta-feed__overlay {
+    opacity: var(--overlay-opacity);
+  }
+  
+  .insta-feed__link:hover .insta-feed__img {
+    transform: scale(1.05);
+  }
+  
+  .insta-feed__link:hover .insta-feed__icon {
+    transform: scale(1);
+  }
+  
+  @media (max-width: 989px) {
+    .insta-feed__overlay {
+    opacity: 0.3;
+}
+    .insta-feed {
+      padding-top: var(--section-pt-mobile);
+      padding-bottom: var(--section-pb-mobile);
+    }
+    
+    .insta-feed__grid {
+      grid-template-columns: repeat(var(--grid-cols-mobile), 1fr);
+    }
+    
+    .insta-feed__header {
+      margin-bottom: 30px;
+    }
+  }
+  
+  @media (max-width: 589px) {
+    .insta-feed__grid {
+      gap: 8px;
+    }
+    
+    .insta-feed__icon {
+      width: 40px;
+      height: 40px;
+    }
+  }
+</style>
+
+<div
+  class="insta-feed"
+  style="
+    --section-bg: {{ section.settings.background_color }};
+    --section-pt: {{ section.settings.padding_top_desktop }}px;
+    --section-pb: {{ section.settings.padding_bottom_desktop }}px;
+    --section-pt-mobile: {{ section.settings.padding_top_mobile }}px;
+    --section-pb-mobile: {{ section.settings.padding_bottom_mobile }}px;
+    --heading-color: {{ section.settings.heading_color }};
+    --grid-cols: {{ section.settings.columns_desktop }};
+    --grid-cols-mobile: {{ section.settings.columns_mobile }};
+    --grid-gap: {{ section.settings.grid_gap }}px;
+    --overlay-color: {{ section.settings.overlay_color }};
+    --overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --icon-color: {{ section.settings.icon_color }};
+  "
+>
+  <div class="insta-feed__container container-x">
+    {%- if section.settings.heading != blank -%}
+      <div class="insta-feed__header">
+        <h2 class="insta-feed__heading">{{ section.settings.heading }}</h2>
+      </div>
+    {%- endif -%}
+    
+    <div class="insta-feed__grid">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'image' -%}
+            <div class="insta-feed__item" {{ block.shopify_attributes }}>
+              {%- if block.settings.link != blank -%}
+                <a href="{{ block.settings.link }}" class="insta-feed__link" target="_blank" rel="noopener">
+              {%- else -%}
+                <div class="insta-feed__link">
+              {%- endif -%}
+                
+                {%- if block.settings.image != blank -%}
+                  <img
+                    src="{{ block.settings.image | image_url: width: 600 }}"
+                    srcset="
+                      {{ block.settings.image | image_url: width: 300 }} 300w,
+                      {{ block.settings.image | image_url: width: 400 }} 400w,
+                      {{ block.settings.image | image_url: width: 600 }} 600w
+                    "
+                    sizes="(min-width: 990px) calc(100vw / {{ section.settings.columns_desktop }}), calc(100vw / {{ section.settings.columns_mobile }})"
+                    alt="{{ block.settings.image.alt | escape }}"
+                    loading="lazy"
+                    width="{{ block.settings.image.width }}"
+                    height="{{ block.settings.image.height }}"
+                    class="insta-feed__img"
+                  >
+                {%- else -%}
+                  {{ 'lifestyle-1' | placeholder_svg_tag: 'insta-feed__img' }}
+                {%- endif -%}
+                
+                <div class="insta-feed__overlay">
+                  <div class="insta-feed__icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                  </div>
+                </div>
+                
+              {%- if block.settings.link != blank -%}
+                </a>
+              {%- else -%}
+                </div>
+              {%- endif -%}
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Instagram Feed",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "@ELSA.THEBRAND"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Grid Settings"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "Columns (Desktop)",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "columns_mobile",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Columns (Mobile)",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Grid Gap",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Hover Effect"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay Opacity",
+      "default": 40
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top (Desktop)",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom (Desktop)",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top (Mobile)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom (Mobile)",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (Instagram post URL)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram Feed",
+      "blocks": [
+        {"type": "image"},
+        {"type": "image"},
+        {"type": "image"},
+        {"type": "image"},
+        {"type": "image"},
+        {"type": "image"},
+        {"type": "image"},
+        {"type": "image"}
+      ]
+    }
+  ]
+}
+{% endschema %}

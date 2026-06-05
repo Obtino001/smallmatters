@@ -1,0 +1,70 @@
+
+
+{%- assign threshold = settings.threshold_amount | times: 100 -%}
+{%- assign cart_total = cart.total_price -%}
+{%- assign remaining_amount = threshold | minus: cart_total -%}
+
+{%- assign percent = cart_total | times: 100.0 | divided_by: threshold -%}
+{%- if percent > 100 -%}{%- assign percent = 100 -%}{%- endif -%}
+
+<div class="fsb-section">
+  <div class="fsb-container">
+    
+    {% if remaining_amount > 0 %}
+      <p class="fsb-text">
+        {{ settings.text_prefix }} 
+        <span class="fsb-money">{{ remaining_amount | money }}</span> 
+        {{ settings.text_suffix }}
+      </p>
+    {% else %}
+      <p class="fsb-text fsb-success">
+        {{ settings.text_success }}
+      </p>
+    {% endif %}
+
+    <div class="fsb-progress-track">
+      <div class="fsb-progress-fill" style="width: {{ percent }}%;"> </div>
+    </div>
+
+  </div>
+</div>
+
+{% style %}
+  .fsb-section {
+    background-color: {{ settings.bg_color }};
+    padding: 15px 0px;
+    padding-bottom: 4px;
+  }
+.fsb-section *{
+      font-family: 'Neue Haas Grotesk Display Pro';
+}
+  .fsb-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+  }
+span.fsb-money {
+    font-weight: 600;
+}
+  .fsb-text {
+    margin: 0 0 10px 0; 
+    color: {{ settings.text_color }};
+    font-size: 14px;
+    letter-spacing: 0.5px;
+  }
+
+  .fsb-progress-track {
+    width: 100%;
+    height: 6px;
+    background-color: rgba(0,0,0,0.1); /
+    border-radius: 10px;
+    margin: 0 auto; /* Centers the bar */
+    overflow: hidden;
+  }
+  .fsb-progress-fill {
+    height: 100%;
+    background-color: {{ settings.bar_color }};
+    border-radius: 10px;
+    transition: width 0.5s ease-in-out;
+  }
+{% endstyle %}

@@ -1,0 +1,283 @@
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'section-related-products.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.image_shape == 'blob' %}
+  {{ 'mask-blobs.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+.related-desktop-only{
+  padding-inline: 20px;
+}
+  @media screen and (min-width: 451px) {
+    .related-mobile-only { 
+      display: none !important; 
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+
+    .slider-desktop-only .slider__slide {
+      width: 25%;
+      max-width: 25%;
+      flex: 0 0 25%;
+    }
+  }
+
+  @media screen and (max-width: 450px) {
+    .related-desktop-only { 
+      display: none !important; 
+    }
+
+    .related-mobile-only-flex {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .collection__title.title-wrapper.related-mobile-only-flex-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0;
+    }
+
+    .mobile-4-product-slide {
+      width: 100%;
+      flex: 0 0 100%; 
+      max-width: 100%;
+      scroll-snap-align: center;
+      padding-bottom: 0;
+      box-sizing: border-box;
+    }
+
+    .mobile-product-grid-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr; 
+      gap: 10px;
+      width: 100%;
+    }
+
+    .mobile-product-grid-inner .grid__item {
+      width: 100% !important;
+      max-width: none !important;
+      min-width: 0 !important;
+      margin: 0 !important;
+      flex: none !important;
+    }
+  }
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <product-recommendations
+    class="related-products section-{{ section.id }}-padding isolate{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+    data-url="{{ routes.product_recommendations_url }}?limit={{ section.settings.products_to_show }}"
+    data-section-id="{{ section.id }}"
+    data-product-id="{{ product.id }}"
+  >
+    {% if recommendations.performed and recommendations.products_count > 0 %}
+      
+      <div class="related-desktop-only">
+        <slider-component class="slider-component-desktop">
+          <div class="collection__title title-wrapper">
+             <h2 class="related-products__heading inline-richtext {{ section.settings.heading_size }}">
+               {{ section.settings.heading }}
+             </h2>
+             {%- if recommendations.products_count > 4 -%}
+               <div class="slider-buttons">
+                  <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="Previous" aria-controls="Slider-Related-Desktop-{{ section.id }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="12" viewBox="0 0 26 12" fill="none"><path d="M0.219669 6.05328C-0.0732231 5.76039 -0.0732231 5.28551 0.219669 4.99262L4.99264 0.219648C5.28553 -0.073245 5.76041 -0.073245 6.0533 0.219648C6.34619 0.512542 6.34619 0.987415 6.0533 1.28031L1.81066 5.52295L6.0533 9.76559C6.34619 10.0585 6.34619 10.5334 6.0533 10.8263C5.76041 11.1191 5.28553 11.1191 4.99264 10.8263L0.219669 6.05328ZM25.75 5.52295V6.27295H0.75V5.52295V4.77295H25.75V5.52295Z" fill="black"/></svg>
+                  </button>
+                  <div class="slider-counter caption">
+                     <span class="slider-counter--current">1</span> / <span class="slider-counter--total">{{ recommendations.products_count | divided_by: 4.0 | ceil }}</span>
+                  </div>
+                  <button type="button" class="slider-button slider-button--next" name="next" aria-label="Next" aria-controls="Slider-Related-Desktop-{{ section.id }}">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="26" height="12" viewBox="0 0 26 12" fill="none"><path d="M25.5303 6.05328C25.8232 5.76039 25.8232 5.28551 25.5303 4.99262L20.7574 0.219648C20.4645 -0.073245 19.9896 -0.073245 19.6967 0.219648C19.4038 0.512542 19.4038 0.987415 19.6967 1.28031L23.9393 5.52295L19.6967 9.76559C19.4038 10.0585 19.4038 10.5334 19.6967 10.8263C19.9896 11.1191 20.4645 11.1191 20.7574 10.8263L25.5303 6.05328ZM0 5.52295V6.27295H25V5.52295V4.77295H0V5.52295Z" fill="black"/></svg>
+                  </button>
+               </div>
+             {%- endif -%}
+          </div>
+          
+           <ul id="Slider-Related-Desktop-{{ section.id }}" class="grid product-grid grid--4-col-desktop slider slider--desktop" role="list">
+             {%- for recommendation in recommendations.products limit: section.settings.products_to_show -%}
+               <li id="Slide-Related-Desktop-{{ section.id }}-{{ forloop.index }}" class="grid__item slider__slide">
+                  {% render 'card-product-color-swatches',
+                    card_product: recommendation,
+                    section_id: section.id, 
+                    show_swatches: true
+                  %}
+               </li>
+             {%- endfor -%}
+           </ul>
+        </slider-component>
+      </div>
+
+      <div class="related-mobile-only container-x">
+        <slider-component class="slider-mobile-gutter">
+          <div class="collection__title title-wrapper related-mobile-only-flex-title">
+             <h2 class="related-products__heading inline-richtext {{ section.settings.heading_size }}">
+               {{ section.settings.heading }}
+             </h2>
+             {%- if recommendations.products_count > 4 -%}
+               <div class="slider-buttons">
+                  <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="Previous" aria-controls="Slider-Related-Mobile-{{ section.id }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="12" viewBox="0 0 26 12" fill="none"><path d="M0.219669 6.05328C-0.0732231 5.76039 -0.0732231 5.28551 0.219669 4.99262L4.99264 0.219648C5.28553 -0.073245 5.76041 -0.073245 6.0533 0.219648C6.34619 0.512542 6.34619 0.987415 6.0533 1.28031L1.81066 5.52295L6.0533 9.76559C6.34619 10.0585 6.34619 10.5334 6.0533 10.8263C5.76041 11.1191 5.28553 11.1191 4.99264 10.8263L0.219669 6.05328ZM25.75 5.52295V6.27295H0.75V5.52295V4.77295H25.75V5.52295Z" fill="black"/></svg>
+                  </button>
+                  <div class="slider-counter caption">
+                     <span class="slider-counter--current">1</span> / <span class="slider-counter--total">{{ recommendations.products_count | divided_by: 4.0 | ceil }}</span>
+                  </div>
+                  <button type="button" class="slider-button slider-button--next" name="next" aria-label="Next" aria-controls="Slider-Related-Mobile-{{ section.id }}">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="26" height="12" viewBox="0 0 26 12" fill="none"><path d="M25.5303 6.05328C25.8232 5.76039 25.8232 5.28551 25.5303 4.99262L20.7574 0.219648C20.4645 -0.073245 19.9896 -0.073245 19.6967 0.219648C19.4038 0.512542 19.4038 0.987415 19.6967 1.28031L23.9393 5.52295L19.6967 9.76559C19.4038 10.0585 19.4038 10.5334 19.6967 10.8263C19.9896 11.1191 20.4645 11.1191 20.7574 10.8263L25.5303 6.05328ZM0 5.52295V6.27295H25V5.52295V4.77295H0V5.52295Z" fill="black"/></svg>
+                  </button>
+               </div>
+             {%- endif -%}
+          </div>
+
+           <ul id="Slider-Related-Mobile-{{ section.id }}" class="slider slider--mobile list-unstyled related-mobile-only-flex" role="list">
+             {% capture mobile_related_id %}{{ section.id }}-related-mobile{% endcapture %}
+
+             {%- for recommendation in recommendations.products limit: section.settings.products_to_show -%}
+                {%- assign mod = forloop.index0 | modulo: 4 -%}
+                
+                {%- if mod == 0 -%}
+                  <li id="Slide-Related-Mobile-{{ section.id }}-{{ forloop.index }}" class="slider__slide mobile-4-product-slide">
+                    <div class="mobile-product-grid-inner">
+                {%- endif -%}
+
+                  <div class="grid__item">
+                    {% render 'card-product-color-swatches',
+                      card_product: recommendation,
+                      section_id: mobile_related_id,
+                      show_swatches: true
+                    %}
+                  </div>
+
+                {%- if mod == 3 or forloop.last -%}
+                    </div>
+                  </li>
+                {%- endif -%}
+             {%- endfor -%}
+           </ul>
+        </slider-component>
+      </div>
+
+    {% endif %}
+  </product-recommendations>
+</div>
+
+{% schema %}
+{
+  "name": "Related Products Slider",
+  "tag": "section",
+  "class": "section related-products-section",
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "default": "You may also like",
+      "label": "Heading"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 20,
+      "step": 2,
+      "default": 4,
+      "label": "Number of products"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        { "value": "h2", "label": "Small" },
+        { "value": "h1", "label": "Medium" },
+        { "value": "h0", "label": "Large" }
+      ],
+      "default": "h1",
+      "label": "Heading size"
+    },
+    {
+      "type": "header",
+      "content": "Card Settings"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        { "value": "adapt", "label": "Adapt to image" },
+        { "value": "portrait", "label": "Portrait" },
+        { "value": "square", "label": "Square" }
+      ],
+      "default": "adapt",
+      "label": "Image ratio"
+    },
+    {
+        "type": "select",
+        "id": "image_shape",
+        "options": [
+          { "value": "default", "label": "Default" },
+          { "value": "round", "label": "Round" },
+          { "value": "arch", "label": "Arch" }
+        ],
+        "default": "default",
+        "label": "Image shape"
+      },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "default": false,
+      "label": "Show secondary image on hover"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "default": false,
+      "label": "Show vendor"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "default": false,
+      "label": "Show product rating"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "Related Products Grouped"
+    }
+  ]
+}
+{% endschema %}

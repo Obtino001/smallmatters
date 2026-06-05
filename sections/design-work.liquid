@@ -1,0 +1,336 @@
+<section class="designs-work-{{ section.id }} section-{{ section.id }}-padding color-{{ section.settings.color_scheme }}">
+  <div class="designs-work container-x">
+    <h2 class="designs-work__heading-cc">How Our Designs Work</h2>
+    <div class="designs-work__grid">
+      <div class="designs-work__image-wrap">
+        {% if section.settings.main_image != blank %}
+          <img
+            src="{{ section.settings.main_image | image_url }}"
+            alt="{{ section.settings.heading | escape }}"
+            loading="lazy"
+            class="designs-work__image"
+          >
+        {% endif %}
+      </div>
+
+      <div class="designs-work__content">
+        {% if section.settings.heading != blank %}
+          <h2 class="designs-work__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+        {% if section.settings.text != blank %}
+          <div class="designs-work__text">{{ section.settings.text }}</div>
+        {% endif %}
+        <ul class="designs-work__list">
+          {% for block in section.blocks %}
+            {% if block.type == 'benefit' %}
+              <li class="designs-work__item">
+                <strong>{{ block.settings.title }}</strong>
+                <p>{{ block.settings.description }}</p>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+        {% if section.settings.button_label != blank %}
+          <a href="{{ section.settings.button_link }}" class="button button--primary designs-work__btn">
+            {{ section.settings.button_label }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+  .section-{{ section.id }}-title{
+    text-align: {{section.settings.title-align}};
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+<style>
+.designs-work {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+.designs-work__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 4rem;
+}
+.designs-work__image-wrap {
+    position: relative;
+    width: 100%;
+    height: 853px;
+}
+.designs-work__image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+.designs-work__label {
+  position: absolute;
+  font-size: 14px;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.designs-work__label span {
+  background: rgba(0,0,0,0.4);
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+.designs-work__arrow {
+  width: 30px;
+  height: 1px;
+  background: #fff;
+}
+.designs-work__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0rem;
+    padding-inline: 10% 20%;
+}
+.designs-work__heading {
+font-weight: 500;
+font-style: Medium;
+font-size: 18px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+text-transform: uppercase;
+color: #000000;
+display: block;
+}
+.designs-work__item p {
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 12px;
+    leading-trim: NONE;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #545453;
+    margin: 0;
+}
+.designs-work__text p {
+  
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 12px;
+    leading-trim: NONE;
+    line-height: 130%;
+    letter-spacing: 0%;
+    color: #545453;
+    margin: 0;
+}
+.designs-work__item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 22px;
+  width: 6px;
+  height: 6px;
+  background-color: #000;
+}
+
+.designs-work__item {
+  position: relative;
+  padding-left: 20px;
+}
+.designs-work__list .designs-work__item:last-child {
+    border: none;
+}
+.designs-work__list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+.designs-work__item {
+border-bottom: 1px solid #0000001F;
+  padding-block: 1rem 2rem;
+}
+.designs-work__item strong {
+font-weight: 700;
+font-style: Bold;
+font-size: 12px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+color: #545453;
+}
+.designs-work__item p {
+font-weight: 500;
+font-style: Medium;
+font-size: 12px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+color: #545453;
+}
+.designs-work__btn {
+    background: #777C55;
+    margin-top: 50px;
+    height: 59px;
+}
+  h2.designs-work__heading-cc  {
+   display: none;
+  }
+@media (max-width: 749px) {
+  h2.designs-work__heading-cc  {
+    text-align: center;
+  
+font-weight: 500;
+font-style: Medium;
+font-size: 18px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+text-transform: uppercase;
+color: #000000;
+display: block;
+}
+.designs-work__heading {
+   display: none;
+}
+  .designs-work__image-wrap {
+    height: 526px;
+}
+  .designs-work__grid {
+    grid-template-columns: 1fr;
+    gap: 0rem;
+  }
+  .designs-work__image {
+    max-width: 100%;
+  }
+  .designs-work__content {
+    padding: 25px 20px;
+    background: #f3f3f3;
+}
+}
+</style>
+
+{% schema %}
+{
+  "name": "How Our Designs Work",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Paddding Heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Bottom",
+      "default": 0
+    },
+        {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Top Mobile",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Bottom Mobile",
+      "default": 0
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "background-1"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Main Image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "How Our Designs Work"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Intro Text",
+      "default": "<p>Our jumpsuits feature a thoughtfully engineered design with two invisible zippers strategically placed on each side of a slightly open back. This innovative approach allows you to:</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "label",
+      "name": "Image Label",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Label Text" },
+        { "type": "range", "id": "pos_top", "label": "Top Position (%)", "min": 0, "max": 100, "step": 1, "default": 50 },
+        { "type": "range", "id": "pos_left", "label": "Left Position (%)", "min": 0, "max": 100, "step": 1, "default": 50 }
+      ]
+    },
+    {
+      "type": "benefit",
+      "name": "Benefit Item",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "text", "id": "description", "label": "Description" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "How Our Designs Work",
+      "blocks": [
+        { "type": "label", "settings": { "text": "Elegant", "pos_top": 10, "pos_left": 20 } },
+        { "type": "benefit", "settings": { "title": "Access only what's necessary:", "description": "Simply unzip only what you need for a bathroom break." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

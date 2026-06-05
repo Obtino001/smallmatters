@@ -1,0 +1,493 @@
+{% comment %} <div class="cust-rev {{ section.settings.custom_class }}" style="
+  padding-top: {{ section.settings.padding_top_desktop }}px;
+  padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+  background-color: {{ section.settings.background_color }};
+">
+  <div class="cust-rev__container container-x">
+    
+    {%- if section.settings.heading != blank or section.settings.rating_text != blank -%}
+      <div class="cust-rev__header">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="cust-rev__heading" style="color: {{ section.settings.heading_color }};">
+            {{ section.settings.heading }}
+          </h2>
+        {%- endif -%}
+        
+        {%- if section.settings.rating_text != blank -%}
+          <div class="cust-rev__rating-wrap">
+            <a href="{{ section.settings.rating_link }}" class="cust-rev__rating-link" style="color: {{ section.settings.rating_color }};">
+              {{ section.settings.rating_text }}
+            </a>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+    
+    {%- if section.blocks.size > 0 -%}
+      <div class="cust-rev__slider-wrap swiper">
+        <div class="cust-rev__slider swiper-wrapper">
+          {%- for block in section.blocks -%}
+            <div class="cust-rev__slide swiper-slide" {{ block.shopify_attributes }}>
+              <div class="cust-rev__grid">
+
+              <div class="cust-rev__grid-cc">
+                <div class="cust-rev__content">
+                <div class="cust-rev__content-ic">
+
+                  {%- if block.settings.show_stars -%}
+                    <div class="cust-rev__stars" style="color: {{ section.settings.star_color }};"><svg xmlns="http://www.w3.org/2000/svg" width="81" height="17" viewBox="0 0 81 17" fill="none">
+<path d="M8.0198 0L10.3108 5.10989L15.6471 5.81862L11.7267 9.68544L12.7337 15.2334L8.0198 12.5133L3.30588 15.2334L4.31294 9.68544L0.392517 5.81862L5.72884 5.10989L8.0198 0Z" fill="#3C3C3C"/>
+<path d="M24.0594 0L26.3504 5.10989L31.6867 5.81862L27.7663 9.68544L28.7733 15.2334L24.0594 12.5133L19.3455 15.2334L20.3525 9.68544L16.4321 5.81862L21.7684 5.10989L24.0594 0Z" fill="#3C3C3C"/>
+<path d="M40.5 0L42.9055 5.10989L48.5086 5.81862L44.3922 9.68544L45.4496 15.2334L40.5 12.5133L35.5504 15.2334L36.6078 9.68544L32.4914 5.81862L38.0945 5.10989L40.5 0Z" fill="#3C3C3C"/>
+<path d="M56.9406 0L59.2316 5.10989L64.5679 5.81862L60.6475 9.68544L61.6545 15.2334L56.9406 12.5133L52.2267 15.2334L53.2337 9.68544L49.3133 5.81862L54.6496 5.10989L56.9406 0Z" fill="#3C3C3C"/>
+<path d="M72.9802 0L75.2712 5.10989L80.6075 5.81862L76.6871 9.68544L77.6941 15.2334L72.9802 12.5133L68.2663 15.2334L69.2733 9.68544L65.3529 5.81862L70.6892 5.10989L72.9802 0Z" fill="#3C3C3C"/>
+</svg></div>
+                  {%- endif -%}
+                  
+                  {%- if block.settings.review_title != blank -%}
+                    <h3 class="cust-rev__title">{{ block.settings.review_title }}</h3>
+                  {%- endif -%}
+                  </div>
+                  {%- if block.settings.review_text != blank -%}
+                    <div class="cust-rev__text">{{ block.settings.review_text }}</div>
+                  {%- endif -%}
+                  
+                  {%- if block.settings.author_name != blank -%}
+                    <p class="cust-rev__author">{{ block.settings.author_name }}</p>
+                  {%- endif -%}
+                </div>
+                </div>
+
+                
+                {%- if block.settings.image != blank -%}
+                  <div class="cust-rev__img-wrap">
+                    <img
+                      src="{{ block.settings.image | image_url }}"
+                      alt="{{ block.settings.image.alt | escape }}"
+                      loading="lazy"
+                      class="cust-rev__img"
+                    >
+                  </div>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+
+        {%- if section.settings.show_navigation and section.blocks.size > 1 -%}
+          <div class="cust-rev__nav">
+            <button class="cust-rev__nav-btn cust-rev__nav-btn--prev" style="
+              background-color: {{ section.settings.nav_bg_color }};
+              color: {{ section.settings.nav_icon_color }};
+              border: 1px solid #000000;
+            ">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <button class="cust-rev__nav-btn cust-rev__nav-btn--next" style="
+              background-color: {{ section.settings.nav_bg_color }};
+              color: {{ section.settings.nav_icon_color }};
+              border: 1px solid #000000;
+            ">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const sliders = document.querySelectorAll('.cust-rev__slider-wrap.swiper');
+    
+    sliders.forEach(function(slider) {
+      const swiperInstance = new Swiper(slider, {
+        loop: false,
+        spaceBetween: 30,
+        slidesPerView: 1,
+
+        autoplay: {
+          delay: 3000,
+          disableOnInteraction: false,
+        },
+
+        navigation: {
+          nextEl: slider.querySelector('.cust-rev__nav-btn--next'),
+          prevEl: slider.querySelector('.cust-rev__nav-btn--prev'),
+        },
+        breakpoints: {
+          990: {
+            slidesPerView: 2,
+            spaceBetween: 30,
+          }
+        },
+        on: {
+          init: function() {
+            const prevBtn = slider.querySelector('.cust-rev__nav-btn--prev');
+            if (prevBtn) prevBtn.style.opacity = '0';
+            if (prevBtn) prevBtn.style.pointerEvents = 'none';
+          },
+          slideChange: function() {
+            const prevBtn = slider.querySelector('.cust-rev__nav-btn--prev');
+            if (!prevBtn) return;
+            if (this.activeIndex > 0) {
+              prevBtn.style.opacity = '1';
+              prevBtn.style.pointerEvents = 'auto';
+            } else {
+              prevBtn.style.opacity = '0';
+              prevBtn.style.pointerEvents = 'none';
+            }
+          }
+        }
+      });
+    });
+  });
+</script>
+
+
+
+<style>
+
+.cust-rev__slider-wrap:not(.swiper-initialized) .cust-rev__slider {
+display: grid;
+grid-template-columns: repeat(2, 1fr); /* show 2 slides per row */
+gap: 30px;
+}
+
+@media (max-width: 768px) {
+.cust-rev__slider-wrap:not(.swiper-initialized) .cust-rev__slider {
+grid-template-columns: 1fr; /* single column on mobile */
+gap: 20px;
+}
+}
+
+.cust-rev__content {
+display: flex;
+flex-direction: column;
+gap: 20px;
+padding: 60px 40px;
+justify-content: space-between;
+height: calc(100% - 100px);
+}
+.cust-rev { width: 100%; }
+.cust-rev__header {
+text-align: center;
+margin-bottom: 50px;
+padding-block: 15px;
+border-top: 1px solid #00000045;
+border-bottom: 1px solid #00000045;
+display: flex;
+align-items: center;
+gap: 30px;
+justify-content: center;
+}
+.cust-rev__heading { 
+font-family: Inter;
+font-weight: 500;
+font-style: Medium;
+font-size: 12px;
+line-height: 100%;
+letter-spacing: 0%;
+text-align: center;
+color: #545453;
+text-transform: uppercase;
+}
+.cust-rev__rating-wrap { display: flex; justify-content: center; }
+.cust-rev__rating-link { font-family: Inter;
+font-weight: 500;
+font-style: Medium;
+font-size: 14px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+text-decoration: underline;
+text-decoration-style: solid;
+text-decoration-offset: 0%;
+text-decoration-thickness: 0%;
+text-decoration-skip-ink: auto;
+color: #545453;
+}
+.cust-rev__grid-cc {
+border: 1px solid #00000017;
+height: 100%;
+}
+.cust-rev__slider-wrap { position: relative; overflow: hidden; }
+.cust-rev__slide { display: flex; flex-direction: column; }
+.cust-rev__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; align-items: start; }
+.cust-rev__stars {
+width: 81px;
+height: 16px;
+}
+#insta-feed h2, .instafeed-shopify h2 {
+    margin-bottom: 30px;
+    display: block;
+}
+.cust-rev__title {
+font-family: Inter;
+font-weight: 500;
+font-size: 14px;
+line-height: 120%;
+letter-spacing: 1px;
+color: #545453;
+margin-top: 25px;
+}
+.cust-rev__text {
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 140%;
+    letter-spacing: 0px;
+    color: #545453;
+    max-height: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 150px;
+}
+.cust-rev__author { font-family: Inter;
+font-weight: 500;
+font-size: 14px;
+line-height: 120%;
+letter-spacing: 0%;
+color:#545453;
+}
+.cust-rev__img-wrap {
+height: 436px;
+}
+.cust-rev__img { width: 100%; height:100%; object-fit: cover; display: block; }
+.cust-rev__nav { display: flex; justify-content: center; gap: 12px; margin-top: 50px; }
+.cust-rev__nav-btn { width: 50px; height: 50px; border: 1px solid; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.cust-rev__nav-btn:hover { opacity: 0.6; }
+
+@media (max-width: 750px) {
+  .cust-rev__title {
+    font-size: 12px;
+}
+.cust-rev__author {
+    font-size: 12px;
+}
+  .cust-rev__text {
+    font-size: 12px;
+}
+.cust-rev__grid {gap: 10px; }
+.cust-rev__content { padding: 30px 20px; }
+}
+</style>
+{% schema %}
+{
+  "name": "Customer Reviews",
+  "settings": [
+       {
+    "type": "header",
+    "content": "Don't delete otherwise design may break"
+    },
+    {
+    "type": "text",
+    "id": "custom_class",
+    "label": "Custom CSS class",
+    "default": "my-default-class"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "CUSTOMER REVIEWS"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#000000"
+    },
+    {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Rating Text",
+      "default": "4.8 stars | 200 + reviews"
+    },
+    {
+      "type": "color",
+      "id": "rating_color",
+      "label": "Rating Text Color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "reviews_per_row",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Reviews Per Row (Desktop)",
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Card Styling"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star Color",
+      "default": "#FFD700"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Review Title Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Review Text Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "author_color",
+      "label": "Author Name Color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "label": "Show Navigation Arrows",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "nav_bg_color",
+      "label": "Navigation Button Background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "nav_icon_color",
+      "label": "Navigation Icon Color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top (Desktop)",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom (Desktop)",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top (Mobile)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom (Mobile)",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_stars",
+          "label": "Show Stars",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "review_title",
+          "label": "Review Title",
+          "default": "Effortless Functionality"
+        },
+        {
+          "type": "textarea",
+          "id": "review_text",
+          "label": "Review Text",
+          "default": "Lorem ipsum dolor sit amet consectetur. Ut volutpat aenean lectus quam interdum nunc. Eros vestibulum sit facilisi ultrices."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Review Image"
+        },
+        {
+          "type": "text",
+          "id": "author_name",
+          "label": "Author Name",
+          "default": "Satham J."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Customer Reviews",
+      "blocks": [
+        {
+          "type": "review"
+        },
+        {
+          "type": "review"
+        },
+        {
+          "type": "review"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %} {% endcomment %}

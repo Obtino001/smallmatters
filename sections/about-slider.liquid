@@ -1,0 +1,542 @@
+{% schema %}
+{
+  "name": "About Us Slider",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Paddding Heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Paddding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Paddding Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Paddding Top Mobile",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Paddding Bottom Mobile",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#F2F0EB"
+    },
+    {
+      "type": "text",
+      "id": "main_title",
+      "label": "Main Heading",
+      "default": "About us"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 20,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading Font Size",
+      "default": 42
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#3C3C3C"
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 1000,
+      "max": 9000,
+      "step": 500,
+      "unit": "ms",
+      "label": "Autoplay Speed",
+      "default": 3000
+    },
+    {
+      "type": "header",
+      "content": "Navigation Buttons"
+    },
+    {
+      "type": "select",
+      "id": "nav_desktop",
+      "label": "Buttons Visibility (Desktop)",
+      "options": [
+        { "value": "both", "label": "Both Prev & Next" },
+        { "value": "next_only", "label": "Next Only" },
+        { "value": "prev_only", "label": "Prev Only" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "next_only"
+    },
+    {
+      "type": "select",
+      "id": "nav_mobile",
+      "label": "Buttons Visibility (Mobile)",
+      "options": [
+        { "value": "both", "label": "Both Prev & Next" },
+        { "value": "next_only", "label": "Next Only" },
+        { "value": "prev_only", "label": "Prev Only" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "none"
+    },
+    
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Our story"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Description"
+        },
+        {
+          "type": "text",
+          "id": "btn_label",
+          "label": "Button Label",
+          "default": "Discover Now"
+        },
+        {
+          "type": "url",
+          "id": "btn_link",
+          "label": "Button Link"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_grayscale",
+          "label": "Enable grayscale image",
+          "default": false
+        },
+        
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Us Slider",
+      "blocks": [
+        { "type": "slide" },
+        { "type": "slide" },
+        { "type": "slide" }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  #shopify-section-{{ section.id }} .abt-swiper-section {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .abt-container {
+    display: flex;
+    gap: 80px; /* Remove gap to handle percentage widths precisely */
+  }
+
+  #shopify-section-{{ section.id }} .abt-left {
+    width: 20%;
+    flex-shrink: 0;
+    padding-inline: 20px 40px;
+    box-sizing: border-box;
+  }
+
+  #shopify-section-{{ section.id }} .abt-main-title {
+    font-size: {{ section.settings.title_size }}px;
+    font-family: Neue Haas Grotesk Display Pro;
+    font-weight: 500;
+    font-style: 55 Roman;
+    font-size: 32px;
+    leading-trim: NONE;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color:#3C3C3C;
+  }
+
+  /* --- RIGHT COLUMN (70%) --- */
+  #shopify-section-{{ section.id }} .abt-right {
+    width: 80%; /* EXACT 70% WIDTH */
+    position: relative;
+    overflow: hidden; /* THIS FIXES THE OVERLAP ISSUE */
+    min-width: 0;     /* Fixes flexbox calculation error */
+  }
+
+  /* Swiper Classes */
+  #shopify-section-{{ section.id }} .swiper-container-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    overflow: visible; 
+  }
+
+  #shopify-section-{{ section.id }} .swiper-slide {
+    width: 400px; /* Slightly smaller card to fit 70% width better */
+    height: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #shopify-section-{{ section.id }} .swiper-slide-active,
+  #shopify-section-{{ section.id }} .swiper-slide-next, 
+  #shopify-section-{{ section.id }} .swiper-slide-next + .swiper-slide {
+    opacity: 1;
+  }
+
+  /* Card Styles */
+  #shopify-section-{{ section.id }} .abt-card-img-wrap {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    {% comment %} margin-bottom: 25px; {% endcomment %}
+    background-color: #ddd;
+    position: relative;
+  }
+
+  #shopify-section-{{ section.id }} .abt-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #shopify-section-{{ section.id }} .abt-card-content {
+    padding-right: 20px;
+  }
+
+  #shopify-section-{{ section.id }} .abt-card-title {
+    font-family: Neue Haas Grotesk Display Pro;
+    font-weight: 500;
+    font-style: 55 Roman;
+    font-size: 18px;
+    leading-trim: NONE;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #3c3c3c;
+  }
+  #shopify-section-{{ section.id }} .abt-card-text p{
+    margin: 0;
+  }
+  #shopify-section-{{ section.id }} .abt-card-text {
+    font-family: Lato;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 14px;
+    leading-trim: NONE;
+    line-height: 140%;
+    letter-spacing: 0%;
+    color: #3c3c3c;
+  }
+
+  #shopify-section-{{ section.id }} .abt-card-btn {
+    display: inline-block;
+    padding: 18px 24px;
+    background-color: #3C3C3C;
+    color: #fff;
+    text-decoration: none;
+    font-family: Lato;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 12px;
+    leading-trim: NONE;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid #3C3C3C;
+    transition: all 0.3s;
+    margin-top: 20px;
+  }
+
+  #shopify-section-{{ section.id }} .abt-card-btn:hover {
+    background-color: transparent;
+    color: #3C3C3C;
+  }
+
+  /* Navigation Buttons Shared Styles */
+  #shopify-section-{{ section.id }} .abt-next-btn,
+  #shopify-section-{{ section.id }} .abt-prev-btn {
+    position: absolute;
+    top: 35%;
+    z-index: 2; /* Increased Z-index */
+    width: 50px;
+    height: 50px;
+    background: #EAE5DF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: #3C3C3C;
+    transition: all 0.3s ease;
+  }
+/* Make the wrapper act as a block and remove default link styling */
+#shopify-section-{{ section.id }} .abt-slide-link-wrapper {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* --- ZOOM EFFECT --- */
+#shopify-section-{{ section.id }} .abt-card-img-wrap {
+  overflow: hidden; /* Important to clip the zoomed image */
+}
+
+#shopify-section-{{ section.id }} .abt-card-img {
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); /* Smooth zoom transition */
+}
+
+/* Zoom on Hover of the slide */
+#shopify-section-{{ section.id }} .swiper-slide:hover .abt-card-img {
+  transform: scale(1.05);
+}
+
+/* Optional: Slight fade to text on hover to show interactivity */
+#shopify-section-{{ section.id }} .abt-slide-link-wrapper:hover .abt-card-title {
+  opacity: 0.8;
+}
+
+/* Ensure the button looks active when the whole slide is hovered */
+#shopify-section-{{ section.id }} .abt-slide-link-wrapper:hover .abt-card-btn {
+  background-color: transparent;
+  color: #3C3C3C;
+}
+  #shopify-section-{{ section.id }} .abt-next-btn {
+    right: 20px;
+  }
+  
+  #shopify-section-{{ section.id }} .abt-prev-btn {
+    left: 20px; /* Positioned to the left of Next button */
+  }
+
+  /* Mobile positioning for prev button if needed, or keeping them grouped */
+  
+  #shopify-section-{{ section.id }} .abt-next-btn:hover,
+  #shopify-section-{{ section.id }} .abt-prev-btn:hover {
+    background: #3c3c3c;
+  }
+
+  #shopify-section-{{ section.id }} .abt-next-btn:hover svg path,
+  #shopify-section-{{ section.id }} .abt-prev-btn:hover svg path {
+    fill: #fff;
+  }
+
+  #shopify-section-{{ section.id }} .abt-prev-btn svg {
+    transform: rotate(180deg); /* Flip the arrow for Prev */
+  }
+
+  .abt-card-img-wrap.grayscale-enabled img {
+    filter: grayscale(100%);
+    transition: filter 0.3s ease; /* Optional: smooth transition */
+  }
+  
+  /* --- NAVIGATION VISIBILITY LOGIC --- */
+  
+  /* Desktop Logic (min-width 901px) */
+  @media screen and (min-width: 901px) {
+    .nav-desktop-next_only .abt-prev-btn { display: none !important; }
+    .nav-desktop-prev_only .abt-next-btn { display: none !important; }
+    .nav-desktop-none .abt-prev-btn, 
+    .nav-desktop-none .abt-next-btn { display: none !important; }
+  }
+
+  /* Mobile Logic (max-width 900px) */
+  @media screen and (max-width: 900px) {
+    .abt-next-btn { display: flex; } /* Reset existing display none */
+    
+    .nav-mobile-next_only .abt-prev-btn { display: none !important; }
+    .nav-mobile-prev_only .abt-next-btn { display: none !important; }
+    .nav-mobile-none .abt-prev-btn, 
+    .nav-mobile-none .abt-next-btn { display: none !important; }
+    
+    /* Adjust positioning for mobile if they are visible */
+    #shopify-section-{{ section.id }} .abt-next-btn { right: 10px; }
+    #shopify-section-{{ section.id }} .abt-prev-btn { left: 10px; }
+    
+    #shopify-section-{{ section.id }} .abt-container {
+      flex-direction: column;
+      gap: 0px;
+      padding-inline: 10px;
+    }
+    #shopify-section-{{ section.id }} .abt-left {
+      width: 100%;
+      padding-inline: 0;
+      margin: 0px;
+    }
+    #shopify-section-{{ section.id }} .abt-right {
+      width: 100%;
+      overflow: visible; /* Let it breathe on mobile */
+    }
+    #shopify-section-{{ section.id }} .swiper-slide {
+      width: 85vw; 
+      opacity: 1; 
+    }
+    #shopify-section-{{ section.id }} .abt-main-title {
+      position: static;
+    }
+  }
+</style>
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+  .section-{{ section.id }}-title {
+    text-align: {{section.settings.title-align}};
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="abt-swiper-section section-{{ section.id }}-padding">
+  <div class="abt-container">
+    <div class="abt-left">
+      <h2 class="abt-main-title">{{ section.settings.main_title }}</h2>
+    </div>
+    
+    <div class="abt-right nav-desktop-{{ section.settings.nav_desktop }} nav-mobile-{{ section.settings.nav_mobile }}">
+      <div class="swiper swiper-container-{{ section.id }}">
+       <div class="swiper-wrapper">
+  {% for block in section.blocks %}
+    <div class="swiper-slide" {{ block.shopify_attributes }}>
+      {%- if block.settings.btn_link != blank -%}
+        <a href="{{ block.settings.btn_link }}" class="abt-card-link-wrapper">
+      {%- endif -%}
+
+        <div class="abt-card-img-wrap {% if block.settings.enable_grayscale %}grayscale-enabled{% endif %}">
+          {% if block.settings.image %}
+            {{ block.settings.image | image_url: width: 1200 | image_tag: class: 'abt-card-img', loading: 'lazy' }}
+          {% else %}
+            {{ 'image' | placeholder_svg_tag: 'abt-card-img' }}
+          {% endif %}
+        </div>
+        
+        <div class="abt-card-content">
+          {% if block.settings.title != blank %}
+            <h3 class="abt-card-title">{{ block.settings.title }}</h3>
+          {% endif %}
+          
+          {% if block.settings.text != blank %}
+            <div class="abt-card-text">{{ block.settings.text }}</div>
+          {% endif %}
+
+          {% if block.settings.btn_label != blank %}
+            {% comment %} Changed to span because parent is now a link {% endcomment %}
+            <span class="abt-card-btn nx-btn">
+              <span class="nx-btn-text">{{ block.settings.btn_label }}</span>
+            </span>
+          {% endif %}
+        </div>
+
+      {%- if block.settings.btn_link != blank -%}
+        </a>
+      {%- endif -%}
+    </div>
+  {% endfor %}
+</div>
+      </div>
+      
+      <div class="abt-prev-btn" id="prev-btn-{{ section.id }}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="10" viewBox="0 0 18 10" fill="none">
+          <path d="M17.4373 4.99152C17.6788 4.74999 17.6788 4.3584 17.4373 4.11688L13.5014 0.180985C13.2599 -0.0605407 12.8683 -0.0605407 12.6268 0.180985C12.3853 0.422511 12.3853 0.814102 12.6268 1.05563L16.1254 4.5542L12.6268 8.05277C12.3853 8.2943 12.3853 8.68589 12.6268 8.92741C12.8683 9.16894 13.2599 9.16894 13.5014 8.92741L17.4373 4.99152ZM0 4.5542V5.17267H17V4.5542V3.93573H0V4.5542Z" fill="#3C3C3C"/>
+        </svg>
+      </div>
+
+      <div class="abt-next-btn" id="next-btn-{{ section.id }}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="10" viewBox="0 0 18 10" fill="none">
+          <path d="M17.4373 4.99152C17.6788 4.74999 17.6788 4.3584 17.4373 4.11688L13.5014 0.180985C13.2599 -0.0605407 12.8683 -0.0605407 12.6268 0.180985C12.3853 0.422511 12.3853 0.814102 12.6268 1.05563L16.1254 4.5542L12.6268 8.05277C12.3853 8.2943 12.3853 8.68589 12.6268 8.92741C12.8683 9.16894 13.2599 9.16894 13.5014 8.92741L17.4373 4.99152ZM0 4.5542V5.17267H17V4.5542V3.93573H0V4.5542Z" fill="#3C3C3C"/>
+        </svg>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const swiperId = '.swiper-container-{{ section.id }}';
+    const nextBtnId = '#next-btn-{{ section.id }}';
+    const prevBtnId = '#prev-btn-{{ section.id }}'; // Defined ID
+    new Swiper(swiperId, {
+      slidesPerView: 1.2,
+      spaceBetween: 10,
+      loop: true,
+
+      autoplay: {
+        delay: {{ section.settings.autoplay_speed }},
+        disableOnInteraction: false,
+      },
+      navigation: {
+        nextEl: nextBtnId,
+        prevEl: prevBtnId, // Added Prev functionality
+      },
+      breakpoints: {
+        520: {
+          spaceBetween: 15,
+          slidesPerView: 1.2,
+        },
+        700: {
+          spaceBetween: 15,
+          slidesPerView: 2.2,
+        },
+        900: {
+          spaceBetween: 10,
+          slidesPerView: 2.5,
+        }
+      }
+    });
+  });
+</script>

@@ -1,0 +1,84 @@
+{%- if predictive_search.performed -%}
+  <div id="predictive-search-results">
+    <div class="WI_suggResult_con">
+      <h3 id="predictive-search-products">
+        {%- comment -%} UPDATED: Replaced static "Suggestion" with translation key {%- endcomment -%}
+        {{ 'general.search.suggestions' | t }}
+      </h3>
+      {%- if predictive_search.resources.queries.size > 0 -%}
+        <ul
+          id="predictive-search-results-queries-list"
+          class="predictive-search__results-list list-unstyled"
+          role="group"
+          aria-labelledby="predictive-search-queries"
+        >
+          {%- for query in predictive_search.resources.queries -%}
+            <li
+              id="predictive-search-option-query-{{ forloop.index }}"
+              class="predictive-search__list-item"
+              role="option"
+              aria-selected="false"
+            >
+              <a href="{{ query.url }}" class="predictive-search__item link link--text" tabindex="-1">
+                <div class="predictive-search__item-content predictive-search__item-content--centered">
+                  <p
+                    class="predictive-search__item-heading predictive-search__item-query-result"
+                    aria-label="{{ query.text }}"
+                  >
+                    {{ query.styled_text }}
+                  </p>
+                </div>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- else -%}
+      {%- endif -%}
+      {%- if predictive_search.resources.collections.size > 0 -%}
+        <ul>
+          {%- for collection in predictive_search.resources.collections -%}
+            <li>
+              <a href="{{ collection.url }}" class="predictive-search__item link link--text" tabindex="-1">
+                <div class="predictive-search__item-content predictive-search__item-content--centered">
+                  <p class="predictive-search__item-heading">{{ collection.title }}</p>
+                </div>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {% else %}
+        {%- comment -%} UPDATED: Replaced static "No collection found" with translation key {%- endcomment -%}
+        <p class="noSugg">{{ 'general.search.no_collections' | t }}</p>
+      {%- endif -%}
+    </div>
+    <h3 id="predictive-search-products">
+      {{ 'general.search.products' | t }}
+      {% if settings.BTN_check %}
+        <a href="javascript:void(0)" onclick="redirectToSearch()" id="SDP_searchBtn">{{ settings.BTN_text }}</a>
+      {% endif %}
+    </h3>
+    <div class="WI_productResult_con">
+      {%- if predictive_search.resources.products.size > 0 -%}
+        {%- for product in predictive_search.resources.products -%}
+          <div class="WI_productResult_product">
+            {% render 'card-product',
+              card_product: product,
+              media_aspect_ratio: 'square',
+              image_shape: 'default',
+              show_secondary_image: true,
+              show_vendor: false,
+              show_rating: false,
+              lazy_load: false,
+              quick_add: false,
+              section_id: section.id
+            %}
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+        {%- comment -%} UPDATED: Replaced static "No products found" with translation key {%- endcomment -%}
+        <p class="noSugg">{{ 'general.search.no_products' | t }}</p>
+      {%- endif -%}
+    </div>
+
+  </div>
+{%- endif -%}

@@ -1,0 +1,273 @@
+{% schema %}
+{
+  "name": "Store Location Map",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Left Column (Info)"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "label": "Image Overlay Opacity",
+      "default": 40
+    },
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Heading",
+      "default": "<h2>Visit Our Oslo Store</h2>"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Come feel the craftsmanship in person at our physical store in Oslo."
+    },
+    {
+      "type": "text",
+      "id": "address",
+      "label": "Address Text",
+      "default": "Address: Holmenveien 20, 0374 Oslo"
+    },
+    {
+      "type": "header",
+      "content": "Opening Hours Box"
+    },
+    {
+      "type": "text",
+      "id": "hours_title",
+      "label": "Hours Title",
+      "default": "Opening Hours:"
+    },
+    {
+      "type": "textarea",
+      "id": "hours_text",
+      "label": "Hours Details",
+      "default": "Mon-Wed: 11–16<br>Thu: 11–18<br>Sat (from Nov 22): 11–15",
+      "info": "Use <br> for line breaks"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Hours Title Color",
+      "default": "#ff6b6b"
+    },
+    {
+      "type": "header",
+      "content": "Right Column (Map)"
+    },
+    {
+      "type": "html",
+      "id": "map_embed",
+      "label": "Map Embed Code (Iframe)",
+      "default": "<iframe src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1998.675756475634!2d10.6974123!3d59.9391621!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46416dd66070624d%3A0x6239169400263667!2sHolmenveien%2020%2C%200374%20Oslo%2C%20Norway!5e0!3m2!1sen!2s!4v1700000000000!5m2!1sen!2s' width='100%' height='100%' style='border:0;' allowfullscreen='' loading='lazy' referrerpolicy='no-referrer-when-downgrade'></iframe>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Store Location Map"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+.store-loc-container {
+display: flex;
+flex-wrap: wrap;
+width: 100%;
+min-height: 500px; /* Adjust height as needed */
+}
+
+/* Left Column */
+.store-loc-info {
+width: 50%;
+position: relative;
+background-color: #1a1a1a; /* Fallback color */
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
+padding: 40px;
+color: #ffffff;
+box-sizing: border-box;
+}
+
+/* Dark Overlay on Left Column */
+.store-loc-overlay {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: #000000;
+opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+z-index: 1;
+pointer-events: none;
+display: block !important;
+}
+
+.store-loc-content {
+    position: relative;
+    z-index: 2;
+    max-width: 340px;
+}
+
+/* Heading Styles for Rich Text */
+.store-loc-title h1, 
+.store-loc-title h2, 
+.store-loc-title h3, 
+.store-loc-title p {
+font-family: Neue Haas Grotesk Display Pro;
+font-weight: 500;
+font-style: 55 Roman;
+font-size: 32px;
+line-height: 100%;
+letter-spacing: 0%;
+color: #ffffff;
+}
+
+/* Reset links in heading if used */
+.store-loc-title a {
+color: inherit;
+text-decoration: underline;
+}
+
+.store-loc-subtext {
+font-family: Lato;
+font-weight: 500;
+font-style: Medium;
+font-size: 14px;
+line-height: 140%;
+letter-spacing: 0%;
+text-align: center;
+color: #fff;
+}
+
+.store-loc-address {
+font-family: Lato;
+font-weight: 500;
+font-style: Medium;
+font-size: 14px;
+line-height: 100%;
+letter-spacing: 0%;
+text-align: center;
+color: #fff;
+}
+
+.store-hours-box {
+    padding: 25px 30px;
+    border-radius: 4px;
+    display: inline-block;
+    width: 100%;
+    max-width: 300px;
+    backdrop-filter: blur(2px);
+    background: #FFFFFF26;
+}
+
+.hours-title {
+font-family: Lato;
+font-weight: 500;
+font-style: Medium;
+font-size: 14px;
+line-height: 100%;
+letter-spacing: 0%;
+text-align: center;
+color: #fff;
+}
+.hours-details {
+    font-family: Lato;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 14px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-align: center;
+    color: #fff;
+    line-height: 140%;
+}
+.store-loc-map {
+width: 50%;
+height: auto;
+min-height: 500px;
+position: relative;
+background: #e0e0e0;
+}
+
+.store-loc-map iframe {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+border: 0;
+}
+
+/* Mobile Responsiveness */
+@media screen and (max-width: 768px) {
+.store-loc-info, 
+.store-loc-map {
+  width: 100%;
+}
+.store-loc-map {
+  height: 400px;
+  min-height: 400px;
+}
+.store-loc-title h1, 
+.store-loc-title h2 {
+  font-size: 28px;
+}
+}
+</style>
+
+<div class="store-loc-container">
+  
+  <div class="store-loc-info" style="background-image: url('{% if section.settings.bg_image %}{{ section.settings.bg_image | image_url: width: 1200 }}{% endif %}');">
+    <div class="store-loc-overlay"></div>
+    
+    <div class="store-loc-content">
+      {% if section.settings.title != blank %}
+        <div class="store-loc-title">
+          {{ section.settings.title }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.subtext != blank %}
+        <p class="store-loc-subtext">{{ section.settings.subtext }}</p>
+      {% endif %}
+
+      {% if section.settings.address != blank %}
+        <p class="store-loc-address">{{ section.settings.address }}</p>
+      {% endif %}
+
+      <div class="store-hours-box">
+        {% if section.settings.hours_title != blank %}
+          <span class="hours-title">{{ section.settings.hours_title }}</span>
+        {% endif %}
+        
+        {% if section.settings.hours_text != blank %}
+          <p class="hours-details">{{ section.settings.hours_text }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="store-loc-map">
+    {{ section.settings.map_embed }}
+  </div>
+
+</div>

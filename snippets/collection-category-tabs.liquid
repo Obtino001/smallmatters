@@ -1,0 +1,103 @@
+<div class="collection-category-tabs {{ section.settings.custom_class }}">
+
+  {% for block in section.blocks %}
+    {% assign label = block.settings.label %}
+    {% assign link = block.settings.link %}
+    {% assign enabled = block.settings.enabled %}
+    
+    {% if enabled and label != blank %}
+    
+      {% assign is_active = false %}
+      
+      {% if link.url == request.path %}
+        {% assign is_active = true %}
+      {% elsif collection.handle != blank and link.handle == collection.handle %}
+        {% assign is_active = true %}
+      {% endif %}
+
+      <a 
+        href="{{ link.url | default: '#' }}"
+        class="tab{% if is_active %} active{% endif %}"
+        aria-current="{% if is_active %}true{% else %}false{% endif %}"
+      >
+        <span class="tab__label">{{ label }}</span>
+      </a>
+
+    {% endif %}
+  {% endfor %}
+
+</div>
+
+<style>
+.collection-category-tabs {
+  display: flex;
+  align-items: center;
+  border-radius: 40px;
+  overflow: hidden;
+  background: transparent;
+}
+
+.collection-category-tabs .tab {
+    padding: 0 10px;
+    font-size: 14px;
+    color: #3c3c3c;
+    text-decoration: none;
+    position: relative;
+    gap: 12px;
+    cursor: pointer;
+    max-width: 150px;
+}
+.collection-category-tabs .tab.active {
+    color: #000000;
+    font-weight: 700;
+}
+.collection-category-tabs .tab.active {
+  color:#000000;
+}
+
+.collection-category-tabs .tab__label {
+font-family: Lato;
+font-weight: 500;
+font-style: Medium;
+font-size: 14px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+
+}
+
+@media (max-width: 786px) {
+  .collection-category-tabs{
+    display: none;
+  }
+  .collection-category-tabs-mob .collection-category-tabs{
+    display: flex;
+    width: 100%;
+    align-items: flex-start;
+    border-radius: 20px;
+  }
+  .collection-category-tabs .tab {
+    padding-block: 6px;
+    width: 100%;
+    justify-content: flex-start;
+    white-space: nowrap;
+    font-size: 12px;
+}
+.collection-category-tabs-mob .collection-category-tabs {
+    display: flex;
+    width: 100%;
+    align-items: flex-start;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    overflow-x: scroll;
+    scrollbar-width: none;
+    /* flex-direction: column; */
+}
+.collection-category-tabs-mob {
+    flex-direction: column;
+}
+  .collection-category-tabs .tab:last-child{
+    border-bottom: none;
+  }
+}
+</style>

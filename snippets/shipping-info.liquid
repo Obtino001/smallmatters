@@ -1,0 +1,66 @@
+<style>
+
+.stock-info-wrapper .status-dot {
+    display: flex;
+    background: var(--dot-color);
+    width: 8px;
+    height: 8px;
+    border-radius: 40px;
+}
+.status-text {
+    font-family: Lato;
+    font-weight: 500;
+    line-height: 140%;
+    letter-spacing: 0;
+    font-style: Medium;
+}
+.stock-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.stock-info-wrapper .status-dot {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    background: var(--dot-color);
+    border-radius: 50%;
+}
+
+/* Pulse shadow */
+.stock-info-wrapper .status-dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--dot-color);
+    animation: pulseShadow 1.4s ease-out infinite;
+    opacity: 0.7;
+}
+
+@keyframes pulseShadow {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    70% {
+        transform: scale(2.4);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(2.4);
+        opacity: 0;
+    }
+}
+  </style>
+
+  <div class="stock-info-wrapper {% if block.settings.enable_pay %}payment__icon__active{% endif %}" style="--dot-color:{{ block.settings.dot_color }};--text-color:{{ block.settings.text_color }};--text--size:{{ block.settings.size }}px;">
+    <div class="stock-box">
+        <div class="status-dot"></div>
+        {% if block.settings.text != '' %}
+            <div class="status-text">
+                {{ block.settings.text }}
+            </div>
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,24 @@
+<faq-item class="faqrs-item faq-blocks" {{ block.shopify_attributes }}>
+  <div class="faqrs-question" aria-expanded="false">
+    <h3 class="faqrs-ques">{{ block.settings.question }}</h3>
+    <span class="faqrs-icon-wrap">
+      <svg class="faqrs-icon-plus" xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9" fill="none">
+        <path d="M4.24512 0V8.5" stroke="#8E7C6B"/>
+        <path d="M8.5 4.245L0 4.24499" stroke="#8E7C6B"/>
+      </svg>
+      <svg class="faqrs-icon-minus" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 28 28" fill="#8E7C6B">
+        <path d="M5.65131 14H21.9846" stroke="#8E7C6B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </span>
+  </div>
+
+  <div class="faqrs-answer">
+    {% if block.settings.faq_content_type == 'manual' %}
+      {{ block.settings.answer }}
+    {% elsif block.settings.faq_content_type == 'product_description' %}
+      {{ product.description }}
+    {% elsif block.settings.faq_content_type == 'product_schema' %}
+      {{ product.metafields.custom.schema_content }}
+    {% endif %}
+  </div>
+</faq-item>

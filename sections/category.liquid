@@ -1,0 +1,220 @@
+{% schema %}
+{
+  "name": "Shop by Category Grid",
+  "settings": [
+     {
+      "type": "header",
+      "content": "Paddding Heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Bottom",
+      "default": 0
+    },
+        {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Top Mobile",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Bottom Mobile",
+      "default": 0
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "Shop by category"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#EFEDE8"
+    },
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category Card",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Category Name",
+          "default": "Women's"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop by Category Grid",
+      "blocks": [
+        { "type": "category", "settings": { "title": "Women's" } },
+        { "type": "category", "settings": { "title": "Men's" } },
+        { "type": "category", "settings": { "title": "Accessories & bags" } },
+        { "type": "category", "settings": { "title": "Bunadsposer" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+  .section-{{ section.id }}-title{
+    text-align: {{section.settings.title-align}};
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+<style>
+  .cat-grid-section {
+    background-color: {{ section.settings.bg_color }};
+  }
+
+
+  .cat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 Columns equal width */
+  gap: 10px; /* Tight gap */
+  width: 100%;
+  }
+
+  .cat-card {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 4.5; /* Vertical portrait shape */
+  overflow: hidden;
+  text-decoration: none;
+  background-color: #ddd; /* Placeholder color */
+  }
+
+  .cat-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+  }
+
+  /* Hover Zoom Effect */
+  .cat-card:hover .cat-card-img {
+  transform: scale(1.05);
+  }
+
+  .cat-card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2); /* Slight dark tint over entire image */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+  }
+
+  .cat-card:hover .cat-card-overlay {
+  background: rgba(0, 0, 0, 0.3); /* Darker on hover */
+  }
+
+  .cat-card-title {
+  color: #fff;
+  font-family: Lora;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 32px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-align: center;
+  }
+
+  @media screen and (max-width: 768px) {
+  .cat-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  }
+
+  h2.cat-grid-heading.title {
+  font-size: 24px;
+  text-align: center;
+  }
+  .cat-card-title{
+  font-size: 20px;
+  text-align: center;
+  }
+  }
+</style>
+
+<div class="cat-grid-section section-{{ section.id }}-padding">
+  <div class="cat-grid-container container-x">
+    
+    {% if section.settings.heading != blank %}
+      <h2 class="cat-grid-heading title">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    <div class="cat-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link }}" class="cat-card" {{ block.shopify_attributes }}>
+          {% if block.settings.image %}
+            {{ block.settings.image | image_url: width: 1600 | image_tag: class: 'cat-card-img', loading: 'lazy' }}
+          {% else %}
+            {{ 'collection-' | append: forloop.index | placeholder_svg_tag: 'cat-card-img' }}
+          {% endif %}
+          
+          <div class="cat-card-overlay">
+            <span class="cat-card-title">{{ block.settings.title }}</span>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>

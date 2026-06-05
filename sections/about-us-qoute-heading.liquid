@@ -1,0 +1,313 @@
+{% schema %}
+{
+  "name": "Why Choose Us Grid",
+  "settings": [
+     {
+      "type": "header",
+      "content": "Paddding Heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Bottom",
+      "default": 0
+    },
+        {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Top Mobile",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Bottom Mobile",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#EBE8E3"
+    },
+    {
+      "type": "header",
+      "content": "Left Side Content"
+    },
+    {
+      "type": "text",
+      "id": "main_heading",
+      "label": "Main Heading",
+      "default": "Why choose smallmatters?"
+    },
+    {
+      "type": "richtext",
+      "id": "main_text",
+      "label": "Description",
+      "default": "<p>Smallmatters began with a vision to reduce waste — using overstock materials and leftover yarn. Today, every product is made from natural fibers or repurposed materials, in limited editions.</p><p>Because luxury should feel good — for you, and for the world around you.</p>"
+    },
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature Item",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon Image (PNG/SVG)",
+          "info": "Upload a small transparent icon (approx 50x50px)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Feature Title",
+          "default": "Norwegian Design"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Feature Text",
+          "default": "Lorem ipsum dolor sit amet consectetur. Aliquam dui congue integer posuere morbi in amet nibh pretium."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Why Choose Us Grid",
+      "blocks": [
+        { "type": "feature", "settings": { "title": "Norwegian Design" } },
+        { "type": "feature", "settings": { "title": "Fast Delivery" } },
+        { "type": "feature", "settings": { "title": "Genuine Customer Service" } },
+        { "type": "feature", "settings": { "title": "Premium Quality" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+  .section-{{ section.id }}-title{
+    text-align: {{section.settings.title-align}};
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+<style>
+  .wcu-section {
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  .wcu-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 60px;
+  }
+
+  /* Left Column */
+  .wcu-left {
+    flex: 0 0 25%; /* Takes up roughly 35% of width */
+    display: flex;
+    flex-direction: column;
+    {% comment %} justify-content: center; {% endcomment %}
+  }
+
+  .wcu-heading {
+font-family: Lora;
+font-weight: 500;
+font-style: Medium;
+font-size: 32px;
+leading-trim: NONE;
+line-height: 140%;
+letter-spacing: 0%;
+color: #3c3c3c;
+  }
+
+  .wcu-text {
+font-family: Lato;
+font-weight: 500;
+font-style: Medium;
+font-size: 14px;
+leading-trim: NONE;
+line-height: 140%;
+letter-spacing: 0%;
+color: #3c3c3c;
+
+  }
+.wcu-text p{
+margin: 0;
+}
+
+.wcu-right {
+    flex: 0 0 60%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px 40px;
+}
+
+.wcu-item {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+  .wcu-icon-wrap {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .wcu-icon {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    opacity: 0.9; /* Matches the soft look in the image */
+  }
+
+.wcu-item-title {
+    font-family: Neue Haas Grotesk Display Pro;
+    font-weight: 500;
+    font-style: 55 Roman;
+    font-size: 18px;
+    leading-trim: NONE;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-align: center;
+    color: #3c3c3c;
+    margin-block: 10px;
+}
+
+  .wcu-item-text {
+color: #3c3c3c;
+ font-family: Lato;
+font-weight: 500;
+font-style: Medium;
+font-size: 14px;
+leading-trim: NONE;
+line-height: 140%;
+letter-spacing: 0%;
+text-align: center;
+
+  }
+
+  @media screen and (max-width: 900px) {
+    .wcu-section {
+      padding: 50px 20px;
+    }
+    .wcu-container {
+      flex-direction: column;
+      gap: 40px;
+    }
+    .wcu-left {
+      flex: auto;
+      text-align: center; 
+      margin-bottom: 20px;
+    }
+    .wcu-heading {
+      font-size: 24px;
+    }
+    .wcu-icon-wrap {
+    margin: 0px;
+    width: 30px;
+    height: 30px;
+}
+.wcu-item {
+    border-bottom: 1px solid #00000017;
+    padding: 0px;
+    max-width: 300px;
+}
+.wcu-item:last-child{
+  border: none;
+}
+  }
+  
+  @media screen and (max-width: 500px) {
+    .wcu-right {
+      grid-template-columns: 1fr; 
+      gap: 40px;
+    }
+  }
+</style>
+
+<div class="wcu-section section-{{ section.id }}-padding">
+  <div class="wcu-container container-x">
+    <div class="wcu-left">
+      {% if section.settings.main_heading != blank %}
+        <h2 class="wcu-heading">{{ section.settings.main_heading }}</h2>
+      {% endif %}
+      
+      <div class="wcu-text">
+        {{ section.settings.main_text }}
+      </div>
+    </div>
+
+    <div class="wcu-right">
+      {% for block in section.blocks %}
+        <div class="wcu-item" {{ block.shopify_attributes }}>
+          
+          <div class="wcu-icon-wrap">
+            {% if block.settings.icon %}
+              {{ block.settings.icon | image_url: width: 100 | image_tag: class: 'wcu-icon', loading: 'lazy' }}
+            {% else %}
+              <svg class="wcu-icon" viewBox="0 0 24 24" fill="none" stroke="#5e5e5e" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 3h12l4 6-10 13L2 9z"></path>
+                <path d="M11 3v6h-6"></path>
+                <path d="M13 3v6h6"></path>
+              </svg>
+            {% endif %}
+          </div>
+
+          {% if block.settings.title != blank %}
+            <h3 class="wcu-item-title">{{ block.settings.title }}</h3>
+          {% endif %}
+
+          {% if block.settings.text != blank %}
+            <p class="wcu-item-text">{{ block.settings.text }}</p>
+          {% endif %}
+
+        </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,498 @@
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'featured-collection-banner.css' | asset_url | stylesheet_tag }}
+
+{% unless section.settings.quick_add == 'none' %}
+  {{ 'quick-add.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+{% endunless %}
+
+{% if section.settings.quick_add == 'standard' %}
+  <script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
+{% endif %}
+
+{% if section.settings.quick_add == 'bulk' %}
+  <script src="{{ 'quick-add-bulk.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'price-per-item.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'quick-order-list.js' | asset_url }}" defer="defer"></script>
+{% endif %}
+
+{%- liquid
+  # Logic to determine if we show the banner
+  assign show_banner_content = false
+  if section.settings.show_banner
+    if section.settings.banner_image != blank or section.settings.banner_text != blank
+      assign show_banner_content = true
+    endif
+  endif
+-%}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  {% if show_banner_content == false %}
+    .section-{{ section.id }}-padding .featured-collection-banner__section {
+       width: 100% !important;
+       margin-right: 0 !important;
+       max-width: none !important;
+    }
+    /* Adjust breakpoints for full width view */
+    .section-{{ section.id }}-padding .swiper-slide {
+       /* You might want to show more products if it's full width */
+       min-width: 0; 
+    }
+  {% else %}
+    /* If banner is visible, keep your existing split layout logic */
+    @media screen and (min-width: 990px) {
+      .featured-collection-banner {
+        overflow: visible !important;
+      }
+      .featured-collection-banner__section {
+        width: calc(74% + (50vw - 50%)) !important;
+        max-width: 100% !important;
+      }
+    }
+  {% endif %}
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} isolate gradient">
+  <div class="featured-collection-banner-cc section-{{ section.id }}-padding{% if section.settings.full_width %} featured-collection-banner--full-width{% endif %}">
+    
+    <div class="featured-collection-banner__header container-x">
+      {%- if section.settings.title != blank -%}
+        <h2 class="h2 title inline-richtext h1 {{ section.settings.heading_size }}">
+          {{ section.settings.title }}
+        </h2>
+      {%- endif -%}
+      {% if section.blocks.size > 0 %}
+        <div class="collection-tabs-wrapper">
+          {% for block in section.blocks %}
+            <button class="tab-button {% if forloop.first %}active{% endif %}" data-tab-target="tab-{{ section.id }}-{{ block.id }}">
+              {{ block.settings.tab_label }}
+            </button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="featured-collection-banner">
+      
+      {% if show_banner_content %}
+        <div class="featured-collection-banner__hero">
+          {%- if section.settings.banner_image != blank -%}
+            <div class="featured-collection-banner__image">
+              {% if section.settings.banner_link != blank %}
+                <a href="{{ section.settings.banner_link }}" class="featured-collection-banner__link">
+              {% endif %}
+               {{ section.settings.banner_image | image_url: width: 2000 | image_tag:
+                 class: 'featured-collection-banner__img',
+                 loading: 'lazy',
+                 sizes: '100vw',
+                 widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000'
+               }}
+              {% if section.settings.banner_link != blank %}
+                </a>
+              {% endif %}
+            </div>
+          {%- endif -%}
+{%- if section.settings.banner_text != blank -%}
+  <div class="featured-collection-banner__content">
+    <h2 class="featured-collection-banner__head">{{ section.settings.banner_head }}</h2>
+    <div class="featured-collection-banner__text">{{ section.settings.banner_text }}</div>
+    
+    {% if section.settings.banner_button_text != blank %}
+      <div class="nx-btn">
+        <a href="{{ section.settings.banner_button_link }}" class="nx-btn-text">
+          {{ section.settings.banner_button_text }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+{%- endif -%}
+
+<style>
+  .featured-collection-banner__content .nx-btn {
+    /* --- CONNECTING LIQUID SETTINGS TO CSS VARIABLES --- */
+    --nx-btn-bg: {{ section.settings.button_bg_color | default: '#000000' }};
+    --nx-btn-text: {{ section.settings.button_text_color | default: '#ffffff' }};
+    --nx-btn-hover-bg: {{ section.settings.button_hover_bg_color | default: '#333333' }};
+    --nx-btn-hover-text: {{ section.settings.button_hover_text_color | default: '#ffffff' }};
+
+    cursor: pointer;
+    border: 1px solid transparent;
+    padding: 1rem 2rem;
+    font-size: 14px;
+    display: flex;
+    letter-spacing: .05rem;
+    overflow: hidden;
+    
+    /* Using the variables defined above */
+    background: var(--nx-btn-bg);
+    color: var(--nx-btn-text);
+    
+    min-width: 125px;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .featured-collection-banner__content .nx-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--nx-btn-hover-bg);
+    transform: translateX(-100%);
+    transition: transform .4s cubic-bezier(.3,1,.8,1);
+    z-index: 0;
+  }
+
+  .featured-collection-banner__content .nx-btn:hover::before {
+    transform: translateX(0);
+  }
+
+  .featured-collection-banner__content .nx-btn-text {
+    z-index: 1;
+    color: var(--nx-btn-text);
+    transition: color .4s;
+    white-space: nowrap;
+    text-decoration: none; /* Added to remove default link underline */
+  }
+
+  .featured-collection-banner__content .nx-btn:hover .nx-btn-text {
+    color: var(--nx-btn-hover-text);
+  }
+</style>
+        </div>
+      {% endif %}
+      <div class="featured-collection-banner__section">
+        {% for block in section.blocks %}
+          {% assign current_collection = block.settings.collection %}
+          <div id="tab-{{ section.id }}-{{ block.id }}" class="tab-content-panel {% if forloop.first %}active{% endif %}">
+            {%- if current_collection.products.size > 0 -%}
+              <div class="featured-collection-banner__products">
+                <div class="swiper featured-collection-swiper swiper-{{ block.id }}">
+                  <div class="swiper-wrapper">
+                    {% for product in current_collection.products limit: section.settings.products_to_show %}
+                      <div class="swiper-slide featured-collection-slide">
+                        {% render 'card-product-color-swatches',
+                          show_swatches: true,
+                          swatch_limit: 3,
+                          card_product: product,
+                          media_aspect_ratio: section.settings.image_ratio,
+                          image_shape: section.settings.image_shape,
+                          lazy_load: false,
+                          show_secondary_image: section.settings.show_secondary_image,
+                          show_vendor: section.settings.show_vendor,
+                          show_rating: section.settings.show_rating,
+                          section_id: section.id,
+                          quick_add: section.settings.quick_add
+                        %}
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+
+              <div class="featured-collection-swiper-cc">
+                <div class="featured-collection-swiper-button-prev prev-{{ block.id }}">
+                  <span class="svg-wrapper">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="26" height="12" viewBox="0 0 26 12" fill="none"><path d="M0.219669 6.05328C-0.0732231 5.76039 -0.0732231 5.28551 0.219669 4.99262L4.99264 0.219648C5.28553 -0.073245 5.76041 -0.073245 6.0533 0.219648C6.34619 0.512542 6.34619 0.987415 6.0533 1.28031L1.81066 5.52295L6.0533 9.76559C6.34619 10.0585 6.34619 10.5334 6.0533 10.8263C5.76041 11.1191 5.28553 11.1191 4.99264 10.8263L0.219669 6.05328ZM25.75 5.52295V6.27295H0.75V5.52295V4.77295H25.75V5.52295Z" fill="black" fill-opacity="1"/></svg>
+                  </span>
+                </div>
+                <div class="featured-collection-swiper-button-next next-{{ block.id }}">
+                  <span class="svg-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="12" viewBox="0 0 26 12" fill="none"><path d="M25.5303 6.05328C25.8232 5.76039 25.8232 5.28551 25.5303 4.99262L20.7574 0.219648C20.4645 -0.073245 19.9896 -0.073245 19.6967 0.219648C19.4038 0.512542 19.4038 0.987415 19.6967 1.28031L23.9393 5.52295L19.6967 9.76559C19.4038 10.0585 19.4038 10.5334 19.6967 10.8263C19.9896 11.1191 20.4645 11.1191 20.7574 10.8263L25.5303 6.05328ZM0 5.52295V6.27295H25V5.52295V4.77295H0V5.52295Z" fill="black"/></svg>
+                  </span>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanels = document.querySelectorAll('.tab-content-panel');
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabPanels.forEach(panel => panel.classList.remove('active'));
+        button.classList.add('active');
+        const targetId = button.getAttribute('data-tab-target');
+        document.getElementById(targetId).classList.add('active');
+      });
+    });
+
+    {% for block in section.blocks %}
+      (function() {
+        var containerSelector = '.swiper-{{ block.id }}';
+        var swiperElement = document.querySelector(containerSelector);
+
+        if (!swiperElement || typeof Swiper === 'undefined') return;
+        new Swiper(containerSelector, {
+          slidesPerView: 1.7,
+          spaceBetween: 10,
+          loop: false,
+          observer: true,
+          observeParents: true,
+
+          navigation: {
+            nextEl: '.next-{{ block.id }}',
+            prevEl: '.prev-{{ block.id }}',
+          },
+
+          breakpoints: {
+                480: { slidesPerView: 1.8, spaceBetween: 10 },
+                1024: { slidesPerView: 2, spaceBetween: 10 },
+                1224: { slidesPerView: 2.8, spaceBetween: 10 },
+                1624: { slidesPerView: 3.8, spaceBetween: 10 },
+          }
+        });
+      })();
+    {% endfor %}
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Collection Banner",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+  "type": "header",
+  "content": "Button Colors"
+},
+{
+  "type": "color",
+  "id": "button_bg_color",
+  "label": "Button Background",
+  "default": "#000000"
+},
+{
+  "type": "color",
+  "id": "button_text_color",
+  "label": "Button Text",
+  "default": "#ffffff"
+},
+{
+  "type": "color",
+  "id": "button_hover_bg_color",
+  "label": "Button Hover Background",
+  "default": "#333333"
+},
+{
+  "type": "color",
+  "id": "button_hover_text_color",
+  "label": "Button Hover Text",
+  "default": "#ffffff"
+},
+    {
+      "type": "header",
+      "content": "Banner Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_banner",
+      "label": "Show Banner",
+      "default": true,
+      "info": "Uncheck to hide the banner and show products full width."
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "Banner Image"
+    },
+    {
+      "type": "text",
+      "id": "banner_head",
+      "label": "Banner Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "banner_text",
+      "label": "Banner Text"
+    },
+    {
+      "type": "text",
+      "id": "banner_button_text",
+      "label": "Banner Button Text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "banner_button_link",
+      "label": "Banner Button Link"
+    },
+    {
+      "type": "url",
+      "id": "banner_link",
+      "label": "Banner Image Link"
+    },
+    {
+      "type": "header",
+      "content": "Collection Settings"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Featured Collection",
+      "label": "Title"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        { "value": "h2", "label": "Small" },
+        { "value": "h1", "label": "Medium" },
+        { "value": "h0", "label": "Large" }
+      ],
+      "default": "h1",
+      "label": "Heading Size"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 24,
+      "step": 1,
+      "default": 8,
+      "label": "Products to Show"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        { "value": "adapt", "label": "Adapt to Image" },
+        { "value": "portrait", "label": "Portrait" },
+        { "value": "square", "label": "Square" }
+      ],
+      "default": "adapt",
+      "label": "Image Ratio"
+    },
+    {
+      "type": "select",
+      "id": "image_shape",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "round", "label": "Round" },
+        { "value": "square", "label": "Square" }
+      ],
+      "default": "default",
+      "label": "Image Shape"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "default": false,
+      "label": "Show Secondary Image"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "default": false,
+      "label": "Show Vendor"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "default": false,
+      "label": "Show Rating"
+    },
+    {
+      "type": "select",
+      "id": "quick_add",
+      "default": "none",
+      "label": "Quick Add",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "standard", "label": "Standard" },
+        { "value": "bulk", "label": "Bulk" }
+      ]
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_tab",
+      "name": "Collection Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tab_label",
+          "label": "Tab Name",
+          "default": "Women"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection Banner"
+    }
+  ]
+}
+{% endschema %}

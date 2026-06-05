@@ -1,0 +1,374 @@
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .template-slider-section .page-width {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    margin: 0 auto;
+    max-width: 1200px;
+  }
+
+  .template-slider-section .swiper-custom-header {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .template-slider-section .l-cat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 25px;
+  }
+
+  .template-slider-section .swiper-custom-arrow {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .template-slider-section .relative-container { 
+    position:relative; 
+    width:100%; 
+    margin: 0 auto; 
+    padding-top: 40px;
+    padding-bottom: 40px; 
+  }
+  
+  .template-slider-section swiper-container { 
+    width:100%; 
+    display:block; 
+  }
+  
+  .template-slider-section swiper-slide { 
+    height: auto; 
+  }
+
+  .template-slider-section .swiper-button-disabled { 
+    opacity:0.5; 
+    cursor: not-allowed; 
+  }
+
+  .template-slider-section .swiper-custom-scrollbar {
+    display:block;
+    width:100%;
+    height:4px;
+    background:rgba(0,0,0,0.1);
+    margin-top:24px;
+    position:relative;
+    border-radius:2px;
+    overflow:hidden;
+  }
+
+  .template-slider-section .swiper-progress-track {
+    display:block;
+    width:100%;
+    height:3px;
+    background:rgba(0,0,0,0.1);
+    position:relative;
+    overflow:hidden;
+    margin-top: 20px;
+  }
+
+  .template-slider-section .swiper-progress-fill {    
+    background: #265697;
+    height: 100%;
+    display: block;
+    width: 0;
+    transition: width 300ms;
+  }
+
+  .swiper-custom-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+
+  .swiper-custom-controls-nav {
+    display: flex;
+    gap: 15px;
+  }
+custom-slider.template-slider-section .card__content {
+    padding: 0px;
+}
+  .l-cat-main-title-{{ section.id }} {
+    font-size: 48px;
+    margin: 0;
+    font-family: Bebas Neue, sans-serif;
+    font-weight: 400;
+    line-height: 1.1;
+    text-transform: uppercase;
+  }
+
+  /* Manual Card Styling */
+  .manual-card-image-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    /* Matches standard product card radius if your theme uses variables, else default 0 */
+    border-radius: var(--media-radius, 0px); 
+  }
+  
+  .manual-card-image-wrapper img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    max-height: 450px;
+    aspect-ratio: {{ section.settings.image_ratio_manual }}; 
+  }
+.manual-card-image-wrapper img {
+
+}
+  @media screen and (max-width:767px){
+    .l-cat-main-title-{{ section.id }} {
+      font-size: 28px;
+    }
+    .template-slider-section .hide-on-mobile{display:none !important;}
+  }
+  @media screen and (min-width:768px){
+    .swiper-custom-controls-nav{display:none !important;}
+    .template-slider-section .hide-on-desktop{display:none !important;}
+  }
+{%- endstyle -%}
+
+<custom-slider class="template-slider-section" data-block-id="{{ section.id }}">
+  <div class="slider-wrapper relative-container container-x">
+      <div class="l-cat-header">
+      <div class="l-cat-title-group">
+        <h2 class="h2 title">{{ section.settings.title }}</h2>
+      </div>
+      
+      <div class="swiper-custom-controls-nav">
+          <div class="swiper-custom-prev swiper-custom-arrow 
+            {% unless section.settings.mobile_arrows %}hide-on-mobile{% endunless %} 
+            {% unless section.settings.desktop_arrows %}hide-on-desktop{% endunless %}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="12" viewBox="0 0 26 12" fill="none"><path d="M0.219669 6.05328C-0.0732231 5.76039 -0.0732231 5.28551 0.219669 4.99262L4.99264 0.219648C5.28553 -0.073245 5.76041 -0.073245 6.0533 0.219648C6.34619 0.512542 6.34619 0.987415 6.0533 1.28031L1.81066 5.52295L6.0533 9.76559C6.34619 10.0585 6.34619 10.5334 6.0533 10.8263C5.76041 11.1191 5.28553 11.1191 4.99264 10.8263L0.219669 6.05328ZM25.75 5.52295V6.27295H0.75V5.52295V4.77295H25.75V5.52295Z" fill="black" fill-opacity="1"></path></svg>
+          </div>
+          <div class="swiper-custom-next swiper-custom-arrow 
+            {% unless section.settings.mobile_arrows %}hide-on-mobile{% endunless %} 
+            {% unless section.settings.desktop_arrows %}hide-on-desktop{% endunless %}">
+    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="12" viewBox="0 0 26 12" fill="none"><path d="M25.5303 6.05328C25.8232 5.76039 25.8232 5.28551 25.5303 4.99262L20.7574 0.219648C20.4645 -0.073245 19.9896 -0.073245 19.6967 0.219648C19.4038 0.512542 19.4038 0.987415 19.6967 1.28031L23.9393 5.52295L19.6967 9.76559C19.4038 10.0585 19.4038 10.5334 19.6967 10.8263C19.9896 11.1191 20.4645 11.1191 20.7574 10.8263L25.5303 6.05328ZM0 5.52295V6.27295H25V5.52295V4.77295H0V5.52295Z" fill="black"></path></svg>
+          </div>
+        </div>
+    </div>
+
+    <swiper-container 
+        init="false" 
+        class="js-swiper-template"
+        data-swiper-config='{
+            "autoplay": {{ section.settings.enable_autoplay | default: false }},
+            "autoplayInterval": {{ section.settings.autoplay_interval | times: 1000 | default: 3000 }},
+            "mobileSlides": {{ section.settings.mobile_slides | default: 1.2 }},
+            "mobileSpacing": {{ section.settings.mobile_spacing | default: 16 }},
+            "desktopSlides": {{ section.settings.desktop_slides | default: 4 }},
+            "tabletSlides": {{ section.settings.tablet_slides | default: 3 }},
+            "desktopSpacing": {{ section.settings.desktop_spacing | default: 24 }}
+        }'
+    >
+        {% for block in section.blocks %}
+            {%- liquid 
+               assign has_manual = false
+               if block.settings.manual_image != blank
+                  assign has_manual = true
+               endif
+            -%}
+            
+            <swiper-slide>
+              {% if has_manual %}
+                <div class="card-wrapper">
+                          {%- if block.settings.manual_link != blank -%}
+                    <a href="{{ block.settings.manual_link }}" class="manual-card-link">
+                  {%- endif -%}
+                  <div class="card card--card color-{{ section.settings.color_scheme }}" style="text-align: left;">
+                    
+                    <div class="manual-card-image-wrapper">
+                       <img src="{{ block.settings.manual_image | image_url: width: 600 }}" 
+                            alt="{{ block.settings.manual_title }}"
+                            loading="lazy">
+                    </div>
+
+                    <div class="card__content">
+                      <div class="card__information">
+                        <h3 class="card__heading h5">
+                            {{ block.settings.manual_title | default: 'Coming Soon' }}
+                        </h3>
+                        <div class="card-information">
+                          <div class="price">
+                            <div class="price__container">
+                              <div class="price-item price-item--regular">
+                                {{ block.settings.manual_price }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              {% else %}
+                {% assign product = block.settings.product %}
+                {% if product != blank %}
+                  {% render 'card-product',
+                    card_product: product,
+                    media_aspect_ratio: 'portrait',
+                    show_secondary_image: true,
+                    show_vendor: false,
+                    show_rating: false,
+                    lazy_load: true
+                  %}
+                {% else %}
+                   <div class="card-wrapper">
+                      <div class="card card--card card--text-only"><div class="card__content"><h3 class="card__heading">Select Product</h3></div></div>
+                   </div>
+                {% endif %}
+              {% endif %}
+            </swiper-slide>
+        {%- endfor -%}
+    </swiper-container>
+
+    <div class="swiper-custom-controls">
+        <div class="swiper-progress-track
+        {% unless section.settings.mobile_progress_bar %}hide-on-mobile{% endunless %} 
+        {% unless section.settings.desktop_progress_bar %}hide-on-desktop{% endunless %}">
+          <div class="swiper-progress-fill"> </div>
+        </div>
+    </div>
+
+    <div class="swiper-custom-scrollbar
+        {% unless section.settings.mobile_scrollbar %}hide-on-mobile{% endunless %} 
+        {% unless section.settings.desktop_scrollbar %}hide-on-desktop{% endunless %}">
+    </div>
+  </div>
+</custom-slider>
+
+<script>
+  if (!customElements.get('custom-slider')) {
+    customElements.define('custom-slider', class extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.initSwiper();
+      }
+
+      initSwiper() {
+        const swiperEl = this.querySelector('.js-swiper-template');
+        if (!swiperEl) return;
+
+        const config = JSON.parse(swiperEl.dataset.swiperConfig);
+        const prevBtn = this.querySelector('.swiper-custom-prev');
+        const nextBtn = this.querySelector('.swiper-custom-next');
+        const progressFill = this.querySelector('.swiper-progress-fill');
+
+        // Construct Swiper Params
+        const params = {
+          slidesPerView: config.mobileSlides,
+          spaceBetween: config.mobileSpacing,
+          loop: false,
+          navigation: {
+            nextEl: nextBtn,
+            prevEl: prevBtn
+          },
+          breakpoints: {
+            768: {
+              slidesPerView: config.tabletSlides,
+              spaceBetween: config.desktopSpacing
+            },
+            1024: {
+              slidesPerView: config.desktopSlides,
+              spaceBetween: config.desktopSpacing
+            }
+          },
+          on: {
+            progress: (swiper, progress) => {
+              if (progressFill) {
+                progressFill.style.width = `${Math.abs(progress * 100)}%`;
+              }
+            }
+          }
+        };
+
+        if (config.autoplay) {
+          params.autoplay = {
+            delay: config.autoplayInterval,
+            disableOnInteraction: false
+          };
+        }
+
+        // Initialize
+        Object.assign(swiperEl, params);
+        swiperEl.initialize();
+      }
+    });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Noe nytt er på vei",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading", "default": "Noe nytt er på vei" },
+    { "type": "range", "id": "image_ratio_manual", "min": 0.5, "max": 1.5, "step": 0.1, "unit": ":1", "label": "Manual Teaser Image Ratio", "default": 1.0, "info": "1.0 is Square, 0.7 is Portrait" },
+    { "type": "header", "content": "⚙️ Configuration" },
+    { "type": "checkbox", "id": "enable_autoplay", "label": "Enable Autoplay", "default": false },
+    { "type": "range", "id": "autoplay_interval", "min": 2, "max": 10, "step": 1, "unit": "s", "label": "Autoplay Interval", "default": 3 },
+    { "type": "header", "content": "💻 Desktop Settings" },
+    { "type": "range", "id": "desktop_slides", "min": 1, "max": 6, "step": 0.1, "label": "Slides per view", "default": 4 },
+    { "type": "range", "id": "desktop_spacing", "min": 0, "max": 100, "label": "Spacing (px)", "default": 24 },
+    { "type": "checkbox", "id": "desktop_arrows", "label": "Show Arrows", "default": true },
+    { "type": "checkbox", "id": "desktop_progress_bar", "label": "Show Visual Progress Bar", "default": true },
+    { "type": "header", "content": "📱 Tablet Settings" },
+    { "type": "range", "id": "tablet_slides", "min": 1, "max": 6, "step": 0.1, "label": "Slides per view", "default": 3 },
+    { "type": "header", "content": "📱 Mobile Settings" },
+    { "type": "range", "id": "mobile_slides", "min": 1, "max": 6, "step": 0.1, "label": "Slides per view", "default": 1.2 },
+    { "type": "range", "id": "mobile_spacing", "min": 0, "max": 50, "label": "Spacing (px)", "default": 16 },
+    { "type": "checkbox", "id": "mobile_arrows", "label": "Show Arrows", "default": false },
+    { "type": "checkbox", "id": "mobile_progress_bar", "label": "Show Visual Progress Bar", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "product_card",
+      "name": "Product or Teaser",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "manual_image",
+          "label": "Teaser Image"
+        },
+        {
+          "type": "text",
+          "id": "manual_title",
+          "label": "Teaser Title",
+          "default": "Coming Soon"
+        },
+        {
+          "type": "text",
+          "id": "manual_price",
+          "label": "Teaser Price",
+          "default": "Kr 500,00"
+        },
+        {
+          "type": "url",
+          "id": "manual_link",
+          "label": "Teaser Link",
+          "info": "Optional. Makes the card clickable."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Noe nytt er på vei",
+      "category": "Template"
+    }
+  ]
+}
+{% endschema %}

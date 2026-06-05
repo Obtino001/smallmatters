@@ -1,0 +1,101 @@
+            <wi-quickadd data-handle="{{ card_product.handle }}" style="display:none;">
+              <div class="WI_quickAdd_in">
+                <div class="WI_quickAdd_variant_in" data-quickoptionid="template--23222930014543__featured_products_LAgynU">
+                  {% if card_product.options.size > 1 %}
+                    <div class="WI_quickAdd_multi-variants">
+                      {%- for option in card_product.options_with_values -%}
+                        <div class="WI_Add_swatch-variants">
+                          {%- for value in option.values -%}
+                            {% liquid
+                              assign op_name = option.name | downcase | replace: ' ', ''
+                              assign op_value = value | downcase | replace: ' ', ''
+                              assign input_id = 'card_product-' | append: op_name | append: '-' | append: op_value | append: '-' | append: card_product.id | append: '-' | append: section.id
+                              assign input_name = 'card_product-' | append: op_name | append: '-' | append: card_product.id | append: '-' | append: section.id
+                            %}
+                            {% if option.name contains 'Colo' %}
+                              {%- liquid
+                                assign swatch_focal_point = null
+                                if value.swatch.image
+                                  assign image_url = value.swatch.image | image_url: width: 50
+                                  assign swatch_value = 'url(' | append: image_url | append: ')'
+                                  assign swatch_focal_point = value.swatch.image.presentation.focal_point
+                                elsif value.swatch.color
+                                  assign swatch_value = 'rgb(' | append: value.swatch.color.rgb | append: ')'
+                                else
+                                  assign swatch_value = null
+                                endif
+                                assign option_disabled = true
+                                if value.available
+                                  assign option_disabled = false
+                                endif
+                              -%}
+                              {% render 'swatch-input', id: input_id, name: input_name, value: value | escape, swatch: value.swatch, product_form_id: product_form_id, visually_disabled: option_disabled, shape: block.settings.swatch_shape, help_text: help_text, additional_props: input_dataset %}
+                            {% endif %}
+                          {% endfor %}
+                        </div>
+                        <div class="WI_Add_input-variants">
+                          {%- for value in option.values -%}
+                            {% liquid
+                              assign op_name = option.name | downcase | replace: ' ', ''
+                              assign op_value = value | downcase | replace: ' ', ''
+                              assign input_id = 'card_product-' | append: op_name | append: '-' | append: op_value | append: '-' | append: card_product.id | append: '-' | append: section.id
+                              assign input_name = 'card_product-' | append: op_name | append: '-' | append: card_product.id | append: '-' | append: section.id
+                            %}
+                            {% unless option.name contains 'Colo' %}
+                              <input type="radio" id="{{ input_id }}" name="{{ input_name }}" value="{{ value | escape }}" form="{{ product_form_id }}" {% if option_disabled %}disabled{% endif %} {{ input_dataset }}>
+                              <label for="{{ input_id }}">{{ value -}}{{ label_unavailable }}</label>
+                            {% endunless %}
+                          {%- endfor -%}
+                        </div>
+                      {%- endfor -%}
+                      <button type="button" class="WI_Add_atc WI_quickAdd_atc svg WI_multiVariantAdd_atc" data-variantid="{{ card_product.variants[0].id }}" tabindex="0" data-options-length="{{ card_product.options.size }}" disabled>
+                        <span class="Ma-span">{{ 'products.product.add_to_cart' | t }}</span>
+                        <div class="loading-overlay__spinner hidden">
+                          <svg width="16" height="16" aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg"><circle fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle></svg>
+                        </div>
+                      </button>
+                      <button type="button" class="WI_mobileQuickViewBtn" data-productname="harper-unisex-jacket-1" tabindex="0">
+                        <span class="Ma-span Select--size">Select size</span>
+                        <div class="loading-overlay__spinner hidden">
+                          <svg width="16" height="16" aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg"><circle fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle></svg>
+                        </div>
+                      </button>
+                    </div>
+                    <script type="application/ld+json" class="product-bundle-data">{{ card_product | json }}</script>
+                  {% else %}
+                    {% if card_product.variants.size > 1 %}
+                      {% for variant in card_product.variants %}
+                        <button type="button" class="WI_quickAdd_atc svg" {% if settings.cart_upsell_variant_id and settings.default_upsell_enabled_in_cart %}data-upsell-variant-id="{{ settings.cart_upsell_variant_id }}"{% endif %} data-variantid="{{ variant.id }}" tabindex="0" {% unless variant.available %}disabled{% endunless %}>
+                          <span class="Ma-span">{{ variant.title }}</span>
+                          <div class="loading-overlay__spinner hidden">
+                            <svg width="16" height="16" aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg"><circle fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle></svg>
+                          </div>
+                        </button>
+                      {% endfor %}
+                      <button type="button" class="WI_mobileQuickViewBtn" data-productname="harper-unisex-jacket-1" tabindex="0">
+                        <span class="Ma-span Select--size">Select size</span>
+                        <div class="loading-overlay__spinner hidden">
+                          <svg width="16" height="16" aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg"><circle fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle></svg>
+                        </div>
+                      </button>
+                    {% else %}
+                      <button type="button" class="WI_Add_atc WI_quickAdd_atc svg" data-variantid="{{ card_product.variants[0].id }}" tabindex="0" {% unless card_product.variants[0].available %}disabled{% endunless %}>
+                        <span class="Ma-span">{{ 'products.product.add_to_cart' | t }}</span>
+                        <div class="loading-overlay__spinner hidden">
+                          <svg aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg"><circle fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle></svg>
+                        </div>
+                      </button>
+                      <button type="button" class="WI_quickAdd_atc" {% if settings.cart_upsell_variant_id and settings.default_upsell_enabled_in_cart %}data-upsell-variant-id="{{ settings.cart_upsell_variant_id }}"{% endif %} tabindex="0" data-variantid="{{ card_product.variants[0].id }}">
+                        <span class="Ma-span">
+                          <svg class="icon--root icon--bag-alt" width="16" height="20" viewBox="0 0 16 20" xmlns="http://www.w3.org/2000/svg"><path d="M12.51 5.264h1.704c.983 0 1.787.797 1.787 1.782l-.011 6.28.009 3.838c0 1.564-1.283 2.836-2.852 2.836H2.85C1.28 20-.001 18.728-.001 17.164v-4.226L0 7.045c0-.984.804-1.781 1.788-1.781h1.699v-.685C3.488 2.054 5.503 0 7.998 0c.83 0 1.63.229 2.325.654A4.591 4.591 0 0 1 12.51 4.58v.685Zm-2 0v-.685c0-.922-.474-1.756-1.23-2.218A2.444 2.444 0 0 0 8 2C6.616 2 5.488 3.15 5.488 4.58v.684h5.021Zm3.48 8.063L14 7.264H2.002L2 12.938v4.226c0 .456.383.836.85.836h10.298c.468 0 .852-.38.852-.833l-.01-3.84ZM4.5 8a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm6.8 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z" fill="#222" fill-rule="nonzero"></path></svg>
+                        </span>
+                        <div class="loading-overlay__spinner hidden black">
+                          <svg aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg"><circle fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle></svg>
+                        </div>
+                      </button>
+                    {% endif %}
+                  {% endif %}
+                </div>
+              </div>
+              <script type="application/json">{{ card_product | json }}</script>
+            </wi-quickadd>

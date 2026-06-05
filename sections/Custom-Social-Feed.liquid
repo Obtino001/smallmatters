@@ -1,0 +1,359 @@
+{% schema %}
+{
+  "name": "Custom Social Feed",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Text Settings"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Everyday Moments, Made to Last"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "From Oslo streets to mountain cabins discover how real people wear their Smallmatters."
+    },
+    {
+      "type": "text",
+      "id": "handle_text",
+      "label": "Social Handle",
+      "default": "@smallmatters_oslo"
+    },
+    {
+      "type": "url",
+      "id": "handle_url",
+      "label": "Handle Link"
+    },
+    {
+      "type": "header",
+      "content": "Colors & Layout"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#F8F5F2"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Slider Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "Enable Autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "min": 1,
+      "max": 10,
+      "step": 0.5,
+      "unit": "s",
+      "label": "Autoplay Speed",
+      "default": 3
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Social Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Image Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Social Feed",
+      "blocks": [
+        {"type": "image"},
+        {"type": "image"},
+        {"type": "image"},
+        {"type": "image"}
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+
+<style>
+  .sm-feed-section-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    overflow: hidden; 
+  }
+
+
+  .sm-feed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .sm-feed-text-group {
+    max-width: 500px;
+  }
+
+  .sm-feed-heading {
+    font-family: Neue Haas Grotesk Display Pro, sans-serif;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 140%;
+    color: #3C3C3C;
+    margin-bottom: 10px;
+  }
+
+  .sm-feed-subtext {
+    font-family: Lato, sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 140%;
+    color: #3C3C3C;
+    margin: 0;
+  }
+
+  .sm-feed-handle {
+    font-family: Neue Haas Grotesk Display Pro, sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 100%;
+    color: #3C3C3C;
+    text-decoration: none;
+  }
+  
+  .sm-feed-handle:hover {
+    text-decoration: underline;
+  }
+
+  /* Grid / Slider Item Styles */
+  .sm-feed-item {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background-color: rgba(0,0,0,0.05);
+  }
+
+  .sm-feed-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .sm-feed-item:hover img {
+    transform: scale(1.03);
+  }
+
+  .sm-feed-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .sm-feed-grid-static {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    width: 100%;
+  }
+
+  /* State 2: Swiper ( > 4 items ) */
+  .swiper-container-feed {
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Essential for Swiper */
+  }
+  
+  .swiper-slide {
+    height: auto; /* Let aspect ratio handle height */
+  }
+
+  @media (max-width: 768px) {
+    .sm-feed-section-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top | divided_by: 1.5 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | divided_by: 1.5 }}px;
+    }
+
+    .sm-feed-header {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 15px;
+    }
+
+    .sm-feed-text-group {
+      margin: 0 auto;
+      max-width: 330px;
+    }
+    
+    /* If using static grid on mobile, force horizontal scroll */
+    .sm-feed-grid-static {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 10px;
+        padding-bottom: 20px;
+        margin-right: -20px;
+        padding-right: 20px;
+    }
+    
+    .sm-feed-grid-static::-webkit-scrollbar { display: none; }
+    
+    .sm-feed-grid-static .sm-feed-item {
+        flex: 0 0 75%;
+        scroll-snap-align: start;
+    }
+  }
+</style>
+
+<div class="sm-feed-section-{{ section.id }}">
+  <div class="sm-feed-container">
+    
+    <div class="sm-feed-header container-x">
+      <div class="sm-feed-text-group">
+        {% if section.settings.heading != blank %}
+          <h2 class="sm-feed-heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+        {% if section.settings.subtext != blank %}
+          <p class="sm-feed-subtext">{{ section.settings.subtext }}</p>
+        {% endif %}
+      </div>
+      
+      {% if section.settings.handle_text != blank %}
+        <a href="{{ section.settings.handle_url }}" class="sm-feed-handle">{{ section.settings.handle_text }}</a>
+      {% endif %}
+    </div>
+
+    {% assign block_count = section.blocks.size %}
+    
+    {% if block_count > 4 %}
+      <div class="swiper swiper-container-feed" id="Swiper-{{ section.id }}">
+        <div class="swiper-wrapper">
+          {% for block in section.blocks %}
+            <div class="swiper-slide sm-feed-item" {{ block.shopify_attributes }}>
+              {% if block.settings.link != blank %}<a href="{{ block.settings.link }}" class="sm-feed-link">{% endif %}
+              
+              {% if block.settings.image != blank %}
+                <img src="{{ block.settings.image | image_url: width: 800 }}" loading="lazy" alt="{{ block.settings.image.alt | escape }}" width="600" height="{{ 600 | divided_by: block.settings.image.aspect_ratio | ceil }}">
+              {% else %}
+                {{ 'image' | placeholder_svg_tag }}
+              {% endif %}
+
+              {% if block.settings.link != blank %}</a>{% endif %}
+            </div>
+          {% endfor %}
+        </div>
+        <div class="swiper-scrollbar"></div>
+      </div>
+
+    {% else %}
+      <div class="sm-feed-grid-static">
+        {% for block in section.blocks %}
+          <div class="sm-feed-item" {{ block.shopify_attributes }}>
+            {% if block.settings.link != blank %}<a href="{{ block.settings.link }}" class="sm-feed-link">{% endif %}
+            
+            {% if block.settings.image != blank %}
+              <img src="{{ block.settings.image | image_url: width: 800 }}" loading="lazy" alt="{{ block.settings.image.alt | escape }}" width="600" height="{{ 600 | divided_by: block.settings.image.aspect_ratio | ceil }}">
+            {% else %}
+              {{ 'image' | placeholder_svg_tag }}
+            {% endif %}
+
+            {% if block.settings.link != blank %}</a>{% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var swiperEl = document.getElementById('Swiper-{{ section.id }}');
+    
+    if (swiperEl) {
+      new Swiper(swiperEl, {
+        /* Mobile settings */
+        slidesPerView: 1.2, 
+        spaceBetween: 10,
+        centeredSlides: true,
+        freeMode: false,
+        loop: true,
+        loopedSlides: 8, /* Matches your total number of slides */
+        {% if section.settings.enable_autoplay %}
+        autoplay: {
+          delay: {{ section.settings.autoplay_delay | times: 1000 }},
+          disableOnInteraction: false,
+          pauseOnMouseEnter: true
+        },
+        {% endif %}
+
+        scrollbar: {
+          el: '.swiper-scrollbar',
+          hide: true,
+        },
+        breakpoints: {
+          768: {
+            slidesPerView: 3,
+            spaceBetween: 15,
+            centeredSlides: true,
+          },
+          1024: {
+            slidesPerView: 4.5, 
+            spaceBetween: 15,
+            centeredSlides: true, 
+            freeMode: false,
+          }
+        }
+      });
+    }
+  });
+</script>

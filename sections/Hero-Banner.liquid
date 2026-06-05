@@ -1,0 +1,557 @@
+{% schema %}
+{
+  "name": "Hero Banner",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "select",
+      "id": "layout_mode",
+      "label": "Desktop Layout Mode",
+      "options": [
+        { "value": "split", "label": "Split (2 Images)" },
+        { "value": "single", "label": "Single Image (Full Width)" }
+      ],
+      "default": "split"
+    },
+    {
+      "type": "header",
+      "content": "Desktop Alignment"
+    },
+    {
+      "type": "select",
+      "id": "text_align_x",
+      "label": "Horizontal Position",
+      "options": [
+        { "value": "flex-start", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "text_align_y",
+      "label": "Vertical Position",
+      "options": [
+        { "value": "flex-start", "label": "Top" },
+        { "value": "center", "label": "Middle" },
+        { "value": "flex-end", "label": "Bottom" }
+      ],
+      "default": "center"
+    },
+    {
+  "type": "select",
+  "id": "subtext_align",
+  "label": "Subtext Only Alignment",
+  "options": [
+    { "value": "left", "label": "Left" },
+    { "value": "center", "label": "Center" },
+    { "value": "right", "label": "Right" }
+  ],
+  "default": "center"
+},
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_left",
+      "label": "Left Image (or Main Image for Single Mode)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_right",
+      "label": "Right Image (Hidden in Single Mode)"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "desktop_bg",
+      "label": "Center Background Color",
+      "default": "#EBE8E3",
+      "info": "Only visible in Split Mode"
+    },
+    {
+      "type": "color",
+      "id": "desktop_text_color",
+      "label": "Desktop Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Mobile Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile Image (Full Screen)",
+      "info": "If blank, uses Left Image"
+    },
+    {
+      "type": "color",
+      "id": "mobile_text_color",
+      "label": "Mobile Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Every Thread Matters."
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Timeless knitwear made from cashmere and merino wool crafted with care, designed to last."
+    },
+    {
+      "type": "text",
+      "id": "btn_label_1",
+      "label": "Button 1 Label",
+      "default": "Shop Women"
+    },
+    {
+      "type": "url",
+      "id": "btn_link_1",
+      "label": "Button 1 Link"
+    },
+    {
+      "type": "text",
+      "id": "btn_label_2",
+      "label": "Button 2 Label",
+      "default": "Shop Men's"
+    },
+    {
+      "type": "url",
+      "id": "btn_link_2",
+      "label": "Button 2 Link"
+    },
+    {
+  "type": "color",
+  "id": "btn_bg_color",
+  "label": "Button background",
+  "default": "#d8cfc4"
+},
+{
+  "type": "color",
+  "id": "btn_hover_bg_color",
+  "label": "Button hover background",
+  "default": "#3c3c3c"
+},
+{
+  "type": "color",
+  "id": "btn_text_color",
+  "label": "Button text color",
+  "default": "#ffffff"
+},
+{
+  "type": "color",
+  "id": "btn_hover_text_color",
+  "label": "Button hover text color",
+  "default": "#ffffff"
+}
+
+  ],
+  "presets": [
+    {
+      "name": "Hero Banner"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  /* Base Variables */
+  :root {
+    --hero-desktop-height: 650px;
+    --hero-mobile-height: 80dvh; /* Full screen on mobile */
+  }
+
+  .split-hero-section {
+    width: 100%;
+    overflow: hidden;
+    font-family: var(--font-body-family, sans-serif);
+  }
+
+  .split-hero-wrapper {
+    display: flex;
+    width: 100%;
+    position: relative;
+    height: var(--hero-desktop-height);
+  }
+
+  /* --- DESKTOP LAYOUT --- */
+  .hero-col {
+    position: relative;
+    height: 100%;
+  }
+
+  /* Side Images */
+  .hero-img-col {
+    flex: 1; /* Equal width for sides */
+    overflow: hidden;
+  }
+
+  .hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease;
+  }
+  
+  /* Zoom effect on hover */
+  .hero-img-col:hover .hero-img {
+    transform: scale(1.03);
+  }
+
+  /* Center Content */
+  .hero-content-col {
+    flex: 1.2; /* Slightly wider center in split mode */
+    background-color: {{ section.settings.desktop_bg }};
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    color: {{ section.settings.desktop_text_color }};
+    gap: 10px;
+    /* Alignment controlled by inline style from schema now */
+  }
+
+  /* Single Image Mode Styles */
+  .split-hero-wrapper.single-mode .hero-img-col {
+    display: none; /* Hide side columns */
+  }
+
+  .split-hero-wrapper.single-mode .hero-content-col {
+    flex: 1;
+    width: 100%;
+    background-color: transparent;
+    position: relative;
+    z-index: 2;
+  }
+
+  .desktop-single-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .desktop-single-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-heading {
+    font-family: Neue Haas Grotesk Display Pro;
+    font-weight: 600;
+    font-size: 48px;
+    line-height: 130%;
+    color: inherit;
+    margin: 0;
+  }
+
+  .hero-subtext {
+    font-family: Lato;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 18px;
+    leading-trim: NONE;
+    line-height: 130%;
+    color: inherit;
+    max-width: 300px;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 15px;
+  }
+
+  .hero-btn {
+    display: inline-block;
+    padding: 14px 28px;
+    background-color: #3C3C3C; 
+    color: #ffffff;
+    font-family: Lato;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 12px;
+    leading-trim: NONE;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-align: center;
+  }
+
+  .hero-btn:hover {
+    background-color: transparent;
+    color: inherit;
+    border: 1px solid currentColor;
+  }
+
+  /* Mobile Background Image (Hidden on Desktop) */
+  .hero-mobile-bg {
+    display: none;
+  }
+.nx-hero-section .nx-btn {
+  cursor:pointer;
+  border:1px solid transparent;
+  padding:1rem 2rem;
+  font-size:14px;
+  display:flex;
+  letter-spacing:.05rem;
+  overflow:hidden;
+  background:var(--nx-btn-bg);
+  color:var(--nx-btn-text);
+  min-width:125px;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+}
+
+.nx-hero-section .nx-btn::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  background:var(--nx-btn-hover-bg);
+  transform:translateX(-100%);
+  transition:transform .4s cubic-bezier(.3,1,.8,1);
+  z-index:0;
+}
+
+.nx-hero-section .nx-btn:hover::before {
+  transform:translateX(0);
+}
+
+.nx-hero-section .nx-btn-text {
+  z-index:1;
+  color:var(--nx-btn-text);
+  transition:color .4s;
+  white-space:nowrap;
+}
+
+.nx-hero-section .nx-btn:hover .nx-btn-text {
+  color:var(--nx-btn-hover-text);
+}
+
+  /* --- MOBILE LAYOUT --- */
+  @media screen and (max-width: 768px) {
+    .split-hero-wrapper, 
+    .split-hero-wrapper.single-mode {
+      flex-direction: column;
+      height: var(--hero-mobile-height);
+    }
+
+    /* Hide Desktop Backgrounds */
+    .hero-img-col, .desktop-single-bg {
+      display: none !important;
+    }
+
+    /* Show Mobile Background */
+    .hero-mobile-bg {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .hero-mobile-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Overlay */
+    .hero-mobile-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 40%);
+      z-index: 2;
+    }
+
+    /* Adapt Content Column */
+    .hero-content-col {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      background: transparent !important; /* Remove beige bg */
+      z-index: 1;
+      justify-content: flex-end !important; /* Force bottom on mobile */
+      align-items: center !important; /* Force center on mobile */
+      text-align: center !important;
+      padding-bottom: 60px;
+      color: {{ section.settings.mobile_text_color }} !important;
+    }
+
+    .hero-heading {
+      font-size: 32px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .hero-subtext {
+      font-size: 15px;
+      opacity: 0.9;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      padding: 0 20px;
+      text-align: center;
+    }
+
+    .hero-buttons {
+      width: 100%;
+      padding: 0 20px;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .hero-btn {
+      flex: 1; /* Full width buttons on mobile */
+      background: rgba(30, 30, 30, 0.85); /* Slightly transparent dark */
+      border-color: transparent;
+      color: #fff;
+    }
+    
+    .hero-btn:hover {
+       background: #fff;
+       color: #000;
+    }
+  }
+</style>
+
+<div class="split-hero-section nx-hero-section"   style="
+    --nx-btn-bg: {{ section.settings.btn_bg_color }};
+    --nx-btn-hover-bg: {{ section.settings.btn_hover_bg_color }};
+    --nx-btn-text: {{ section.settings.btn_text_color }};
+    --nx-btn-hover-text: {{ section.settings.btn_hover_text_color }};
+  ">
+  <div class="split-hero-wrapper {% if section.settings.layout_mode == 'single' %}single-mode{% endif %}">
+
+<div class="hero-mobile-bg large-up-hide"> 
+  {%- liquid
+    if section.settings.image_mobile
+      assign mobile_image = section.settings.image_mobile
+    elsif section.settings.image_left
+      assign mobile_image = section.settings.image_left
+    endif
+  -%}
+  
+  {% if mobile_image %}
+    {{ mobile_image | image_url: width: 1000 | image_tag: 
+      class: 'hero-mobile-img', 
+      loading: 'eager', 
+      fetchpriority: 'high',
+      sizes: '(min-width: 901px) 0px, 100vw',  
+      widths: '375, 550, 750, 1100'
+    }}
+  {%- comment -%} Updated sizes to 901px to match your CSS breakpoint {%- endcomment -%}
+  {% endif %}
+  <div class="hero-mobile-overlay"></div>
+</div>
+
+    {%- comment -%}
+      SINGLE MODE DESKTOP BACKGROUND
+      FIX: Added 'quality: 70' and removed '3000' width.
+    {%- endcomment -%}
+    {% if section.settings.layout_mode == 'single' %}
+      <div class="desktop-single-bg small-hide">
+        {% if section.settings.image_left %}
+           {{ section.settings.image_left | image_url: width: 2000 | image_tag: 
+              loading: 'eager',
+              fetchpriority: 'high',
+              sizes: '(max-width: 749px) 0px, 100vw',
+              widths: '750, 1100, 1500, 1780, 2000'
+           }}
+        {% else %}
+           {{ 'lifestyle-1' | placeholder_svg_tag: 'hero-img' }}
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {%- comment -%}
+      SPLIT MODE: LEFT IMAGE
+      FIX: Added 'quality: 70' to reduce LCP time.
+    {%- endcomment -%}
+    <div class="hero-col hero-img-col small-hide">
+      {% if section.settings.image_left %}
+        {{ section.settings.image_left | image_url: width: 1200 | image_tag: 
+           class: 'hero-img', 
+           loading: 'eager',
+           fetchpriority: 'high',
+           sizes: '(max-width: 749px) 0px, 50vw',
+           widths: '550, 750, 1100, 1500'
+        }}
+      {% else %}
+        {{ 'collection-1' | placeholder_svg_tag: 'hero-img' }}
+      {% endif %}
+    </div>
+
+    {%- comment -%}
+      CENTER CONTENT
+    {%- endcomment -%}
+    <div class="hero-col hero-content-col" 
+         style="
+           justify-content: {{ section.settings.text_align_y }}; 
+           align-items: {{ section.settings.text_align_x }}; 
+           text-align: {% if section.settings.text_align_x == 'flex-start' %}left{% elsif section.settings.text_align_x == 'flex-end' %}right{% else %}center{% endif %};
+         ">
+      
+      <h1 class="hero-heading">{{ section.settings.heading }}</h1>
+  <p class="hero-subtext" style="text-align: {{ section.settings.subtext_align }}; width: 100%;">
+  {{ section.settings.subtext }}
+</p>
+      
+      <div class="hero-buttons">
+        <div class="nx-btn">
+          {% if section.settings.btn_label_1 != blank %}
+            <a href="{{ section.settings.btn_link_1 }}" class="nx-btn-text">{{ section.settings.btn_label_1 }}</a>
+          {% endif %}
+        </div>
+        <div class="nx-btn">
+          {% if section.settings.btn_label_2 != blank %}
+            <a href="{{ section.settings.btn_link_2 }}" class="nx-btn-text">{{ section.settings.btn_label_2 }}</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    {%- comment -%}
+      SPLIT MODE: RIGHT IMAGE
+      FIX: Added 'quality: 70'.
+    {%- endcomment -%}
+    <div class="hero-col hero-img-col small-hide">
+      {% if section.settings.image_right %}
+        {{ section.settings.image_right | image_url: width: 1200 | image_tag: 
+           class: 'hero-img', 
+           loading: 'eager',
+           fetchpriority: 'high',
+           sizes: '(max-width: 749px) 0px, 50vw',
+           widths: '550, 750, 1100, 1500'
+        }}
+      {% else %}
+        {{ 'collection-2' | placeholder_svg_tag: 'hero-img' }}
+      {% endif %}
+    </div>
+
+  </div>
+</div>

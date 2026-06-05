@@ -1,0 +1,388 @@
+
+<style>
+.ma-banner-sss {
+height: 100%;
+position: relative;
+padding-top: 25px;
+overflow: hidden;
+  width: 100%;
+}
+.Ma-swipersss {
+width: 100%;
+height: 100%;
+position: relative;
+  border-radius: 20px;
+  
+}
+.Ma-swipersss .swiper-slide {
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 10px;
+  
+}
+.Ma-sss-img {
+position: relative;
+width: 100%;
+height: 100%;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 20px;
+min-height: 60rem;
+max-height: 60rem;
+object-fit: cover;
+}
+.ma-banner-sss .swiper-slide:hover  .Ma-sss-img{
+  border-radius: 20px;
+  transition: scale 0.5s ease;
+}
+.{{ section.id }} .text-ssss {
+position: absolute;
+    max-width: 50%;
+    padding: 40px;
+    top: 45%;
+    transform: translate(0%, -50%);
+    z-index: 9;
+    left: 5%;
+    {% if section.settings.bg-color != blank %}
+    background-color: {{ section.settings.bg-color }}39;
+    border-radius: 20px;
+    backdrop-filter: blur(31.1px);
+    {% endif %}
+}
+.{{ section.id }} .text-ssss *{
+  color: {{ section.settings.text | default: '#fff' }};
+}
+.Ma-swipersss .swiper-pagination-bullet {
+width: 10px;
+height: 10px;
+background-color: #fff;
+opacity: 0.5;
+margin: 0 5px;
+transition: scale 0.3s ease;
+border-radius: 50%;
+}
+.Ma-swipersss .Ma-swiper-pagination {
+    position: absolute;
+    bottom: 0;
+    z-index: 99;
+    padding: 20px 80px;
+    display: flex;
+    justify-content: flex-end;
+}
+.Ma-swipersss .swiper-pagination-bullet-active {
+width: 30px; 
+background-color: #fff;
+border-radius: 25px; 
+transition: scale 0.3s ease;
+opacity: 1;
+}
+.text-sss-3{
+  font-size: 32px;
+  margin: 0;
+  margin-bottom: 20px;
+  line-height: 1;
+}
+.text-sss-2{
+  font-size: 14px;
+  margin-bottom: 20px;
+  
+}  
+.text-sss-4{
+  font-size:16px;
+  line-height: 22px;
+  margin-bottom: 24px;
+}
+.text-sss-4 p{
+  margin: 0px;
+}
+.Ma-swipersss .swiper-slide {
+transition: scale 0.5s ease; 
+overflow: hidden;
+cursor: pointer;
+
+}
+.{{ section.id }} .Ma-banner-button .Ma-btn{
+background: transparent;
+border: 1px solid {{ section.settings.text | default: '#fff' }};
+}
+.Ma-banner-button .Ma-btn > span{
+padding: 12px;
+}
+.custom-features {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 20px;
+}
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.feature-item span {
+  white-space: nowrap;
+}
+.feature-item img{
+  width: 37px;
+  height: 37px;
+}
+.Ma-sss-img.mob{
+  display: none;
+}
+@media screen and (max-width:768px){
+  .text-sss-3{
+    font-size: 22px;
+  }
+  .Ma-swipersss .swiper-slide:has(.Ma-sss-img.mob) .desk{
+    display: none;
+  }
+  .Ma-sss-img.mob{
+    display: block;
+  }
+  .ma-banner-sss {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+  .Ma-sss-img {
+    width: 100%;
+}
+  .Ma-swipersss .Ma-swiper-pagination{
+       padding: 20px 40px;
+  }
+  .custom-features{
+    flex-direction: column;
+  }
+  .{{ section.id }} .text-ssss{
+    top: 24px;
+    left: 24px;
+    right: 24px;
+    transform: translate(0%, 0%);
+    {% if section.settings.bg-color == blank %}
+      padding-inline: 0px;
+    {% endif %}
+    max-width: 100%;
+  }
+  .Ma-sss-img{
+    max-height: 70rem;
+    height: auto;
+  }
+}
+</style>
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+<div class="icontext-row section-{{ section.id }}-padding {{ section.id }}">
+<div class="ma-banner-sss">
+  <div class="ma-banner-wrapper">
+    <div class="page-width">
+      <div class="Ma-swipersss swiper">
+        <div class="swiper-wrapper">
+          {% for block in section.blocks %}
+          <div class="swiper-slide">
+            <img
+              class="Ma-sss-img desk"
+              src="{{ block.settings.image | img_url: 'master' }}"
+              alt="{{ block.settings.title }}"
+            />
+            {% if block.settings.image-mob %}
+            <img
+              class="Ma-sss-img mob"
+              src="{{ block.settings.image-mob | img_url: 'master' }}"
+              alt="{{ block.settings.title }}"
+            />
+            {% endif %}
+            <div class="text-ssss">
+              <div class="text-sss-1">
+                <span class="text-sss-2">{{ block.settings.subtitle }}</span>
+                <h3 class="text-sss-3">{{ block.settings.title }}</h3>
+                <div class="text-sss-4">{{ block.settings.description }}</div>
+                <div class="custom-features">
+                  {% if block.settings.feature_1_icon_svg %}
+                  <div class="feature-item">
+                    {{ block.settings.feature_1_icon_svg | image_url: width: 80 | image_tag  }}
+                    <span>{{ block.settings.feature_1_label }}</span>
+                  </div>
+                  {%endif %}
+                  {% if block.settings.feature_2_icon_svg %}
+                  <div class="feature-item">
+                    {{ block.settings.feature_2_icon_svg | image_url: width: 80 | image_tag }}
+                    <span>{{ block.settings.feature_2_label }}</span>
+                  </div>
+                  {% endif %}
+                  {% if block.settings.feature_3_icon_svg %}
+                  <div class="feature-item">
+                    {{ block.settings.feature_3_icon_svg | image_url: width: 80 | image_tag }}
+                    <span>{{ block.settings.feature_3_label }}</span>
+                  </div>
+                  {% endif %}
+                </div>
+                {% if block.settings.button_text != blank %}
+                <div class="Ma-banner-button">
+                  <a href="{{ block.settings.button_link }}" class="Ma-btn text-sss-btn">
+                    <span data-text="{{ block.settings.button_text }}">{{ block.settings.button_text }}</span>
+                  </a>
+                </div>
+              {% endif %}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="Ma-swiper-pagination"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    new Swiper(".Ma-swipersss", {
+      spaceBetween: 26,
+      freeMode: false,
+      speed: 500, // 500ms transition duration
+      loop: true,
+      centerInsufficientSlides: true,
+      pagination: {
+        el: ".Ma-swiper-pagination",
+        clickable: true,
+      },
+    });
+  });
+</script>
+
+
+{% schema %}
+{
+  "name": "Ma Banner",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg-color",
+      "label": "Background Color"
+    },
+    {
+      "type": "color",
+      "id": "text",
+      "label": "Content Color"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    },
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Slide Image (Desktop)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image-mob",
+          "label": "Slide Image (Mobile)"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle Text",
+          "default": "Bedre Malte x Bedre Nætter"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Brohaves ven skal prioritere sin søvn"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Rasmus Brohaves ven, Malte, sover for lidt, fester for meget og passer ikke godt nok på sig selv.</p>"
+        },
+        {
+          "type": "image_picker",
+          "id": "feature_1_icon_svg",
+          "label": "Feature 1 SVG (Paste SVG code here)"
+        },
+        {
+          "type": "text",
+          "id": "feature_1_label",
+          "label": "Feature 1 Label",
+          "default": "Ingen renter"
+        },
+        {
+          "type": "image_picker",
+          "id": "feature_2_icon_svg",
+          "label": "Feature 2 SVG (Paste SVG code here)"
+        },
+        {
+          "type": "text",
+          "id": "feature_2_label",
+          "label": "Feature 2 Label",
+          "default": "Ingen skjulte gebyrer"
+        },
+        {
+          "type": "image_picker",
+          "id": "feature_3_icon_svg",
+          "label": "Feature 3 SVG (Paste SVG code here)"
+        },
+        {
+          "type": "text",
+          "id": "feature_3_label",
+          "label": "Feature 3 Label",
+          "default": "Hurtig godkendelse"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "Læs mere"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link",
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ma Banner",
+    }
+  ]
+}
+
+{% endschema %}

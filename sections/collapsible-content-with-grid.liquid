@@ -1,0 +1,219 @@
+{{ 'wi-accordion.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+  .section-{{ section.id }}-title{
+    text-align: {{section.settings.title-align}};
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="wi-accordion-wrapper section-{{ section.id }}-padding color-{{ section.settings.color_scheme }}">
+  <div class="wi-accordion-container container-x">
+    
+    <div class="wi-accordion-layout">
+      
+      {%- if section.settings.heading != blank or section.settings.caption != blank -%}
+        <div class="wi-accordion-header">
+          {%- if section.settings.caption != blank -%}
+            <p class="wi-accordion-caption">{{ section.settings.caption | escape }}</p>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="wi-accordion-title {{ section.settings.heading_size }}">
+              {{ section.settings.heading }}
+            </h2>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <div class="wi-accordion-content">
+        {% for block in section.blocks %}
+          <div class="wi-accordion-item" {{ block.shopify_attributes }}>
+            <button class="wi-accordion-trigger" aria-expanded="false">
+              <span class="wi-accordion-title-text">{{ block.settings.title }}</span>
+              <span class="wi-accordion-icon">
+                <svg class="icon-plus" width="9" height="9" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 0V12" stroke="#8E7C6B" stroke-width="1.5"/>
+                  <path d="M12 6L0 6" stroke="#8E7C6B" stroke-width="1.5"/>
+                </svg>
+                <svg class="icon-minus" width="9" height="2" viewBox="0 0 12 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M0 1H12" stroke="#8E7C6B" stroke-width="1.5"/>
+                </svg>
+              </span>
+            </button>
+            <div class="wi-accordion-panel">
+              <div class="wi-accordion-body">
+                {{ block.settings.content }}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const accordions = document.querySelectorAll('.wi-accordion-trigger');
+
+    accordions.forEach(acc => {
+      acc.addEventListener('click', function() {
+        // Toggle active state
+        const isActive = this.getAttribute('aria-expanded') === 'true';
+        const panel = this.nextElementSibling;
+        
+        // Optional: Close others (Accordion behavior)
+        // Remove this loop if you want multiple items open at once
+        document.querySelectorAll('.wi-accordion-trigger').forEach(otherAcc => {
+          if (otherAcc !== this) {
+            otherAcc.setAttribute('aria-expanded', 'false');
+            otherAcc.nextElementSibling.style.maxHeight = null;
+            otherAcc.closest('.wi-accordion-item').classList.remove('active');
+          }
+        });
+
+        // Toggle current
+        this.setAttribute('aria-expanded', !isActive);
+        this.closest('.wi-accordion-item').classList.toggle('active');
+
+        if (!isActive) {
+          panel.style.maxHeight = panel.scrollHeight + "px";
+        } else {
+          panel.style.maxHeight = null;
+        }
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "WI Accordion",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Caption"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        { "value": "h2", "label": "Small" },
+        { "value": "h1", "label": "Medium" },
+        { "value": "h0", "label": "Large" }
+      ],
+      "default": "h1",
+      "label": "Heading Size"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+     {
+      "type": "header",
+      "content": "Paddding Heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Bottom",
+      "default": 0
+    },
+        {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Top Mobile",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label":  "Paddding Bottom Mobile",
+      "default": 0
+    },
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Question",
+          "default": "What is your return policy?"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Answer",
+          "default": "<p>You can return any item within 30 days of purchase.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "WI Accordion"
+    }
+  ]
+}
+{% endschema %}

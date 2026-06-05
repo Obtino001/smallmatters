@@ -1,0 +1,207 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+.lux-fade-section {
+text-align: center;
+/* border: 1px solid #00000017; */
+}
+
+.lux-fade-container {
+max-width: 820px;
+margin: 0 auto;
+padding-left: 1.5rem;
+padding-right: 1.5rem;
+}
+
+.lux-main-text,
+.lux-sub-text,
+.lux-sub-text-happy {
+opacity: 0;
+transform: translateY(25px);
+transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+.lux-main-text.revealed,
+.lux-sub-text.revealed,
+.lux-sub-text-happy.revealed {
+opacity: 1;
+transform: translateY(0);
+}
+
+.lux-main-text .rte {
+font-family: Lora;
+font-weight: 400;
+line-height: 100%;
+text-align: center;
+font-size: {{ section.settings.font_size }}px;
+line-height: 1.38;
+margin-bottom: 40px;
+color: rgb(var(--color-foreground)); 
+}
+
+.lux-main-text .rte a {
+color: rgb(var(--color-foreground));
+text-decoration: underline;
+text-underline-offset: 3px;
+}
+.lux-fade-container-b {
+    border-top: 1px solid #00000017;
+    border-bottom: 1px solid #00000017;
+}
+.lux-sub-text {
+text-transform: uppercase;
+color: rgb(var(--color-foreground));
+opacity: 0.8;
+font-family: 'Satoshi-medium';
+font-weight: 700;
+font-size: 11px;
+line-height: 100%;
+text-transform: uppercase;
+margin-bottom: 6px;
+}
+.lux-sub-text-happy {
+font-family: Satoshi;
+font-weight: 500;
+font-size: 11px;
+line-height: 100%;
+letter-spacing: 0%;
+}
+
+@media screen and (max-width: 768px){
+  .lux-fade-section {
+    text-align: left;
+}
+
+.lux-main-text .rte {
+text-align: left;
+font-size:20px;
+}
+}
+
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient ">
+  <div class="lux-fade-section  container-x">
+    <div class="lux-fade-container-b section-{{ section.id }}-padding">
+    <div class="lux-fade-container">
+
+      <div class="lux-main-text fade-item">
+        <div class="rte">
+          {{ section.settings.main_text }}
+        </div>
+      </div>
+      
+      {% if section.settings.sub_text != blank %}
+        <div class="lux-sub-text fade-item">{{ section.settings.sub_text }}</div>
+        <div class="lux-sub-text-happy fade-item">{{ section.settings.sub_happy }}</div>
+
+      {% endif %}
+      
+    </div>
+  </div>
+  </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const observerOptions = {
+    threshold: 0.25 
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("revealed");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  const fadeItems = document.querySelectorAll(".section-{{ section.id }}-padding .fade-item");
+  fadeItems.forEach((el) => observer.observe(el));
+});
+</script>
+
+{% schema %}
+{
+  "name": "Luxury Fade Text",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "richtext",
+      "id": "main_text",
+      "label": "Main Text",
+      "default": "<p>No logos. No noise. Just timeless design identified by a signature stripe on the back or a quiet color twist. A personal touch that makes each piece unique while keeping it effortlessly minimal.</p>"
+    },
+    {
+      "type": "text",
+      "id": "sub_text",
+      "label": "Bottom Label",
+      "default": "1000+ HAPPY CUSTOMERS"
+    },
+      {
+      "type": "text",
+      "id": "sub_happy",
+      "label": "Bottom Label",
+      "default": "( 4.5 stars | based on 200+ reviews )"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 18,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Main Text Size",
+      "default": 26
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 52
+    }
+  ],
+  "presets": [
+    {
+      "name": "Luxury Fade Text"
+    }
+  ]
+}
+{% endschema %}

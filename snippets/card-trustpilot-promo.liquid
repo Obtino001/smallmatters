@@ -1,0 +1,40 @@
+<li
+class="grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+{% if settings.animations_reveal_on_scroll %}
+    data-cascade
+    style="--animation-order: {{ forloop.index }};"
+{% endif %}
+>
+<div 
+  class="trustpilot-card"
+  style="background-image: url({{ block.settings.bg_image | image_url: width: 800 }});"
+>
+  <div 
+    class="trustpilot-card__overlay"
+    style="background-color: {{ block.settings.overlay_color }};
+           opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};">
+  </div>
+
+  <div class="trustpilot-card__content-upper">
+    {% if block.settings.logo %}
+        <img src="{{ block.settings.logo | image_url: width: 800 }}" alt="Trustpilot" class="trustpilot-card__logo">
+    {% endif %}
+    <p class="trustpilot-card__headline">{{ block.settings.headline }}</p>
+  </div>
+  <div class="trustpilot-card__content">
+
+    <div class="trustpilot-card__review">
+        <div class="trustpilot-card__review-write">
+            <p class="trustpilot-card__reviewer">{{ block.settings.reviewer_name }}</p>
+            <div class="trustpilot-card__stars">
+                {% if block.settings.logo-s %}
+                    <img src="{{ block.settings.logo-s | image_url: width: 800 }}" alt="Trustpilot" class="trustpilot-card__logo">
+                {% endif %}
+            </div>
+        </div>
+        <p class="trustpilot-card__review-text">{{ block.settings.review_text }}</p>
+    </div>
+  </div>
+</div>
+
+</li>

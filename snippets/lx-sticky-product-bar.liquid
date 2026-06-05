@@ -1,0 +1,54 @@
+{{ 'lx-sticky-bar.css' | asset_url | stylesheet_tag }}
+
+
+<div id="sticky-bar" class="sticky-bar">
+  <div class="sticky-bar-inner page-width">
+    <div class="sticky-bar-left">
+        <div class="sticky-bar-image">
+            <img src="{{ product.featured_image | image_url: width: '150' }}" alt="{{ product.title }}" class="desktop_only">
+            <div class="sticky-bar-info">
+                <h4 class="sticky-bar-title">{{ product.title }}</h4>
+                <div class="sticky-bar-sub">Mocha - 3D-massagestol</div>
+            </div>
+        </div>
+        {% if product.has_only_default_variant == false %}
+          <div class="sticky-bar-variant">
+              {% for option in product.options_with_values %}
+                <fieldset class="product-form__input product-form__input--swatch">
+                      <legend class="form__label">
+                          {{ option.name }}:
+                          <span data-selected-value>
+                          {{ option.selected_value }}
+                          </span>
+                      </legend>
+                      {% render 'product-variant-options-sticky',
+                          product: product,
+                          option: option,
+                          picker_type: 'swatch'
+                      %}
+                  </fieldset>
+              {% endfor %}
+          </div>
+        {% endif %}
+    </div>
+    <div class="sticky-bar-price-btn">
+      <span class="sticky-bar-price {% if product.compare_at_price > product.price %}false__com{% endif %}">
+        {%- render 'price',
+            product: product,
+            use_variant: true,
+            show_badges: true,
+            price_class: 'price--large'
+        -%}
+      </span>
+      <div class="sticky__buy___btn">
+        {%- render 'buy-buttons',
+            block: block,
+            product: product,
+            product_form_id: product_form_id,
+            section_id: section.id,
+            show_pickup_availability: true
+        -%}
+      </div>
+    </div>
+  </div>
+</div>

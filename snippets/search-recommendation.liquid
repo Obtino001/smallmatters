@@ -1,0 +1,24 @@
+{% if settings.search_recommendation_product_list %}
+    <div id="predictive-search-results-groups-wrapper" class="predictive-search__results-groups-wrapper predictive-search__results-groups-wrapper--no-suggestions"><div class="predictive-search__result-group"><div>
+            <h2 id="predictive-search-products" class="predictive-search__heading text-body caption-with-letter-spacing">recommendation</h2>
+                <ul id="predictive-search-results-products-list" class="predictive-search__results-list list-unstyled" role="group" aria-labelledby="predictive-search-products">
+                    {%- for product in settings.search_recommendation_product_list -%}
+                        <li id="predictive-search-option-product-{{ forloop.index }}" class="predictive-search__list-item" role="option" aria-selected="false">
+                            {% render 'card-product',
+                                card_product: product,
+                                media_aspect_ratio: 'square',
+                                image_shape: 'default',
+                                show_secondary_image: true,
+                                show_vendor: false,
+                                show_rating: false,
+                                lazy_load: false,
+                                quick_add: 'standard',
+                                section_id: section.id
+                            %}
+                        </li>
+                    {%- endfor -%}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endif %}

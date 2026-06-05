@@ -1,0 +1,395 @@
+<style>
+.aok9-about-section {
+  background-color: var(--section-bg);
+  padding-top: var(--section-pt);
+  padding-bottom: var(--section-pb);
+}
+
+.aok9-image {
+  height: 856px;
+}
+
+.aok9-about-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  align-items: center;
+}
+
+.aok9-about-content {
+  max-width: 100%;
+  text-align: var(--content-align);
+}
+
+.aok9-heading {
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 130%;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #545453;
+  max-width: 500px;
+}
+
+.aok9-text {
+  max-width: 500px;
+}
+
+.aok9-heading-subtitle {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 100%;
+  color: #545453;
+  text-transform: uppercase;
+}
+
+.aok9-text p {
+
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 26px;
+    letter-spacing: 1px;
+    color: #545453;
+}
+.aok9-text h5 {
+  font-weight: 500;
+  font-style: italic;
+  font-size: 14px;
+  line-height: 100%;
+  letter-spacing: 2px;
+  color: #545453;
+}
+
+.aok9-button {
+  display: inline-block;
+  padding: 12px 32px;
+  margin-top: 20px;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  text-decoration: none;
+  border: 1px solid var(--button-border);
+  border-radius: 2px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+.aok9-image img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.page-width-right,
+.page-width-left {
+  padding: 15%;
+}
+
+.ak09.button.button--primary {
+  margin-top: 30px;
+}
+
+@media screen and (max-width: 768px) {
+  .aok9-heading {
+    font-size: 22px;
+  }
+
+  .aok9-image {
+    height: 629px;
+    width: 100%;
+  }
+
+  .ak09.button.button--primary {
+    margin-top: 0;
+  }
+
+  .aok9-about-section.You-might-elsa .aok9-about-wrapper {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .page-width-left {
+    padding: 15px;
+  }
+
+  .aok9-about-section {
+    padding-top: 50px;
+    padding-bottom: var(--pb-mobile, 50px);
+  }
+
+  .page-width-right {
+    padding: 5%;
+  }
+
+  .aok9-about-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .aok9-about-content {
+    text-align: var(--content-align-mobile);
+    background: #f4f4f4;
+    width: 100%;
+  }
+}
+</style>
+
+<div
+  class="aok9-about-section  {{ section.settings.custom_class }}"
+  style="
+    --section-bg: {{ section.settings.section_bg_color }};
+    --heading-color: {{ section.settings.heading_color }};
+    --text-color: {{ section.settings.text_color }};
+    --heading-size: {{ section.settings.heading_size }}px;
+    --text-size: {{ section.settings.text_size }}px;
+    --section-pt: {{ section.settings.padding_top }}px;
+    --section-pb: {{ section.settings.padding_bottom }}px;
+    --content-align: {{ section.settings.content_alignment }};
+    --content-align-mobile: {{ section.settings.content_alignment_mobile }};
+    --button-bg: {{ section.settings.button_bg_color }};
+    --button-text: {{ section.settings.button_text_color }};
+    --button-border: {{ section.settings.button_border_color }};
+  "
+ >
+  <div class="aok9-about-wrapper container-x {% if section.settings.use_page_width %}page-width{% endif %}">
+    {% if section.settings.image_position == 'left' %}
+      {% if section.settings.dog_image != blank %}
+        <div class="aok9-image">
+          <img src="{{ section.settings.dog_image | image_url }}" alt="image">
+        </div>
+      {% endif %}
+    {% endif %}
+    <div class="aok9-about-content {% unless section.settings.use_page_width %}{% if section.settings.image_position == 'right' %}page-width-left{% else %}page-width-right{% endif %}{% endunless %}">
+           {% if section.settings.section_heading != blank %}
+        <h6 class="aok9-heading-subtitle">{{ section.settings.section_heading_subtitle }}</h6>
+      {% endif %}
+      {% if section.settings.section_heading != blank %}
+        <h2 class="aok9-heading">{{ section.settings.section_heading }}</h2>
+      {% endif %}
+<div class="aok9-text">
+      <p class="aok9-textss">{{ section.settings.content }}</p>
+</div>
+      {% if section.settings.button_text != blank %}
+        <a href="{{ section.settings.button_link }}" class="ak09
+          button button--primary">
+          {{ section.settings.button_text }}
+        </a>
+      {% endif %}
+    </div>
+    {% if section.settings.image_position == 'right' %}
+      {% if section.settings.dog_image != blank %}
+        <div class="aok9-image">
+          <img src="{{ section.settings.dog_image | image_url }}" alt="image" loading="lazy">
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Full Image With Text",
+  "settings": [
+          {
+    "type": "header",
+    "content": "Don't delete otherwise design may break"
+    },
+    {
+    "type": "text",
+    "id": "custom_class",
+    "label": "Custom CSS class",
+    "default": "my-default-class"
+    },
+    {
+      "type": "header",
+      "content": "Section Heading"
+    },
+       {
+      "type": "text",
+      "id": "section_heading_subtitle",
+      "label": "Subtitle",
+      "default": "Where It All Started"
+    },
+    {
+      "type": "text",
+      "id": "section_heading",
+      "label": "Heading",
+      "default": "Where It All Started"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading Font Size",
+      "min": 16,
+      "max": 48,
+      "default": 32,
+      "step": 1
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Text Content",
+      "default": "<p>We launched A-OK9 in 2019 with a mission to create premium products for dogs and their owners.</p>"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#045c5a"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text Font Size",
+      "min": 12,
+      "max": 24,
+      "default": 16,
+      "step": 1
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content Alignment (Desktop)",
+      "options": [
+        {"value": "left", "label": "Left"},
+        {"value": "center", "label": "Center"},
+        {"value": "right", "label": "Right"}
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment_mobile",
+      "label": "Content Alignment (Mobile)",
+      "options": [
+        {"value": "left", "label": "Left"},
+        {"value": "center", "label": "Center"},
+        {"value": "right", "label": "Right"}
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Button Border Color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "dog_image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image Position",
+      "options": [
+        {"value": "left", "label": "Left"},
+        {"value": "right", "label": "Right"}
+      ],
+      "default": "right"
+    },
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "color",
+      "id": "section_bg_color",
+      "label": "Section Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "default": 40,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "default": 40,
+      "step": 1
+    },  
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top (Mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom (Mobile)",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "use_page_width",
+      "label": "Use Standard Page Width",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Full Image With Text"
+    }
+  ]
+}
+{% endschema %}

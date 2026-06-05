@@ -1,0 +1,148 @@
+.wi-accordion-wrapper {
+    width: 100%;
+    background: #f8f6f3;
+}
+
+.wi-accordion-header {
+  margin-bottom: 30px;
+}
+
+.wi-accordion-caption {
+  font-size: 1.2rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  opacity: 0.7;
+}
+
+.wi-accordion-title {
+    margin: 0;
+    line-height: 1.2;
+    font-family: Lora;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 32px;
+    leading-trim: NONE;
+    line-height: 100%;
+    letter-spacing: 0%;
+}
+
+/* Accordion Layout */
+.wi-accordion-layout {
+  display: flex;
+  flex-direction: column; /* Or row if you want side-by-side */
+  gap: 20px;
+}
+
+@media screen and (min-width: 990px) {
+  .wi-accordion-layout {
+    flex-direction: row;
+    gap: 50px;
+    justify-content: space-between;
+  }
+.wi-accordion-content {
+    flex: 2;
+    max-width: 600px;
+    margin-right: 20%;
+}
+}
+
+/* Accordion Item Styles */
+.wi-accordion-item {
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  margin-bottom: 10px;
+}
+
+.wi-accordion-trigger {
+  width: 100%;
+  background: none;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.3s ease;
+}
+
+.wi-accordion-title-text {
+font-family: Lato;
+font-weight: 500;
+font-style: Medium;
+font-size: 14px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+color: #3c3c3c;
+}
+
+/* Icon Animation */
+.wi-accordion-icon {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wi-accordion-icon svg {
+  position: absolute;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.icon-plus {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+.icon-minus {
+  opacity: 0;
+  transform: rotate(-90deg);
+}
+
+/* Active State Icons */
+.wi-accordion-item.active .icon-plus {
+  opacity: 0;
+  transform: rotate(90deg);
+}
+
+.wi-accordion-item.active .icon-minus {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+/* Panel Animation */
+.wi-accordion-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.wi-accordion-body {
+    padding-bottom: 10px;
+    color: #000000b3;
+    line-height: 1.6;
+    font-family: Lato;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 14px;
+    leading-trim: NONE;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #3c3c3c;
+}
+
+@media screen and (max-width: 750px) {
+h2.wi-accordion-title.h1 {
+    font-size: 24px;
+    text-align: center;
+}
+.wi-accordion-content {
+    margin-inline: 40px;
+}
+.wi-accordion-layout {
+    gap: 0px;
+}
+}
