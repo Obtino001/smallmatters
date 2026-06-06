@@ -6,6 +6,9 @@ class WIcartDrawer extends HTMLElement {
         this.addEventListener('click', this.decQuantity.bind(this));
         this.addEventListener('click', this.revQuantity.bind(this));
         this.addEventListener('click', this.cartBgclick.bind(this));
+        this.addEventListener('click', this.handleCartClicks.bind(this));
+        this.addEventListener('input', this.handleCartInputs.bind(this));
+        this.addEventListener('submit', this.handleCartSubmits.bind(this));
         this.isProcessing = false;
     }
 
@@ -348,6 +351,137 @@ class WIcartDrawer extends HTMLElement {
                 }, 3000);
             }
         });
+    }
+
+    handleCartClicks(event) {
+        // 1. Complete the Look Option Picker
+        if (event.target.classList.contains('WI_complete_look_option_val')) {
+            const btn = event.target;
+            const valuesGroup = btn.closest('.WI_complete_look_option_values');
+            if (valuesGroup) {
+                valuesGroup.querySelectorAll('.WI_complete_look_option_val').forEach(el => el.classList.remove('selected'));
+                btn.classList.add('selected');
+                
+                const container = btn.closest('.WI_complete_look_product');
+                if (container) {
+                    const selectedOptions = [];
+                    container.querySelectorAll('.WI_complete_look_option_values').forEach(group => {
+                        const selected = group.querySelector('.WI_complete_look_option_val.selected');
+                        if (selected) {
+                            selectedOptions.push(selected.getAttribute('data-value'));
+                        }
+                    });
+                    
+                    const select = container.querySelector('.WI_complete_look_variant_select');
+                    const hiddenInput = container.querySelector('.WI_complete_look_variant_id');
+                    if (select && hiddenInput) {
+                        const options = select.options;
+                        const matchString = selectedOptions.join(',');
+                        for (let i = 0; i < options.length; i++) {
+                            if (options[i].getAttribute('data-options') === matchString) {
+                                select.value = options[i].value;
+                                hiddenInput.value = options[i].value;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // 2. Carousel Arrow Left
+        if (event.target.closest('.WI_also_like_prev')) {
+            const alsoLikeSection = event.target.closest('.WI_also_like');
+            if (alsoLikeSection) {
+                const list = alsoLikeSection.querySelector('.WI_also_like_list');
+                if (list) list.scrollBy({ left: -140, behavior: 'smooth' });
+            }
+        }
+
+        // 3. Carousel Arrow Right
+        if (event.target.closest('.WI_also_like_next')) {
+            const alsoLikeSection = event.target.closest('.WI_also_like');
+            if (alsoLikeSection) {
+                const list = alsoLikeSection.querySelector('.WI_also_like_list');
+                if (list) list.scrollBy({ left: 140, behavior: 'smooth' });
+            }
+        }
+
+        // 4. Discount Code Apply Button Click
+        if (event.target.classList.contains('WI_discount_btn')) {
+            const btn = event.target;
+            const wrap = btn.closest('.WI_discount_wrap');
+            if (wrap) {
+                const input = wrap.querySelector('.WI_discount_input');
+                if (input && input.value) {
+                    const form = wrap.closest('form');
+                    if (form) {
+                        let discountHidden = form.querySelector('input[name="discount"]');
+                        if (!discountHidden) {
+                            discountHidden = document.createElement('input');
+                            discountHidden.type = 'hidden';
+                            discountHidden.name = 'discount';
+                            form.appendChild(discountHidden);
+                        }
+                        discountHidden.value = input.value;
+                        btn.textContent = 'APPLIED';
+                        btn.style.backgroundColor = '#E2ECF5';
+                        btn.style.borderColor = '#000';
+                        setTimeout(() => {
+                            btn.textContent = 'APPLY';
+                            btn.style.backgroundColor = '';
+                            btn.style.borderColor = '';
+                        }, 3000);
+                    }
+                }
+            }
+        }
+    }
+
+    handleCartInputs(event) {
+        // Sync discount input text if typed
+        if (event.target.classList.contains('WI_discount_input')) {
+            const input = event.target;
+            const form = input.closest('form');
+            if (form) {
+                let discountHidden = form.querySelector('input[name="discount"]');
+                if (!discountHidden) {
+                    discountHidden = document.createElement('input');
+                    discountHidden.type = 'hidden';
+                    discountHidden.name = 'discount';
+                    form.appendChild(discountHidden);
+                }
+                discountHidden.value = input.value;
+            }
+        }
+    }
+
+    async handleCartSubmits(event) {
+        // AJAX submission interceptor for Complete the Look Form
+        if (event.target.classList.contains('WI_complete_look_form')) {
+            event.preventDefault();
+            event.stopPropagation();
+            const form = event.target;
+            const btn = form.querySelector('.WI_complete_look_add_btn');
+            if (btn) btn.disabled = true;
+            
+            try {
+                const formData = new FormData(form);
+                const res = await fetch('/cart/add.js', {
+                    method: 'POST',
+                    body: formData
+                });
+                if (res.ok) {
+                    await this.updateCart();
+                } else {
+                    console.error('Failed to add to cart');
+                }
+            } catch (err) {
+                console.error(err);
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
     }
 }
 customElements.define("wi-cartdrawer", WIcartDrawer);
