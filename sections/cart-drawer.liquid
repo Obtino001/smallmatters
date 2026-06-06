@@ -29,6 +29,7 @@ wi-cartdrawer {
   z-index: 1;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 .WI_cartDrawerin_upsell {
   display: none !important;
@@ -119,6 +120,7 @@ wi-cartdrawer {
   flex: 1;
   position: relative;
   overflow: hidden;
+  height: calc(100% - 110px);
 }
 .WI_cartDrawerin_cart_body form {
   width: 100%;
@@ -129,7 +131,7 @@ wi-cartdrawer {
 .WI_cartDrawerin_cart_form_in {
   flex: 1;
   overflow-y: auto;
-  padding: 0 24px 40px 24px;
+  padding: 0 24px 220px 24px; /* Large bottom padding so scrolling content clears sticky footer */
 }
 .WI_cartDrawerin_cart_form_in::-webkit-scrollbar {
   width: 4px;
@@ -312,10 +314,13 @@ wi-cartdrawer {
   color: #000;
 }
 .WI_complete_look_toggle {
+  font-size: 16px;
+  font-weight: bold;
   display: flex;
   align-items: center;
   color: #000;
   transition: transform 0.3s;
+  user-select: none;
 }
 .WI_complete_look.open .WI_complete_look_toggle {
   transform: rotate(45deg);
@@ -379,8 +384,8 @@ wi-cartdrawer {
   gap: 4px;
 }
 .WI_complete_look_option_label {
-  font-size: 11px;
-  color: #555;
+  font-size: 12px;
+  color: #888;
 }
 .WI_complete_look_option_values {
   display: flex;
@@ -390,8 +395,11 @@ wi-cartdrawer {
 .WI_complete_look_option_val {
   border: 1px solid #E7E7E7;
   background: #fff;
-  padding: 4px 10px;
-  font-size: 11px;
+  padding: 5px 12px;
+  min-width: 35px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
   cursor: pointer;
   color: #000;
   transition: all 0.2s;
@@ -405,18 +413,21 @@ wi-cartdrawer {
   color: #fff;
 }
 .WI_complete_look_add_btn {
-  width: auto;
-  align-self: flex-start;
-  height: 30px;
-  padding: 0 16px;
   background: #000;
   color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
   border: none;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 1px;
+  height: 36px;
+  padding: 0 24px;
   cursor: pointer;
-  margin-top: 4px;
+  text-transform: uppercase;
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
   transition: background 0.2s;
 }
 .WI_complete_look_add_btn:hover {
@@ -475,14 +486,14 @@ wi-cartdrawer {
   display: none;
 }
 .WI_also_like_item {
-  flex: 0 0 120px;
+  flex: 0 0 160px;
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 .WI_also_like_item_img {
-  width: 120px;
-  height: 140px;
+  width: 160px;
+  height: 180px;
   background-color: #F8F8F8;
   overflow: hidden;
   position: relative;
@@ -497,9 +508,8 @@ wi-cartdrawer {
   font-weight: 400;
   color: #000;
   text-decoration: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.35;
+  margin-top: 2px;
 }
 .WI_also_like_item_price {
   font-size: 12px;
@@ -606,11 +616,15 @@ wi-cartdrawer {
 
 /* Sticky Footer Styles */
 .WI_cartDrawerin_cart_footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
   width: 100%;
   padding: 20px 24px 24px 24px;
   border-top: 1px solid #E7E7E7;
   background-color: #fff;
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.02);
+  z-index: 10;
 }
 .WI_cartDrawer_total {
   width: 100%;
@@ -843,12 +857,8 @@ wi-cartdrawer {
                       {% if first_product.handle != blank %}
                         <div class="WI_complete_look open">
                           <div class="WI_complete_look_header" onclick="this.closest('.WI_complete_look').classList.toggle('open')">
-                            <span>COMPLETE THE LOOK</span>
-                            <span class="WI_complete_look_toggle">
-                              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 0V10M0 5H10" stroke="currentColor" stroke-width="1.5"/>
-                              </svg>
-                            </span>
+                            <span>{{ section.settings.complete_look_title | default: 'COMPLETE THE LOOK' }}</span>
+                            <span class="WI_complete_look_toggle">×</span>
                           </div>
                           <div class="WI_complete_look_body">
                             <div class="WI_complete_look_product">
@@ -900,7 +910,7 @@ wi-cartdrawer {
                     {% if rec_handles.size > 1 %}
                       <div class="WI_also_like">
                         <div class="WI_also_like_header">
-                          <span>YOU MAY ALSO LIKE</span>
+                          <span>{{ section.settings.you_may_also_like_title | default: 'YOU MAY ALSO LIKE' }}</span>
                           <div class="WI_also_like_nav">
                             <button type="button" class="WI_also_like_prev">
                               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -937,16 +947,16 @@ wi-cartdrawer {
 
                     {% comment %} EXERCERE BUNDLE promo box {% endcomment %}
                     <div class="WI_bundle_promo">
-                      <h4 class="WI_bundle_promo_title">EXERCERE BUNDLE</h4>
-                      <p class="WI_bundle_promo_desc">
-                        Save 15% off when buying a bundle. Simply add a <a href="/collections/tops">Top</a>, <a href="/collections/blouses">Blouse</a> and <a href="/collections/bottoms">Bottom</a> to your cart. Already discounted items are excluded.
-                      </p>
+                      <h4 class="WI_bundle_promo_title">{{ section.settings.bundle_title | default: 'EXERCERE BUNDLE' }}</h4>
+                      <div class="WI_bundle_promo_desc">
+                        {{ section.settings.bundle_desc | default: '<p>Save 15% off when buying a bundle. Simply add a <a href="/collections/tops">Top</a>, <a href="/collections/blouses">Blouse</a> and <a href="/collections/bottoms">Bottom</a> to your cart. Already discounted items are excluded.</p>' }}
+                      </div>
                     </div>
 
                     {% comment %} Discount Code Input {% endcomment %}
                     <div class="WI_discount_wrap">
-                      <input type="text" name="discount" class="WI_discount_input" placeholder="Enter discount code" autocomplete="off">
-                      <button type="button" class="WI_discount_btn">APPLY</button>
+                      <input type="text" name="discount" class="WI_discount_input" placeholder="{{ section.settings.discount_placeholder | default: 'Enter discount code' }}" autocomplete="off">
+                      <button type="button" class="WI_discount_btn">{{ section.settings.discount_btn_text | default: 'APPLY' }}</button>
                     </div>
 
                 </div>
@@ -957,9 +967,8 @@ wi-cartdrawer {
                         <h5 class="WI_cartDrawer_total_price">{{ cart.total_price | money }}</h5>
                     </div>
 
-                    <button type="submit" name="checkout" value="Checkout" class="WI_cartDrawer_checkout">GO TO CHECKOUT</button>
+                    <button type="submit" name="checkout" value="Checkout" class="WI_cartDrawer_checkout">{{ section.settings.checkout_btn_text | default: 'GO TO CHECKOUT' }}</button>
                     
-                    {% comment %} Custom trust payment badges list matching screenshot 1:1 {% endcomment %}
                     <ul class="WI_cartDrawer_badges">
                       <!-- Apple Pay -->
                       <li>
@@ -1009,7 +1018,7 @@ wi-cartdrawer {
                         </svg>
                       </li>
                     </ul>
-                    <p class="WI_cartDrawer_subtext">Shipping, taxes, and discount codes are calculated at checkout</p>
+                    <p class="WI_cartDrawer_subtext">{{ section.settings.checkout_subtext | default: 'Shipping, taxes, and discount codes are calculated at checkout' }}</p>
                 </div>
                 {% endform %}
             </div>
@@ -1128,4 +1137,91 @@ document.addEventListener('input', function(e) {
     }
   }
 });
+
+// Ajax submission interceptor for Complete the Look Form
+document.addEventListener('submit', async function(e) {
+  if (e.target.classList.contains('WI_complete_look_form')) {
+    e.preventDefault();
+    const form = e.target;
+    const btn = form.querySelector('.WI_complete_look_add_btn');
+    if (btn) btn.disabled = true;
+    
+    try {
+      const formData = new FormData(form);
+      const res = await fetch('/cart/add.js', {
+        method: 'POST',
+        body: formData
+      });
+      if (res.ok) {
+        if (typeof window.refreshedCartDrawer === 'function') {
+          await window.refreshedCartDrawer();
+        } else {
+          location.reload();
+        }
+      } else {
+        console.error('Failed to add to cart');
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+});
 </script>
+
+{% schema %}
+{
+  "name": "Cart Drawer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "complete_look_title",
+      "label": "Complete the Look Title",
+      "default": "COMPLETE THE LOOK"
+    },
+    {
+      "type": "text",
+      "id": "you_may_also_like_title",
+      "label": "You May Also Like Title",
+      "default": "YOU MAY ALSO LIKE"
+    },
+    {
+      "type": "text",
+      "id": "bundle_title",
+      "label": "Bundle Title",
+      "default": "EXERCERE BUNDLE"
+    },
+    {
+      "type": "richtext",
+      "id": "bundle_desc",
+      "label": "Bundle Description",
+      "default": "<p>Save 15% off when buying a bundle. Simply add a <a href=\"/collections/tops\">Top</a>, <a href=\"/collections/blouses\">Blouse</a> and <a href=\"/collections/bottoms\">Bottom</a> to your cart. Already discounted items are excluded.</p>"
+    },
+    {
+      "type": "text",
+      "id": "discount_placeholder",
+      "label": "Discount Input Placeholder",
+      "default": "Enter discount code"
+    },
+    {
+      "type": "text",
+      "id": "discount_btn_text",
+      "label": "Discount Button Text",
+      "default": "APPLY"
+    },
+    {
+      "type": "text",
+      "id": "checkout_btn_text",
+      "label": "Checkout Button Text",
+      "default": "GO TO CHECKOUT"
+    },
+    {
+      "type": "text",
+      "id": "checkout_subtext",
+      "label": "Checkout Subtext",
+      "default": "Shipping, taxes, and discount codes are calculated at checkout"
+    }
+  ]
+}
+{% endschema %}
