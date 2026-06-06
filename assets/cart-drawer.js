@@ -227,11 +227,12 @@ class WIcartDrawer extends HTMLElement {
             if (totalSaving > 0) {
                 if (indicator) indicator.style.display = 'flex';
                 
-                // CHANGED LOCALE TO nb-NO AND CURRENCY TO NOK
-                if (savedMoney) savedMoney.innerHTML = "-" + (totalSaving / 100).toLocaleString('nb-NO', {
+                const currencyCode = (window.Shopify && window.Shopify.currency && window.Shopify.currency.active) || 'NOK';
+                const localeCode = currencyCode === 'NOK' ? 'nb-NO' : 'en-US';
+                if (savedMoney) savedMoney.innerHTML = "-" + (totalSaving / 100).toLocaleString(localeCode, {
                     style: 'currency',
-                    currency: 'NOK',
-                    currencyDisplay: 'symbol' // 'symbol' displays "kr", 'code' displays "NOK"
+                    currency: currencyCode,
+                    currencyDisplay: 'symbol'
                 });
             }
         }, 100);
@@ -383,11 +384,13 @@ class WIcartDrawer extends HTMLElement {
                             form.appendChild(discountHidden);
                         }
                         discountHidden.value = input.value;
-                        btn.textContent = 'APPLIED';
+                        const originalText = btn.textContent;
+                        const appliedText = btn.getAttribute('data-applied-text') || 'APPLIED';
+                        btn.textContent = appliedText;
                         btn.style.backgroundColor = '#E2ECF5';
                         btn.style.borderColor = '#000';
                         setTimeout(() => {
-                            btn.textContent = 'APPLY';
+                            btn.textContent = originalText;
                             btn.style.backgroundColor = '';
                             btn.style.borderColor = '';
                         }, 3000);

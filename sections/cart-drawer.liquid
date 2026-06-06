@@ -787,7 +787,7 @@ wi-cartdrawer:not(.active) .WI_cartDrawerin_cart_footer {
                         </g>
                       </svg>
                     </span>
-                    <span class="WI_cartDrawer_count">{{ cart.item_count }} {% if cart.item_count == 1 %}ITEM{% else %}ITEMS{% endif %}</span>
+                    <span class="WI_cartDrawer_count">{{ 'sections.header.cart_count' | t: count: cart.item_count | upcase }}</span>
                   </div>
                   <span class="WI_cartDrawerCls">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -844,8 +844,8 @@ wi-cartdrawer:not(.active) .WI_cartDrawerin_cart_footer {
                                                 {%- unless p.last == blank or first_character_in_key == '_' -%}
                                                     <span class="option-tag">
                                                         <strong>{{ p.first }}:</strong>
-                                                        {%- if p.last contains '/uploads/' -%}
-                                                            <a href="{{ p.last }}" target="_blank">Download File</a>
+                                                         {%- if p.last contains '/uploads/' -%}
+                                                             <a href="{{ p.last }}" target="_blank">{{ p.last | split: '/' | last }}</a>
                                                         {%- else -%}
                                                             {{ p.last }}
                                                         {%- endif -%}
@@ -870,7 +870,7 @@ wi-cartdrawer:not(.active) .WI_cartDrawerin_cart_footer {
                                           </svg>
                                         </button>
                                     </div>
-                                    <button type="button" class="cartDrawerRemove text-remove-btn">Remove</button>
+                                     <button type="button" class="cartDrawerRemove text-remove-btn">{{ 'sections.cart.remove_title' | t: title: '' | strip }}</button>
                                 </div>
                             </div>
                             <div class="WI_cartLoading">
@@ -927,7 +927,10 @@ wi-cartdrawer:not(.active) .WI_cartDrawerin_cart_footer {
                         <div class="WI_complete_look open">
                           <div class="WI_complete_look_header" onclick="this.closest('.WI_complete_look').classList.toggle('open')">
                             <span>{{ section.settings.complete_look_title | default: 'COMPLETE THE LOOK' }}</span>
-                            <span class="WI_complete_look_toggle">+</span>
+                            <span class="WI_complete_look_toggle"><svg xmlns="http://www.w3.org/2000/svg" class="icon-cancel" width="9" height="9" viewBox="0 0 9 9" fill="none">
+    <path d="M0.5 8.5L4.5 4.5L0.5 8.5ZM8.5 0.5L4.49924 4.5L8.5 0.5ZM4.49924 4.5L0.5 0.5L4.49924 4.5ZM4.5 4.5L8.5 8.5L4.5 4.5Z" fill="#0B0B0B"></path>
+    <path d="M0.5 8.5L4.5 4.5L8.5 8.5M8.5 0.5L4.49924 4.5L0.5 0.5" stroke="#0B0B0B" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg></span>
                           </div>
                           <div class="WI_complete_look_body">
                             <div class="WI_complete_look_product">
@@ -966,7 +969,7 @@ wi-cartdrawer:not(.active) .WI_cartDrawerin_cart_footer {
                                       {% endfor %}
                                     </select>
                                   {% endif %}
-                                  <button type="button" class="WI_complete_look_add_btn">+ ADD</button>
+                                  <button type="button" class="WI_complete_look_add_btn">{{ section.settings.complete_look_add_btn_text | default: '+ ADD' }}</button>
                                 </div>
                               </div>
                             </div>
@@ -1025,14 +1028,14 @@ wi-cartdrawer:not(.active) .WI_cartDrawerin_cart_footer {
                     {% comment %} Discount Code Input {% endcomment %}
                     <div class="WI_discount_wrap">
                       <input type="text" name="discount" class="WI_discount_input" placeholder="{{ section.settings.discount_placeholder | default: 'Enter discount code' }}" autocomplete="off">
-                      <button type="button" class="WI_discount_btn">{{ section.settings.discount_btn_text | default: 'APPLY' }}</button>
+                      <button type="button" class="WI_discount_btn" data-applied-text="{{ section.settings.discount_applied_btn_text | default: 'APPLIED' }}">{{ section.settings.discount_btn_text | default: 'APPLY' }}</button>
                     </div>
 
                 </div>
                 
                 <div class="WI_cartDrawerin_cart_footer">
                     <div class="WI_cartDrawer_total">
-                        <h5>{{ 'general.cart.total' | t }}</h5>
+                        <h5>{{ 'sections.cart.estimated_total' | t }}</h5>
                         <h5 class="WI_cartDrawer_total_price">{{ cart.total_price | money }}</h5>
                     </div>
 
@@ -1087,7 +1090,45 @@ wi-cartdrawer:not(.active) .WI_cartDrawerin_cart_footer {
                         </svg>
                       </li>
                     </ul>
-                    <p class="WI_cartDrawer_subtext">{{ section.settings.checkout_subtext | default: 'Shipping, taxes, and discount codes are calculated at checkout' }}</p>
+                    <p class="WI_cartDrawer_subtext">
+                      {%- if cart.duties_included and cart.taxes_included -%}
+                        {%- if shop.shipping_policy.body == blank -%}
+                          {{ 'sections.cart.duties_and_taxes_included_shipping_at_checkout_without_policy' | t }}
+                        {%- else -%}
+                          {{
+                            'sections.cart.duties_and_taxes_included_shipping_at_checkout_with_policy_html'
+                            | t: link: shop.shipping_policy.url
+                          }}
+                        {%- endif -%}
+                      {%- elsif cart.duties_included == false and cart.taxes_included -%}
+                        {%- if shop.shipping_policy.body == blank -%}
+                          {{ 'sections.cart.taxes_included_shipping_at_checkout_without_policy' | t }}
+                        {%- else -%}
+                          {{
+                            'sections.cart.taxes_included_shipping_at_checkout_with_policy_html'
+                            | t: link: shop.shipping_policy.url
+                          }}
+                        {%- endif -%}
+                      {%- elsif cart.duties_included and cart.taxes_included == false -%}
+                        {%- if shop.shipping_policy.body == blank -%}
+                          {{ 'sections.cart.duties_included_taxes_at_checkout_shipping_at_checkout_without_policy' | t }}
+                        {%- else -%}
+                          {{
+                            'sections.cart.duties_included_taxes_at_checkout_shipping_at_checkout_with_policy_html'
+                            | t: link: shop.shipping_policy.url
+                          }}
+                        {%- endif -%}
+                      {%- elsif cart.duties_included == false and cart.taxes_included == false -%}
+                        {%- if shop.shipping_policy.body == blank -%}
+                          {{ 'sections.cart.taxes_at_checkout_shipping_at_checkout_without_policy' | t }}
+                        {%- else -%}
+                          {{
+                            'sections.cart.taxes_at_checkout_shipping_at_checkout_with_policy_html'
+                            | t: link: shop.shipping_policy.url
+                          }}
+                        {%- endif -%}
+                      {%- endif -%}
+                    </p>
                 </div>
                 {% endform %}
             </div>
@@ -1113,6 +1154,12 @@ wi-cartdrawer:not(.active) .WI_cartDrawerin_cart_footer {
       "id": "complete_look_title",
       "label": "Complete the Look Title",
       "default": "COMPLETE THE LOOK"
+    },
+    {
+      "type": "text",
+      "id": "complete_look_add_btn_text",
+      "label": "Complete the Look Add Button Text",
+      "default": "+ ADD"
     },
     {
       "type": "text",
@@ -1143,6 +1190,12 @@ wi-cartdrawer:not(.active) .WI_cartDrawerin_cart_footer {
       "id": "discount_btn_text",
       "label": "Discount Button Text",
       "default": "APPLY"
+    },
+    {
+      "type": "text",
+      "id": "discount_applied_btn_text",
+      "label": "Discount Applied Button Text",
+      "default": "APPLIED"
     },
     {
       "type": "text",
