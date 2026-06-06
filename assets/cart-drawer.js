@@ -56,7 +56,7 @@ class WIcartDrawer extends HTMLElement {
     }
 
     closeCart(event) {
-        if (event.target.matches('.WI_cartDrawerCls')) {
+        if (event.target.closest('.WI_cartDrawerCls')) {
             this.closeCartdrawer();
         }
     }
