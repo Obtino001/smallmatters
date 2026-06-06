@@ -457,7 +457,7 @@
   -%}
   
   {% if mobile_image %}
-    {{ mobile_image | image_url: width: 1000 | image_tag: 
+    {{ mobile_image | image_url: width: 1000, format: 'webp' | image_tag: 
       class: 'hero-mobile-img', 
       loading: 'eager', 
       fetchpriority: 'high',
@@ -476,7 +476,7 @@
     {% if section.settings.layout_mode == 'single' %}
       <div class="desktop-single-bg small-hide">
         {% if section.settings.image_left %}
-           {{ section.settings.image_left | image_url: width: 2000 | image_tag: 
+           {{ section.settings.image_left | image_url: width: 2000, format: 'webp' | image_tag: 
               loading: 'eager',
               fetchpriority: 'high',
               sizes: '(max-width: 749px) 0px, 100vw',
@@ -494,7 +494,7 @@
     {%- endcomment -%}
     <div class="hero-col hero-img-col small-hide">
       {% if section.settings.image_left %}
-        {{ section.settings.image_left | image_url: width: 1200 | image_tag: 
+        {{ section.settings.image_left | image_url: width: 1200, format: 'webp' | image_tag: 
            class: 'hero-img', 
            loading: 'eager',
            fetchpriority: 'high',
@@ -541,7 +541,7 @@
     {%- endcomment -%}
     <div class="hero-col hero-img-col small-hide">
       {% if section.settings.image_right %}
-        {{ section.settings.image_right | image_url: width: 1200 | image_tag: 
+        {{ section.settings.image_right | image_url: width: 1200, format: 'webp' | image_tag: 
            class: 'hero-img', 
            loading: 'eager',
            fetchpriority: 'high',
