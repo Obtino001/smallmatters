@@ -46,8 +46,10 @@ class MaAddToCart extends HTMLElement {
         if (emptyCart != null) {
             emptyCart.style.display = "none";
         }
-        refreshedCartDrawer();
-        // openCart();
+        if (typeof refreshedCartDrawer === 'function') {
+            refreshedCartDrawer();
+        }
+        document.dispatchEvent(new Event('opencart'));
         // updateCart();
         // totalSaving();
         // freeShipping();

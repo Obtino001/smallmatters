@@ -20,7 +20,7 @@ wi-cartdrawer {
   display: flex;
   justify-content: flex-start;
   transform: translateX(100%);
-  transition: 0.3s ease-out;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .WI_cartDrawerin_cart {
   width: 480px;
@@ -698,6 +698,75 @@ wi-cartdrawer {
     width: 100%;
   }
 }
+
+/* Staggered slide-in from left to right when active */
+wi-cartdrawer .WI_cartDrawerin_cart_header,
+wi-cartdrawer .WI_cartDrawer_item,
+wi-cartdrawer .WI_complete_look,
+wi-cartdrawer .WI_also_like,
+wi-cartdrawer .WI_bundle_promo,
+wi-cartdrawer .WI_discount_wrap,
+wi-cartdrawer .WI_cartDrawerin_cart_footer {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+
+wi-cartdrawer.active .WI_cartDrawerin_cart_header,
+wi-cartdrawer.active .WI_cartDrawer_item,
+wi-cartdrawer.active .WI_complete_look,
+wi-cartdrawer.active .WI_also_like,
+wi-cartdrawer.active .WI_bundle_promo,
+wi-cartdrawer.active .WI_discount_wrap,
+wi-cartdrawer.active .WI_cartDrawerin_cart_footer {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Staggered transition delays */
+wi-cartdrawer.active .WI_cartDrawerin_cart_header {
+  transition-delay: 0.1s;
+}
+wi-cartdrawer.active .WI_cartDrawer_item:nth-child(1) {
+  transition-delay: 0.15s;
+}
+wi-cartdrawer.active .WI_cartDrawer_item:nth-child(2) {
+  transition-delay: 0.2s;
+}
+wi-cartdrawer.active .WI_cartDrawer_item:nth-child(3) {
+  transition-delay: 0.25s;
+}
+wi-cartdrawer.active .WI_cartDrawer_item:nth-child(4) {
+  transition-delay: 0.3s;
+}
+wi-cartdrawer.active .WI_cartDrawer_item:nth-child(n+5) {
+  transition-delay: 0.35s;
+}
+wi-cartdrawer.active .WI_complete_look {
+  transition-delay: 0.35s;
+}
+wi-cartdrawer.active .WI_also_like {
+  transition-delay: 0.4s;
+}
+wi-cartdrawer.active .WI_bundle_promo {
+  transition-delay: 0.45s;
+}
+wi-cartdrawer.active .WI_discount_wrap {
+  transition-delay: 0.5s;
+}
+wi-cartdrawer.active .WI_cartDrawerin_cart_footer {
+  transition-delay: 0.25s;
+}
+
+wi-cartdrawer:not(.active) .WI_cartDrawerin_cart_header,
+wi-cartdrawer:not(.active) .WI_cartDrawer_item,
+wi-cartdrawer:not(.active) .WI_complete_look,
+wi-cartdrawer:not(.active) .WI_also_like,
+wi-cartdrawer:not(.active) .WI_bundle_promo,
+wi-cartdrawer:not(.active) .WI_discount_wrap,
+wi-cartdrawer:not(.active) .WI_cartDrawerin_cart_footer {
+  transition: none !important;
+}
 </style>
 
 <wi-cartdrawer>
@@ -886,7 +955,7 @@ wi-cartdrawer {
                                   {%- endunless -%}
                                 </div>
 
-                                <form action="/cart/add" method="post" class="WI_complete_look_form">
+                                <div class="WI_complete_look_form">
                                   {% if first_product.variants.size == 1 %}
                                     <input type="hidden" name="id" value="{{ first_product.variants[0].id }}">
                                   {% else %}
@@ -897,8 +966,8 @@ wi-cartdrawer {
                                       {% endfor %}
                                     </select>
                                   {% endif %}
-                                  <button type="submit" class="WI_complete_look_add_btn">+ ADD</button>
-                                </form>
+                                  <button type="button" class="WI_complete_look_add_btn">+ ADD</button>
+                                </div>
                               </div>
                             </div>
                           </div>

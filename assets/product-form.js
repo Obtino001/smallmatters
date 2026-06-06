@@ -27,6 +27,10 @@ if (!customElements.get('product-form')) {
         evt.preventDefault();
         if (this.submitButton.getAttribute('aria-disabled') === 'true') return;
 
+        if (!this.cart) {
+          this.cart = document.querySelector('cart-notification') || document.querySelector('wi-cartdrawer');
+        }
+
         this.handleErrorMessage();
 
         this.submitButton.setAttribute('aria-disabled', true);

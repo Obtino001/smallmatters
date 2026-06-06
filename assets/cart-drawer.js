@@ -19,7 +19,6 @@ class WIcartDrawer extends HTMLElement {
         this.totalSaving();
         // this.freeShipping();
         this.cartTermsCondition();
-        this.addToCart();
         // Bind this function globally so other scripts can call it
         window.refreshedCartDrawer = this.updateCart.bind(this);
     }
@@ -46,6 +45,7 @@ class WIcartDrawer extends HTMLElement {
         let cartDrawer = this.querySelector('.WI_cartDrawerin');
         let cartDrawerUpsell = this.querySelector('.WI_cartDrawerin_upsell');
         this.style.display = "flex";
+        this.classList.add('active');
         setTimeout(() => {
             this.style.backgroundColor = 'rgba(0,0,0,0.5)';
             cartDrawer.style.transform = 'translateX(0)';
@@ -64,13 +64,14 @@ class WIcartDrawer extends HTMLElement {
     closeCartdrawer() {
         let cartDrawer = this.querySelector('.WI_cartDrawerin');
         let cartDrawerUpsell = this.querySelector('.WI_cartDrawerin_upsell');
+        this.classList.remove('active');
         if (cartDrawerUpsell) cartDrawerUpsell.classList.remove('WI_cartDrawerin_upsell_active');
         setTimeout(() => {
             this.style.backgroundColor = 'rgba(0,0,0,0)';
             cartDrawer.style.transform = 'translateX(100%)';
             setTimeout(() => {
                 this.style.display = "none";
-            }, 310);
+            }, 230);
         }, 10);
     }
 
@@ -250,51 +251,9 @@ class WIcartDrawer extends HTMLElement {
     attachFormListeners() {
         const allForms = document.querySelectorAll('form[action="/cart/add"]');
         allForms.forEach(form => {
+            if (form.closest('product-form')) return; // Ignore forms handled by product-form.js
             if (form.hasAttribute('data-wi-cart-attached')) return;
             form.setAttribute('data-wi-cart-attached', 'true');
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                e.stopImmediatePropagation();
-                if (this.isProcessing) return;
-                this.isProcessing = true;
-
-                try {
-                    const formData = new FormData(form);
-                    let loadingCartBlock = document.querySelector('.WI_loadingCartItemBlock');
-                    let emptyCart = document.querySelector('.WI_cartDrawerin_cart_empty');
-
-                    if (loadingCartBlock) loadingCartBlock.style.display = "block";
-                    if (emptyCart) emptyCart.style.display = "none";
-
-                    // Open the cart immediately
-                    this.openCart();
-
-                    const response = await fetch('/cart/add.js', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    if (response.ok) {
-                        // REMOVED MODAL/BACKDROP CODE HERE AS REQUESTED
-
-                        // Trigger the seamless update
-                        await this.updateCart();
-                        this.isProcessing = false;
-                    } else {
-                        console.error('Failed to add to cart');
-                        this.isProcessing = false;
-                    }
-                } catch (error) {
-                    console.error('Error adding to cart:', error);
-                    this.isProcessing = false;
-                }
-            }, true);
-        });
-    }
-
-    addToCart() {
-        const allForms = document.querySelectorAll('form[action="/cart/add"]');
-        allForms.forEach(form => {
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 e.stopImmediatePropagation();
@@ -436,6 +395,15 @@ class WIcartDrawer extends HTMLElement {
                 }
             }
         }
+
+        // 5. Complete the Look Add Button Click
+        if (event.target.closest('.WI_complete_look_add_btn')) {
+            const btn = event.target.closest('.WI_complete_look_add_btn');
+            const form = btn.closest('.WI_complete_look_form');
+            if (form) {
+                this.addCompleteLookAjax(form, btn);
+            }
+        }
     }
 
     handleCartInputs(event) {
@@ -463,24 +431,49 @@ class WIcartDrawer extends HTMLElement {
             event.stopPropagation();
             const form = event.target;
             const btn = form.querySelector('.WI_complete_look_add_btn');
-            if (btn) btn.disabled = true;
-            
-            try {
-                const formData = new FormData(form);
-                const res = await fetch('/cart/add.js', {
-                    method: 'POST',
-                    body: formData
-                });
-                if (res.ok) {
-                    await this.updateCart();
-                } else {
-                    console.error('Failed to add to cart');
-                }
-            } catch (err) {
-                console.error(err);
-            } finally {
-                if (btn) btn.disabled = false;
+            if (btn) btn.closest('.WI_complete_look_form') ? this.addCompleteLookAjax(form, btn) : null;
+        }
+    }
+
+    async addCompleteLookAjax(form, btn) {
+        if (this.isProcessing) return;
+        this.isProcessing = true;
+        if (btn) btn.disabled = true;
+
+        try {
+            const idInput = form.querySelector('input[name="id"], select[name="id"]');
+            if (!idInput) throw new Error("No variant ID input found");
+            const variantId = idInput.value;
+
+            let loadingCartBlock = this.querySelector('.WI_loadingCartItemBlock');
+            let emptyCart = this.querySelector('.WI_cartDrawerin_cart_empty');
+
+            if (loadingCartBlock) loadingCartBlock.style.display = "block";
+            if (emptyCart) emptyCart.style.display = "none";
+
+            const response = await fetch('/cart/add.js', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    items: [{
+                        id: variantId,
+                        quantity: 1
+                    }]
+                })
+            });
+
+            if (response.ok) {
+                await this.updateCart();
+            } else {
+                console.error('Failed to add to cart:', await response.text());
             }
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+        } finally {
+            if (btn) btn.disabled = false;
+            this.isProcessing = false;
         }
     }
 }
