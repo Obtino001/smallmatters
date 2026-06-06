@@ -119,19 +119,21 @@ wi-cartdrawer {
   flex: 1;
   position: relative;
   overflow: hidden;
-  min-height: 0; /* Critical for flex children to shrink properly */
+  min-height: 0;
 }
 .WI_cartDrawerin_cart_body form {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 .WI_cartDrawerin_cart_form_in {
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 0 24px 240px 24px; /* Large bottom padding so scrolling content clears sticky footer */
+  min-height: 0;
+  padding: 0 24px 24px 24px;
 }
 .WI_cartDrawerin_cart_form_in::-webkit-scrollbar {
   width: 4px;
@@ -614,16 +616,12 @@ wi-cartdrawer {
   100% { left: 100%; width: 100%; }
 }
 
-/* Sticky Footer Styles */
+/* Footer Styles */
 .WI_cartDrawerin_cart_footer {
-  position: sticky;
-  bottom: 0;
-  left: 0;
   width: 100%;
-  padding: 16px 24px env(safe-area-inset-bottom, 16px) 24px;
+  padding: 16px 24px;
   border-top: 1px solid #E7E7E7;
   background-color: #fff;
-  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.02);
   z-index: 10;
   flex-shrink: 0;
 }
@@ -698,9 +696,6 @@ wi-cartdrawer {
   .WI_cartDrawerin_cart {
     width: 100%;
     height: 100dvh;
-  }
-  .WI_cartDrawerin_cart_form_in {
-    padding-bottom: 260px; /* More clearance on mobile for taller footer */
   }
   .WI_cartDrawerin_cart_footer {
     padding-bottom: max(16px, env(safe-area-inset-bottom));
