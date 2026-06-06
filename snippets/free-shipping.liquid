@@ -12,13 +12,19 @@
     
     {% if remaining_amount > 0 %}
       <p class="fsb-text">
-        {{ settings.text_prefix }} 
-        <span class="fsb-money">{{ remaining_amount | money }}</span> 
-        {{ settings.text_suffix }}
+        {% if settings.text_prefix != blank %}
+          {{ settings.text_prefix }} <span class="fsb-money">{{ remaining_amount | money }}</span> {{ settings.text_suffix }}
+        {% else %}
+          <strong>UNLOCK FREE SHIPPING</strong> Add <span class="fsb-money">{{ remaining_amount | money }}</span> more to your bag
+        {% endif %}
       </p>
     {% else %}
       <p class="fsb-text fsb-success">
-        {{ settings.text_success }}
+        {% if settings.text_success != blank %}
+          {{ settings.text_success }}
+        {% else %}
+          <strong>YOU'VE UNLOCKED FREE SHIPPING!</strong>
+        {% endif %}
       </p>
     {% endif %}
 
