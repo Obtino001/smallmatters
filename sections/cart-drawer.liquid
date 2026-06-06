@@ -1,13 +1,12 @@
 <style>
 wi-cartdrawer {
   width: 100%;
-  height: 100%;
+  height: 100dvh;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 10000;
   background-color: rgba(0, 0, 0, 0);
-  display: flex;
   justify-content: flex-end;
   overflow: hidden;
   display: none;
@@ -15,7 +14,7 @@ wi-cartdrawer {
   font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
 }
 .WI_cartDrawerin {
-  height: 100%;
+  height: 100dvh;
   position: relative;
   display: flex;
   justify-content: flex-start;
@@ -120,7 +119,7 @@ wi-cartdrawer {
   flex: 1;
   position: relative;
   overflow: hidden;
-  height: calc(100% - 110px);
+  min-height: 0; /* Critical for flex children to shrink properly */
 }
 .WI_cartDrawerin_cart_body form {
   width: 100%;
@@ -131,7 +130,8 @@ wi-cartdrawer {
 .WI_cartDrawerin_cart_form_in {
   flex: 1;
   overflow-y: auto;
-  padding: 0 24px 220px 24px; /* Large bottom padding so scrolling content clears sticky footer */
+  -webkit-overflow-scrolling: touch;
+  padding: 0 24px 240px 24px; /* Large bottom padding so scrolling content clears sticky footer */
 }
 .WI_cartDrawerin_cart_form_in::-webkit-scrollbar {
   width: 4px;
@@ -616,15 +616,16 @@ wi-cartdrawer {
 
 /* Sticky Footer Styles */
 .WI_cartDrawerin_cart_footer {
-  position: absolute;
+  position: sticky;
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 20px 24px 24px 24px;
+  padding: 16px 24px env(safe-area-inset-bottom, 16px) 24px;
   border-top: 1px solid #E7E7E7;
   background-color: #fff;
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.02);
   z-index: 10;
+  flex-shrink: 0;
 }
 .WI_cartDrawer_total {
   width: 100%;
@@ -696,6 +697,13 @@ wi-cartdrawer {
 @media screen and (max-width: 800px) {
   .WI_cartDrawerin_cart {
     width: 100%;
+    height: 100dvh;
+  }
+  .WI_cartDrawerin_cart_form_in {
+    padding-bottom: 260px; /* More clearance on mobile for taller footer */
+  }
+  .WI_cartDrawerin_cart_footer {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
   }
 }
 
