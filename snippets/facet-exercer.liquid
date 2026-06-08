@@ -23,7 +23,7 @@
       </button>
 
       <span class="exr-toolbar__count" data-exr-toolbar-count>
-        {{ collection.products_count }} {{ 'products.facets.product_count_simple' | t: count: collection.products_count | default: 'products' }}
+      {{ 'products.facets.product_count_simple' | t: count: collection.products_count | default: 'products' }}
       </span>
     </div>
 
