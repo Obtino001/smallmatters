@@ -98,8 +98,7 @@
     {%- endif -%}
 
     <div class="{% if section.settings.filter_type == 'vertical' %} facets-vertical page-width{% endif %}">
-      {{ 'custom-excerce.css' | asset_url | stylesheet_tag }}
-      <script src="{{ 'custom-filter.js' | asset_url }}" defer="defer"></script>
+      {%- comment -%} Custom exercer filter assets are loaded inside the snippet {%- endcomment -%}
       {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
         <aside
           aria-labelledby="verticalTitle"
@@ -107,12 +106,10 @@
           id="main-collection-filters"
           data-id="{{ section.id }}"
         >
-          {% render 'custom-facet-exercer',
-            results: collection,
+          {% render 'facet-exercer',
             enable_filtering: section.settings.enable_filtering,
             enable_sorting: section.settings.enable_sorting,
-            filter_type: section.settings.filter_type,
-            paginate: paginate
+            filter_type: section.settings.filter_type
           %}
         </aside>
       {%- endif -%}

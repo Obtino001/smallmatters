@@ -1,0 +1,535 @@
+/* ============================================================================
+   CUSTOM FILTER SYSTEM - Exercer
+   Built from scratch. Zero Dawn dependency.
+   ============================================================================ */
+
+:root {
+  --exr-drawer-width: 420px;
+  --exr-bg: #ffffff;
+  --exr-text: #0B0B0B;
+  --exr-text-light: #9A9A9A;
+  --exr-border: #EAEAEA;
+  --exr-accent: #0B0B0B;
+  --exr-disabled: #c8c8c8;
+  --exr-radius: 4px;
+  --exr-swatch-size: 18px;
+  --exr-transition: 0.35s cubic-bezier(0.215, 0.61, 0.355, 1);
+  --exr-header-h: 56px;
+  --exr-footer-h: auto;
+  --exr-font: inherit;
+  --exr-font-sm: 12px;
+  --exr-font-xs: 11px;
+}
+
+/* ---- Overlay ---- */
+.exr-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99998;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--exr-transition), visibility var(--exr-transition);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+.exr-overlay.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ---- Drawer Shell ---- */
+.exr-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: var(--exr-drawer-width);
+  height: 100%;
+  background: var(--exr-bg);
+  transform: translateX(100%);
+  transition: transform var(--exr-transition), visibility var(--exr-transition);
+  visibility: hidden;
+  overflow: hidden;
+  will-change: transform;
+}
+.exr-drawer.is-open {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+@media only screen and (max-width: 749px) {
+  .exr-drawer {
+    max-width: 100%;
+  }
+}
+
+/* ---- Header ---- */
+.exr-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--exr-header-h);
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--exr-border);
+  flex-shrink: 0;
+}
+.exr-drawer__header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.exr-drawer__title {
+  font-family: var(--exr-font);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1;
+}
+.exr-drawer__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--exr-text);
+  transition: transform 0.3s ease;
+}
+.exr-drawer__close:hover {
+  transform: scale(1.2);
+}
+
+/* ---- Scrollable Body ---- */
+.exr-drawer__body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 0 20px;
+}
+
+/* ---- Filter Group (Accordion) ---- */
+.exr-group {
+  border-bottom: none;
+}
+.exr-group + .exr-group {
+  margin-top: 8px;
+}
+.exr-group__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--exr-font);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--exr-text);
+  text-align: left;
+  line-height: 1.2;
+}
+.exr-group__trigger:hover {
+  opacity: 0.7;
+}
+.exr-group__arrow {
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+.exr-group[open] .exr-group__arrow {
+  transform: rotate(180deg);
+}
+.exr-group__body {
+  padding: 0 20px 10px;
+}
+
+/* ---- Pill Grid (Product Type, Size, Activity, etc.) ---- */
+.exr-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.exr-pill {
+  position: relative;
+}
+.exr-pill__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.exr-pill__label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  padding: 10px 16px;
+  border: 1px solid var(--exr-border);
+  border-radius: var(--exr-radius);
+  font-family: var(--exr-font);
+  font-size: var(--exr-font-sm);
+  font-weight: 400;
+  color: var(--exr-text);
+  cursor: pointer;
+  text-align: center;
+  white-space: nowrap;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.exr-pill__label:hover {
+  border-color: var(--exr-text-light);
+}
+
+/* Active pill */
+.exr-pill__input:checked + .exr-pill__label {
+  background: var(--exr-accent);
+  border-color: var(--exr-accent);
+  color: #fff;
+  font-weight: 500;
+}
+
+/* Disabled pill */
+.exr-pill--disabled .exr-pill__label {
+  color: var(--exr-disabled);
+  border-color: var(--exr-border);
+  cursor: not-allowed;
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+.exr-pill--disabled .exr-pill__input {
+  pointer-events: none;
+}
+
+/* ---- Color Swatches Grid ---- */
+.exr-swatches {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.exr-swatch {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+}
+.exr-swatch__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.exr-swatch__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: var(--exr-font-sm);
+  color: var(--exr-text);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Checkbox visual */
+.exr-swatch__check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--exr-text-light);
+  border-radius: 2px;
+  flex-shrink: 0;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.exr-swatch__check svg {
+  display: none;
+  width: 10px;
+  height: 10px;
+}
+.exr-swatch__input:checked ~ .exr-swatch__label .exr-swatch__check {
+  background: var(--exr-accent);
+  border-color: var(--exr-accent);
+}
+.exr-swatch__input:checked ~ .exr-swatch__label .exr-swatch__check svg {
+  display: block;
+  color: #fff;
+}
+
+/* Color circle */
+.exr-swatch__color {
+  display: block;
+  width: var(--exr-swatch-size);
+  height: var(--exr-swatch-size);
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+}
+.exr-swatch__name {
+  font-size: var(--exr-font-sm);
+  color: var(--exr-text);
+}
+
+/* Disabled swatch */
+.exr-swatch--disabled .exr-swatch__label {
+  opacity: 0.35;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+.exr-swatch--disabled .exr-swatch__check {
+  background: var(--exr-text-light);
+  border-color: var(--exr-text-light);
+  opacity: 0.4;
+}
+
+/* ---- Price Range ---- */
+.exr-price {
+  padding: 4px 0 0;
+}
+.exr-price__fields {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.exr-price__field {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid var(--exr-text);
+  border-radius: var(--exr-radius);
+}
+.exr-price__currency {
+  font-size: var(--exr-font-sm);
+  margin-right: 4px;
+  color: var(--exr-text-light);
+}
+.exr-price__input {
+  flex: 1;
+  width: 0;
+  min-width: 0;
+  border: none;
+  outline: none;
+  font-family: var(--exr-font);
+  font-size: var(--exr-font-sm);
+  text-align: right;
+  background: transparent;
+  color: var(--exr-text);
+  -moz-appearance: textfield;
+}
+.exr-price__input::-webkit-inner-spin-button,
+.exr-price__input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.exr-price__sep {
+  flex-shrink: 0;
+  width: 8px;
+  height: 1px;
+  background: var(--exr-text);
+}
+
+/* ---- Active Filter Tags ---- */
+.exr-active-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 20px;
+}
+.exr-active-tags:empty {
+  display: none;
+}
+.exr-active-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--exr-border);
+  border-radius: var(--exr-radius);
+  background: var(--exr-bg);
+  font-family: var(--exr-font);
+  font-size: var(--exr-font-xs);
+  color: var(--exr-text);
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 0.2s ease, background 0.15s ease;
+}
+.exr-active-tag:hover {
+  border-color: var(--exr-text);
+}
+.exr-active-tag__x {
+  display: flex;
+  align-items: center;
+}
+.exr-active-tag__x svg {
+  width: 8px;
+  height: 8px;
+}
+
+/* ---- Footer Buttons ---- */
+.exr-drawer__footer {
+  flex-shrink: 0;
+  padding: 12px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--exr-bg);
+}
+.exr-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 14px 20px;
+  border: 1px solid var(--exr-border);
+  border-radius: 0;
+  background: var(--exr-bg);
+  font-family: var(--exr-font);
+  font-size: var(--exr-font-sm);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--exr-text);
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.exr-btn:hover {
+  background: var(--exr-accent);
+  color: #fff;
+}
+.exr-btn--primary {
+  background: var(--exr-accent);
+  color: #fff;
+  border-color: var(--exr-accent);
+}
+.exr-btn--primary:hover {
+  background: #333;
+}
+
+/* ---- Loading State ---- */
+.exr-loading {
+  position: relative;
+  pointer-events: none;
+}
+.exr-loading::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.6);
+  z-index: 10;
+}
+.exr-loading .exr-spinner {
+  display: block;
+}
+.exr-spinner {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 11;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--exr-border);
+  border-top-color: var(--exr-text);
+  border-radius: 50%;
+  animation: exr-spin 0.6s linear infinite;
+}
+@keyframes exr-spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* ---- Mobile Trigger Button ---- */
+.exr-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--exr-font);
+  font-size: var(--exr-font-sm);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--exr-text);
+}
+.exr-trigger:hover {
+  opacity: 0.7;
+}
+
+/* ---- Sort Dropdown ---- */
+.exr-sort {
+  position: relative;
+  display: inline-block;
+}
+.exr-sort__select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 8px 28px 8px 10px;
+  border: 1px solid var(--exr-border);
+  border-radius: var(--exr-radius);
+  background: var(--exr-bg);
+  font-family: var(--exr-font);
+  font-size: var(--exr-font-sm);
+  color: var(--exr-text);
+  cursor: pointer;
+  outline: none;
+}
+.exr-sort__arrow {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* ---- Toolbar (above grid) ---- */
+.exr-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.exr-toolbar__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.exr-toolbar__count {
+  font-size: var(--exr-font-sm);
+  color: var(--exr-text-light);
+}
+
+/* ---- Animations ---- */
+.exr-group__body {
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}

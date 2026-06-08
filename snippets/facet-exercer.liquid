@@ -1,0 +1,225 @@
+{% comment %}
+  ============================================================================
+  EXERCER FILTERS – 100% Custom Filter Snippet
+  Uses: custom-exercer.css, custom-filters.js
+  No Dawn dependency.
+  ============================================================================
+{% endcomment %}
+
+{{ 'custom-exercer.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'custom-filters.js' | asset_url }}" defer="defer"></script>
+
+<exercer-filters>
+
+  {%- comment -%} ── Toolbar above the grid ── {%- endcomment -%}
+  <div class="exr-toolbar">
+    <div class="exr-toolbar__left">
+      <button type="button" class="exr-trigger" data-exr-open aria-label="Open Filters">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 14 10" fill="none">
+          <path d="M6.61111 8.33332H12.7222M0.5 1.66666H6.84188M9.94444 1.66666H12.7222M3.27778 8.33332H0.5" stroke="currentColor" stroke-linecap="round"/>
+          <path d="M4.94482 7.06641C5.64413 7.06658 6.21125 7.63371 6.21143 8.33301C6.21143 9.03246 5.64424 9.59943 4.94482 9.59961C4.24526 9.59961 3.67822 9.03257 3.67822 8.33301C3.6784 7.6336 4.24537 7.06641 4.94482 7.06641ZM8.27783 0.400391C8.97739 0.400391 9.54443 0.967432 9.54443 1.66699C9.54426 2.3664 8.97728 2.93359 8.27783 2.93359C7.57838 2.93359 7.01141 2.3664 7.01123 1.66699C7.01123 0.967431 7.57827 0.400391 8.27783 0.400391Z" stroke="currentColor" stroke-width="0.8"/>
+        </svg>
+        <span>Filter</span>
+      </button>
+
+      <span class="exr-toolbar__count" data-exr-toolbar-count>
+        {{ collection.products_count }} {{ 'products.facets.product_count_simple' | t: count: collection.products_count | default: 'products' }}
+      </span>
+    </div>
+
+    {%- if enable_sorting -%}
+      <div class="exr-sort">
+        {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+        <select data-exr-sort class="exr-sort__select" aria-label="Sort by">
+          {%- for option in collection.sort_options -%}
+            <option value="{{ option.value | escape }}" {% if option.value == sort_by %}selected{% endif %}>
+              {{ option.name | escape }}
+            </option>
+          {%- endfor -%}
+        </select>
+        <span class="exr-sort__arrow">
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} ── Overlay ── {%- endcomment -%}
+  <div class="exr-overlay" data-exr-overlay></div>
+
+  {%- comment -%} ── Drawer ── {%- endcomment -%}
+  <div class="exr-drawer" data-exr-drawer aria-label="Filters">
+
+    {%- comment -%} ── Header ── {%- endcomment -%}
+    <div class="exr-drawer__header">
+      <div class="exr-drawer__header-left">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 14 10" fill="none">
+          <path d="M6.61111 8.33332H12.7222M0.5 1.66666H6.84188M9.94444 1.66666H12.7222M3.27778 8.33332H0.5" stroke="currentColor" stroke-linecap="round"/>
+          <path d="M4.94482 7.06641C5.64413 7.06658 6.21125 7.63371 6.21143 8.33301C6.21143 9.03246 5.64424 9.59943 4.94482 9.59961C4.24526 9.59961 3.67822 9.03257 3.67822 8.33301C3.6784 7.6336 4.24537 7.06641 4.94482 7.06641ZM8.27783 0.400391C8.97739 0.400391 9.54443 0.967432 9.54443 1.66699C9.54426 2.3664 8.97728 2.93359 8.27783 2.93359C7.57838 2.93359 7.01141 2.3664 7.01123 1.66699C7.01123 0.967431 7.57827 0.400391 8.27783 0.400391Z" stroke="currentColor" stroke-width="0.8"/>
+        </svg>
+        <h3 class="exr-drawer__title">Filter</h3>
+      </div>
+      <button type="button" class="exr-drawer__close" data-exr-close aria-label="Close Filters">
+        <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9" fill="none">
+          <path d="M0.5 8.5L4.5 4.5L8.5 8.5M8.5 0.5L4.49924 4.5L0.5 0.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    {%- comment -%} ── Scrollable Body ── {%- endcomment -%}
+    <div class="exr-drawer__body">
+      <form data-exr-form>
+
+        {%- for filter in collection.filters -%}
+          <details class="exr-group" data-exr-group open>
+            <summary class="exr-group__trigger" data-exr-trigger>
+              <span>{{ filter.label | escape | upcase }}</span>
+              <span class="exr-group__arrow">
+                <svg width="12" height="7" viewBox="0 0 12 7" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </summary>
+
+            <div class="exr-group__body">
+
+              {%- case filter.type -%}
+
+                {%- when 'list' -%}
+                  {%- comment -%} Detect if this is a color filter {%- endcomment -%}
+                  {%- assign is_color = false -%}
+                  {%- assign label_lower = filter.label | downcase -%}
+                  {%- if label_lower == 'color' or label_lower == 'colour' or label_lower == 'farge' -%}
+                    {%- assign is_color = true -%}
+                  {%- endif -%}
+
+                  {%- if is_color -%}
+                    {%- comment -%} ── COLOR SWATCHES ── {%- endcomment -%}
+                    <ul class="exr-swatches">
+                      {%- for value in filter.values -%}
+                        {%- assign swatch_handle = value.label | downcase | replace: ' ', '-' -%}
+                        <li class="exr-swatch{% if value.count == 0 and value.active == false %} exr-swatch--disabled{% endif %}">
+                          <input
+                            class="exr-swatch__input"
+                            type="checkbox"
+                            name="{{ value.param_name }}"
+                            value="{{ value.value }}"
+                            id="exr-{{ filter.label | handleize }}-{{ forloop.index }}"
+                            {% if value.active %}checked{% endif %}
+                            {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                          >
+                          <label class="exr-swatch__label" for="exr-{{ filter.label | handleize }}-{{ forloop.index }}">
+                            <span class="exr-swatch__check">
+                              <svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </span>
+                            <span class="exr-swatch__color" style="background-color: {{ value.label | downcase }};"></span>
+                            <span class="exr-swatch__name">{{ value.label }}</span>
+                          </label>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+
+                  {%- else -%}
+                    {%- comment -%} ── PILL BUTTONS (Product Type, Size, Activity, etc.) ── {%- endcomment -%}
+                    <ul class="exr-pills">
+                      {%- for value in filter.values -%}
+                        <li class="exr-pill{% if value.count == 0 and value.active == false %} exr-pill--disabled{% endif %}">
+                          <input
+                            class="exr-pill__input"
+                            type="checkbox"
+                            name="{{ value.param_name }}"
+                            value="{{ value.value }}"
+                            id="exr-{{ filter.label | handleize }}-{{ forloop.index }}"
+                            {% if value.active %}checked{% endif %}
+                            {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                          >
+                          <label class="exr-pill__label" for="exr-{{ filter.label | handleize }}-{{ forloop.index }}">
+                            {{ value.label }}
+                          </label>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+
+                {%- when 'price_range' -%}
+                  {%- comment -%} ── PRICE RANGE ── {%- endcomment -%}
+                  <div class="exr-price">
+                    <div class="exr-price__fields">
+                      <div class="exr-price__field">
+                        <span class="exr-price__currency">{{ cart.currency.symbol }}</span>
+                        <input
+                          class="exr-price__input"
+                          data-exr-price-input
+                          type="number"
+                          name="{{ filter.min_value.param_name }}"
+                          value="{{ filter.min_value.value }}"
+                          min="0"
+                          max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                          placeholder="{{ filter.min_value.value | default: 0 | money_without_currency }}"
+                        >
+                      </div>
+                      <span class="exr-price__sep"></span>
+                      <div class="exr-price__field">
+                        <span class="exr-price__currency">{{ cart.currency.symbol }}</span>
+                        <input
+                          class="exr-price__input"
+                          data-exr-price-input
+                          type="number"
+                          name="{{ filter.max_value.param_name }}"
+                          value="{{ filter.max_value.value }}"
+                          min="0"
+                          max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                          placeholder="{{ filter.range_max | money_without_currency }}"
+                        >
+                      </div>
+                    </div>
+                  </div>
+
+              {%- endcase -%}
+
+            </div>
+          </details>
+        {%- endfor -%}
+
+      </form>
+    </div>
+
+    {%- comment -%} ── Active Tags ── {%- endcomment -%}
+    <div class="exr-active-tags" data-exr-active-tags>
+      {%- for filter in collection.filters -%}
+        {%- for value in filter.active_values -%}
+          <a class="exr-active-tag" href="{{ value.url_to_remove }}" data-exr-remove="{{ value.url_to_remove }}">
+            <small>{{ value.label }}</small>
+            <span class="exr-active-tag__x">
+              <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 9 9" fill="none">
+                <path d="M0.5 8.5L4.5 4.5L8.5 8.5M8.5 0.5L4.49924 4.5L0.5 0.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </a>
+        {%- endfor -%}
+        {%- if filter.type == 'price_range' -%}
+          {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+            <a class="exr-active-tag" href="{{ filter.url_to_remove }}" data-exr-remove="{{ filter.url_to_remove }}">
+              <small>{{ filter.min_value.value | default: 0 | money }} – {{ filter.max_value.value | default: filter.range_max | money }}</small>
+              <span class="exr-active-tag__x">
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 9 9" fill="none">
+                  <path d="M0.5 8.5L4.5 4.5L8.5 8.5M8.5 0.5L4.49924 4.5L0.5 0.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </a>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    {%- comment -%} ── Footer ── {%- endcomment -%}
+    <div class="exr-drawer__footer">
+      <button type="button" class="exr-btn" data-exr-close>
+        Apply Filter
+      </button>
+      <button type="button" class="exr-btn" data-exr-close data-exr-count>
+        View {{ collection.products_count }} items
+      </button>
+    </div>
+
+  </div>
+
+</exercer-filters>
