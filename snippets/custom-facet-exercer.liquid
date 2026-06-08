@@ -1,0 +1,86 @@
+<div class="collection__sidebar__slide-out expanded drawer--animated" id="filter-groups" data-collection-sidebar="">
+  <div class="collection__sidebar__head">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-filter" width="14" height="10" viewBox="0 0 14 10" fill="none">
+      <path d="M6.61111 8.33332H12.7222M0.5 1.66666H6.84188M9.94444 1.66666H12.7222M3.27778 8.33332H0.5" stroke="black" stroke-linecap="round"></path>
+      <path d="M4.94482 7.06641C5.64413 7.06658 6.21125 7.63371 6.21143 8.33301C6.21143 9.03246 5.64424 9.59943 4.94482 9.59961C4.24526 9.59961 3.67822 9.03257 3.67822 8.33301C3.6784 7.6336 4.24537 7.06641 4.94482 7.06641ZM8.27783 0.400391C8.97739 0.400391 9.54443 0.967432 9.54443 1.66699C9.54426 2.3664 8.97728 2.93359 8.27783 2.93359C7.57838 2.93359 7.01141 2.3664 7.01123 1.66699C7.01123 0.967431 7.57827 0.400391 8.27783 0.400391Z" stroke="black" stroke-width="0.8"></path>
+    </svg>
+    <h3>Filter</h3>
+    <a href="#filters-group" class="collection__sidebar__close" data-collection-sidebar-close="" aria-label="Hide Filters" tabindex="-1" data-tab-index="0">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon-cancel" width="9" height="9" viewBox="0 0 9 9" fill="none">
+        <path d="M0.5 8.5L4.5 4.5L0.5 8.5ZM8.5 0.5L4.49924 4.5L8.5 0.5ZM4.49924 4.5L0.5 0.5L4.49924 4.5ZM4.5 4.5L8.5 8.5L4.5 4.5Z" fill="#0B0B0B"></path>
+        <path d="M0.5 8.5L4.5 4.5L8.5 8.5M8.5 0.5L4.49924 4.5L0.5 0.5" stroke="#0B0B0B" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </a>
+  </div>
+
+  <div class="collection__sidebar collection__sidebar--has-buttons" data-collection-sidebar-slide-out="" data-active-filters-count="1" data-scroll-lock-scrollable="" style="--swatch-size: var(--swatch-size-filters);">
+    <custom-filters-form>
+      <form data-collection-filters-form="" class="collection__filters" id="template--custom-form-filter">
+        {%- for filter in collection.filters -%}
+          <div class="filter-group custom-filter-group" data-animation="drawer-items-fade" data-animation-duration="500" data-animation-delay="250">
+            <details data-collapsible="" open="true">
+              <summary class="filter-group__heading" data-collapsible-trigger="">
+                <div>{{ filter.label | escape | upcase }}</div>
+                <div><svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-nav-arrow-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" stroke="#000" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+              </summary>
+              <div class="filter-group__body" data-collapsible-body="" style="height: auto;">
+                <div class="filter-group__content" data-collapsible-content="">
+                  <ul class="collection-nav">
+                    {%- for value in filter.values -%}
+                      <li class="sidebar__item {% if value.active %}sidebar__item--active{% endif %} {% if value.count == 0 and value.active == false %}link--disable{% else %}link--add{% endif %}">
+                        {%- if filter.label == 'Color' or filter.label == 'Colour' -%}
+                          <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" id="filter-{{ filter.label }}-{{ forloop.index }}" {% if value.active %}checked{% endif %} {% if value.count == 0 and value.active == false %}disabled{% endif %}>
+                          <label class="checkbox-label" for="filter-{{ filter.label }}-{{ forloop.index }}">
+                            <span class="swatches swatch__button swatch__button--square swatch-{{ value.label | downcase | replace: ' ', '-' }}" data-swatch="{{ value.label }}" style="--swatch: var(--{{ value.label | downcase | replace: ' ', '-' }}); background-color: {{ value.label | downcase }};"></span>
+                            <span class="checkbox-color">{{ value.label }}</span>
+                          </label>
+                        {%- else -%}
+                          <label class="is_filter_label" for="filter-{{ filter.label }}-{{ forloop.index }}">
+                            <span class="is_filter_span">{{ value.label }}</span>  
+                            <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" id="filter-{{ filter.label }}-{{ forloop.index }}" {% if value.active %}checked{% endif %} {% if value.count == 0 and value.active == false %}disabled{% endif %} style="display:none;">
+                          </label>
+                        {%- endif -%}
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              </div>
+            </details>
+          </div>
+        {%- endfor -%}
+        <noscript>
+          <button type="submit" class="collection__filters__btn btn btn--primary btn--outline btn--full" aria-label="Filter">
+            <span>Filter</span>
+          </button>
+        </noscript>
+      </form>
+    </custom-filters-form>
+  </div>
+
+  <div class="btn-filters-container">
+    <div class="btn-filters custom-active-tags" data-animation="drawer-items-fade" data-animation-delay="200" data-animation-duration="500">
+      {%- for filter in collection.filters -%}
+        {%- for value in filter.active_values -%}
+          <a class="active__filters__remove custom-filter-remove" href="{{ value.url_to_remove }}" data-filter-update-url="{{ value.url_to_remove }}">
+            <small>{{ value.label }}</small>
+            <span class="filter__x">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon-cancel" width="9" height="9" viewBox="0 0 9 9" fill="none">
+                <path d="M0.5 8.5L4.5 4.5L0.5 8.5ZM8.5 0.5L4.49924 4.5L8.5 0.5ZM4.49924 4.5L0.5 0.5L4.49924 4.5ZM4.5 4.5L8.5 8.5L4.5 4.5Z" fill="#0B0B0B"></path>
+                <path d="M0.5 8.5L4.5 4.5L8.5 8.5M8.5 0.5L4.49924 4.5L0.5 0.5" stroke="#0B0B0B" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </span>
+          </a>
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <div class="collection__sidebar__buttons" data-animation="drawer-items-fade" data-animation-delay="200" data-animation-duration="500">
+    <a id="btn-apply-filters" class="btn btn--primary btn--outline btn--full" data-filter-update-url="" onclick="document.querySelector('.collection__sidebar__close').click()">
+      <span>Apply Filter</span>
+    </a>
+    <a id="btn-layout-filters" class="btn btn--primary btn--outline btn--full" href="#filters-group" data-collection-sidebar-close="" aria-label="Hide Filters" tabindex="0">
+      <span>View <span id="custom-filter-products-count">{{ collection.products_count }}</span> items</span>
+    </a>
+  </div>
+</div>

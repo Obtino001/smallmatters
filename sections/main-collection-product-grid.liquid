@@ -98,8 +98,8 @@
     {%- endif -%}
 
     <div class="{% if section.settings.filter_type == 'vertical' %} facets-vertical page-width{% endif %}">
-      {{ 'component-facets.css' | asset_url | stylesheet_tag }}
-      <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
+      {{ 'custom-excerce.css' | asset_url | stylesheet_tag }}
+      <script src="{{ 'custom-filter.js' | asset_url }}" defer="defer"></script>
       {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
         <aside
           aria-labelledby="verticalTitle"
@@ -107,7 +107,7 @@
           id="main-collection-filters"
           data-id="{{ section.id }}"
         >
-          {% render 'facets',
+          {% render 'custom-facet-exercer',
             results: collection,
             enable_filtering: section.settings.enable_filtering,
             enable_sorting: section.settings.enable_sorting,
