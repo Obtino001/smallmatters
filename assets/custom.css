@@ -3675,13 +3675,19 @@ vipps-button#vipps-button {
 /* Active/Selected pill state */
 .mobile-facets__list:not(.facets-layout-list--swatch) .mobile-facets__label:has(input:checked),
 .mobile-facets__list:not(.facets-layout-list--swatch) .mobile-facets__label.active {
-  border: 1px solid #000 !important;
-  background-color: #fff !important;
+  border: 1px solid transparent !important;
+  background-color: #616161 !important;
 }
 .mobile-facets__list:not(.facets-layout-list--swatch) .mobile-facets__label:has(input:checked) .facet-checkbox__text .facet-checkbox__text-label,
 .mobile-facets__list:not(.facets-layout-list--swatch) .mobile-facets__label.active .facet-checkbox__text .facet-checkbox__text-label {
-  font-weight: 700;
-  color: #000;
+  font-weight: 600;
+  color: #fff;
+}
+.active-facets-mobile-drawer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0 20px 20px;
 }
 
 /* --- 5. COLOR SWATCH GRID (3-column with checkbox + swatch + name) --- */
