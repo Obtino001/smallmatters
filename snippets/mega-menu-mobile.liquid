@@ -32,7 +32,7 @@
             {% if title_1 != blank %}
             <div class="mega-menu_title-body" href="{{ title_1_link }}">
                 {{ title_1 }}
-                {% render 'accordion-icon' %}
+                {% render 'chevron-icon' %}
             </div>
         {% endif %}
             <div class="mega-menu__linklist_____inner">
@@ -43,7 +43,7 @@
                             <a class="h6 menu_wrapper" href="{{ sub_link.url }}">
                             {{ sub_link.title | escape }}
                             </a>
-                            <span>{% render 'accordion-icon' %}</span>
+                            <span>{% render 'chevron-icon' %}</span>
                         </div>
                         {% else %}
                         <a href="{{ sub_link.url }}" class="h6 menu_wrapper">{{ sub_link.title | escape }}</a>
@@ -55,7 +55,7 @@
                                 {% if sub_sub_link.links != blank %}
                                 <div class="link-faded sub_menu_wrapper">
                                     {{ sub_sub_link.title | escape }}
-                                    {% render 'accordion-icon' %}
+                                    {% render 'chevron-icon' %}
                                 </div>
                                 {% else %}
                                 <a href="{{ sub_sub_link.url }}" class="link-faded sub_menu_wrapper">{{ sub_sub_link.title | escape }}</a>
@@ -83,7 +83,7 @@
                         {% if title_2 != blank %}
             <div class="mega-menu_title-body" href="{{ title_2_link }}">
                 {{ title_2 }}
-                {% render 'accordion-icon' %}
+                {% render 'chevron-icon' %}
             </div>
                     {% endif %}
             <div class="mega-menu__linklist_____inner">
@@ -94,7 +94,7 @@
                     <a class="h6 menu_wrapper" href="{{ sub_link.url }}">
                     {{ sub_link.title | escape }}
                     </a>
-                    <span>{% render 'accordion-icon' %}</span>
+                    <span>{% render 'chevron-icon' %}</span>
                 </div>
                 {% else %}
                 <a href="{{ sub_link.url }}" class="h6 menu_wrapper">{{ sub_link.title | escape }}</a>
@@ -106,7 +106,7 @@
                         {% if sub_sub_link.links != blank %}
                         <div class="link-faded sub_menu_wrapper">
                             {{ sub_sub_link.title | escape }}
-                            {% render 'accordion-icon' %}
+                            {% render 'chevron-icon' %}
                         </div>
                         {% else %}
                         <a href="{{ sub_sub_link.url }}" class="link-faded sub_menu_wrapper">{{ sub_sub_link.title | escape }}</a>
@@ -135,7 +135,7 @@
 
             <div class="mega-menu_title-body" href="{{ title_3_link }}">
                 {{ title_3 }}
-                {% render 'accordion-icon' %}
+                {% render 'chevron-icon' %}
             </div>
                     {% endif %}
 
@@ -147,7 +147,7 @@
                     <a class="h6 menu_wrapper" href="{{ sub_link.url }}">
                     {{ sub_link.title | escape }}
                     </a>
-                    <span>{% render 'accordion-icon' %}</span>
+                    <span>{% render 'chevron-icon' %}</span>
                 </div>
                 {% else %}
                 <a href="{{ sub_link.url }}" class="h6 menu_wrapper">{{ sub_link.title | escape }}</a>
@@ -159,7 +159,7 @@
                         {% if sub_sub_link.links != blank %}
                         <div class="link-faded sub_menu_wrapper">
                             {{ sub_sub_link.title | escape }}
-                            {% render 'accordion-icon' %}
+                            {% render 'chevron-icon' %}
                         </div>
                         {% else %}
                         <a href="{{ sub_sub_link.url }}" class="link-faded sub_menu_wrapper">{{ sub_sub_link.title | escape }}</a>
@@ -190,7 +190,7 @@
                 {%- if sub_link.links.size > 0 -%}
                 <div class="menu_wrapper----col">
                     <a class="h6 menu_wrapper" href="{{ sub_link.url }}">{{ sub_link.title | escape }}</a>
-                    <span>{% render 'accordion-icon' %}</span>
+                    <span>{% render 'chevron-icon' %}</span>
                 </div>
                 {% else %}
                 <a href="{{ sub_link.url }}" class="h6 menu_wrapper">{{ sub_link.title | escape }}</a>
@@ -218,7 +218,7 @@
                 {%- if sub_link.links.size > 0 -%}
                 <div class="menu_wrapper----col">
                     <a class="h6 menu_wrapper" href="{{ sub_link.url }}">{{ sub_link.title | escape }}</a>
-                    <span>{% render 'accordion-icon' %}</span>
+                    <span>{% render 'chevron-icon' %}</span>
                 </div>
                 {% else %}
                 <a href="{{ sub_link.url }}" class="h6 menu_wrapper">{{ sub_link.title | escape }}</a>

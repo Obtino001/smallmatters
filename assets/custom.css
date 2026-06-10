@@ -1775,14 +1775,13 @@ svg.WI_cartDrawerCls {
   justify-content: start;
   gap: 10px;
 }
-.menu_wrapper----col .accordion-icons .icon-minus {
-  display: none;
+.menu_wrapper----col svg {
+  width: 15px;
+  transform: rotate(90deg);
+  transition: 0.3s;
 }
-.custom_wrapper_item.active > .menu_wrapper----col .accordion-icons .icon-plus {
-  display: none;
-}
-.custom_wrapper_item.active > .menu_wrapper----col .accordion-icons .icon-minus {
-  display: block;
+.custom_wrapper_item.active span svg {
+  transform: rotate(270deg);
 }
 .menu_wrapper----col a {
   margin: 0;
@@ -1930,14 +1929,14 @@ a.custom_menu_image_item {
     padding-right: 10px;
     align-items: center;
   }
-  .mega-menu_title-body .accordion-icons .icon-minus {
-    display: none;
+  .mega-menu_title-body svg {
+    width: 20px;
+    height: 20px;
+    transition: 0.3s;
+    transform: rotate(90deg);
   }
-  .active > .mega-menu_title-body .accordion-icons .icon-plus {
-    display: none;
-  }
-  .active > .mega-menu_title-body .accordion-icons .icon-minus {
-    display: block;
+  .active .mega-menu_title-body svg {
+    transform: rotate(270deg);
   }
   .custom_menu_images::-webkit-scrollbar,
   .custom_menu_products::-webkit-scrollbar {

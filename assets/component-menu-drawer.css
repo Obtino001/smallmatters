@@ -132,12 +132,16 @@ menu-drawer > details[open] > summary::before {
 }
 
 .js .menu-drawer__submenu {
-  display: none;
+  display: block;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-in-out;
   background-color: #EAE5DF;
   z-index: 1;
 }
-details[open] > .menu-drawer__submenu {
-  display: block;
+details[open] > .menu-drawer__submenu,
+.custom-accordion.is-open > .menu-drawer__submenu {
+  /* No display block here, handled by JS max-height */
 }
 
 .js .menu-drawer__submenu .menu-drawer__submenu {
@@ -148,12 +152,15 @@ details[open] > .menu-drawer__submenu {
   display: none !important;
 }
 
+.custom-accordion-toggle .accordion-icons .icon-minus,
 details > summary .accordion-icons .icon-minus {
   display: none;
 }
+.custom-accordion.is-open > .custom-accordion-toggle .accordion-icons .icon-plus,
 details[open] > summary .accordion-icons .icon-plus {
   display: none;
 }
+.custom-accordion.is-open > .custom-accordion-toggle .accordion-icons .icon-minus,
 details[open] > summary .accordion-icons .icon-minus {
   display: block;
 }
