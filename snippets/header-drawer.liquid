@@ -55,7 +55,7 @@
 
       <li>
         {% if mega_menu_block != "" %}
-          <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+          <details id="Details-menu-drawer-menu-item-{{ forloop.index }}"{% if forloop.index == 1 %} open{% endif %}>
             <summary
               id="HeaderDrawer-{{ link.handle }}"
               class="menu-drawer__menu-item list-menu__item link link--text focus-inset{% if link.child_active %} menu-drawer__menu-item--active{% endif %}"
@@ -65,8 +65,9 @@
               {{ link.title | escape }}
               </a>
 
-              <span class="svg-wrapper">
-                {{- 'icon-arrow.svg' | inline_asset_content -}}
+              <span class="svg-wrapper accordion-icons">
+                <svg class="icon icon-plus" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1V13M1 7H13" stroke="currentColor" stroke-width="1.5"/></svg>
+                <svg class="icon icon-minus" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7H13" stroke="currentColor" stroke-width="1.5"/></svg>
               </span>
             </summary>
             <div id="link-{{ link.handle | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce" tabindex="-1">
@@ -83,14 +84,15 @@
             </div>
           </details>
         {%- elsif link.links != blank -%}
-          <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+          <details id="Details-menu-drawer-menu-item-{{ forloop.index }}"{% if forloop.index == 1 %} open{% endif %}>
             <summary
               id="HeaderDrawer-{{ link.handle }}"
               class="menu-drawer__menu-item list-menu__item link link--text focus-inset{% if link.child_active %} menu-drawer__menu-item--active{% endif %}"
             >
               {{ link.title }}
-              <span class="svg-wrapper">
-                {{- 'icon-arrow.svg' | inline_asset_content -}}
+              <span class="svg-wrapper accordion-icons">
+                <svg class="icon icon-plus" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1V13M1 7H13" stroke="currentColor" stroke-width="1.5"/></svg>
+                <svg class="icon icon-minus" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7H13" stroke="currentColor" stroke-width="1.5"/></svg>
               </span>
             </summary>
             <div

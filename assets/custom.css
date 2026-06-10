@@ -1775,13 +1775,14 @@ svg.WI_cartDrawerCls {
   justify-content: start;
   gap: 10px;
 }
-.menu_wrapper----col svg {
-  width: 15px;
-  transform: rotate(90deg);
-  transition: 0.3s;
+.menu_wrapper----col .accordion-icons .icon-minus {
+  display: none;
 }
-.custom_wrapper_item.active span svg {
-  transform: rotate(270deg);
+.custom_wrapper_item.active > .menu_wrapper----col .accordion-icons .icon-plus {
+  display: none;
+}
+.custom_wrapper_item.active > .menu_wrapper----col .accordion-icons .icon-minus {
+  display: block;
 }
 .menu_wrapper----col a {
   margin: 0;
@@ -1891,7 +1892,9 @@ a.custom_menu_image_item {
     scroll-snap-type: x mandatory;
     overflow-x: auto;
     scrollbar-width: none;
-    ::-webkit-scrollbar: none;
+  }
+  .custom_menu_images::-webkit-scrollbar {
+    display: none;
   }
   .custom_menu_images {
   width:100%;
@@ -1927,14 +1930,14 @@ a.custom_menu_image_item {
     padding-right: 10px;
     align-items: center;
   }
-  .mega-menu_title-body svg {
-    width: 20px;
-    height: 20px;
-    transition: 0.3s;
-    transform: rotate(90deg);
+  .mega-menu_title-body .accordion-icons .icon-minus {
+    display: none;
   }
-  .active .mega-menu_title-body svg {
-    transform: rotate(270deg);
+  .active > .mega-menu_title-body .accordion-icons .icon-plus {
+    display: none;
+  }
+  .active > .mega-menu_title-body .accordion-icons .icon-minus {
+    display: block;
   }
   .custom_menu_images::-webkit-scrollbar,
   .custom_menu_products::-webkit-scrollbar {
@@ -1981,6 +1984,14 @@ a.custom_menu_image_item:only-child {
 /* Ensure the last item in a multiple list doesn't have extra margin causing overflow issues */
 a.custom_menu_image_item:last-child {
     margin-right: 0;
+}
+.custom_menu_images {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+a.custom_menu_image_item {
+    max-width: 100%;
+    box-sizing: border-box;
 }
   .custom_menu_article_wrapper {
     overflow: scroll;

@@ -148,8 +148,14 @@ details[open] > .menu-drawer__submenu {
   display: none !important;
 }
 
-details[open] > summary .svg-wrapper {
-  transform: translateY(-50%) rotate(90deg);
+details > summary .accordion-icons .icon-minus {
+  display: none;
+}
+details[open] > summary .accordion-icons .icon-plus {
+  display: none;
+}
+details[open] > summary .accordion-icons .icon-minus {
+  display: block;
 }
 
 .menu-drawer__close-button .svg-wrapper {
