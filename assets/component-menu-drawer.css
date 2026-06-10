@@ -47,19 +47,17 @@ menu-drawer > details[open] > summary::before {
   height: calc(var(--viewport-height, 100vh) - (var(--header-bottom-position, 100%)));
 }
 
-.js details[open] > .menu-drawer,
-.js details[open] > .menu-drawer__submenu {
+.js details[open] > .menu-drawer {
   transition: transform var(--duration-default) ease, visibility var(--duration-default) ease;
 }
 
-.js details[open].menu-opening > .menu-drawer,
-details[open].menu-opening > .menu-drawer__submenu {
+.js details[open].menu-opening > .menu-drawer {
   transform: translateX(0);
   visibility: visible;
 }
 
 .js .menu-drawer__navigation .submenu-open {
-  visibility: hidden; /* hide menus from screen readers when hidden by submenu */
+  /* removed visibility hidden so accordion works properly */
 }
 
 @media screen and (min-width: 750px) {
@@ -134,15 +132,12 @@ details[open].menu-opening > .menu-drawer__submenu {
 }
 
 .js .menu-drawer__submenu {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  bottom: 0;
-  left: 0;
+  display: none;
   background-color: #EAE5DF;
   z-index: 1;
-  transform: translateX(100%);
-  visibility: hidden;
+}
+details[open] > .menu-drawer__submenu {
+  display: block;
 }
 
 .js .menu-drawer__submenu .menu-drawer__submenu {
@@ -150,17 +145,11 @@ details[open].menu-opening > .menu-drawer__submenu {
 }
 
 .menu-drawer__close-button {
-  margin-top: 1.5rem;
-  /* padding: 1.2rem 2.6rem 1.2rem 3rem; */
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  font-size: 1.4rem;
-  width: 100%;
-  background-color: transparent;
-  font-family: var(--font-body-family);
-  font-style: var(--font-body-style);
-  text-align: left;
+  display: none !important;
+}
+
+details[open] > summary .svg-wrapper {
+  transform: translateY(-50%) rotate(90deg);
 }
 
 .menu-drawer__close-button .svg-wrapper {
