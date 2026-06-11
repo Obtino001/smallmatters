@@ -2,60 +2,64 @@
   position: initial;
 }
 
-.js menu-drawer>details>summary::before,
-.js menu-drawer>details[open]:not(.menu-opening)>summary::before {
+.js menu-drawer > details > summary::before,
+.js menu-drawer > details[open]:not(.menu-opening) > summary::before {
   content: '';
-  position: fixed;
+  position: absolute;
   cursor: default;
   width: 100%;
-  top: var(--header-bottom-position, 0px);
-  bottom: 0;
+  height: calc(100vh - 100%);
+  height: calc(var(--viewport-height, 100vh) - (var(--header-bottom-position, 100%)));
+  top: 100%;
   left: 0;
   background: rgba(var(--color-foreground), 0.5);
   opacity: 0;
   visibility: hidden;
   z-index: 2;
+  transition: opacity 0s, visibility 0s;
 }
 
-menu-drawer>details[open]>summary::before {
+menu-drawer > details[open] > summary::before {
   visibility: visible;
   opacity: 1;
+  transition: opacity var(--duration-default) ease, visibility var(--duration-default) ease;
 }
 
 .menu-drawer {
-  position: fixed;
+  position: absolute;
   transform: translateX(-100%);
   visibility: hidden;
   z-index: 3;
   left: 0;
-  top: var(--header-bottom-position, 0px);
-  bottom: 0;
+  top: 100%;
   width: 100%;
   padding: 0;
-  background-color: #EAE5DF;
+  background-color:#EAE5DF;
   overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-  filter: drop-shadow(var(--drawer-shadow-horizontal-offset) var(--drawer-shadow-vertical-offset) var(--drawer-shadow-blur-radius) rgba(var(--color-shadow), var(--drawer-shadow-opacity)));
-  scrollbar-width: none;
+  filter: drop-shadow(
+    var(--drawer-shadow-horizontal-offset) var(--drawer-shadow-vertical-offset) var(--drawer-shadow-blur-radius)
+      rgba(var(--color-shadow), var(--drawer-shadow-opacity))
+  );
 }
 
 .js .menu-drawer {
-  /* fixed positioning with top:0 + bottom:0 handles the full viewport height */
+  height: calc(100vh - 100%);
+  height: calc(var(--viewport-height, 100vh) - (var(--header-bottom-position, 100%)));
 }
 
-.js details[open]>.menu-drawer {
-  /* no transition — opens instantly */
+.js details[open] > .menu-drawer,
+.js details[open] > .menu-drawer__submenu {
+  transition: transform var(--duration-default) ease, visibility var(--duration-default) ease;
 }
 
-.js details[open].menu-opening>.menu-drawer {
+.js details[open].menu-opening > .menu-drawer,
+details[open].menu-opening > .menu-drawer__submenu {
   transform: translateX(0);
   visibility: visible;
 }
 
 .js .menu-drawer__navigation .submenu-open {
-  /* removed visibility hidden so accordion works properly */
+  visibility: hidden; /* hide menus from screen readers when hidden by submenu */
 }
 
 @media screen and (min-width: 750px) {
@@ -69,12 +73,15 @@ menu-drawer>details[open]>summary::before {
 
 .menu-drawer__inner-container {
   position: relative;
-  min-height: 100%;
+  height: 100%;
 }
 
 .menu-drawer__navigation-container {
-  display: block;
-  min-height: 100%;
+  display: grid;
+  grid-template-rows: 1fr 200px;
+  align-content: space-between;
+  overflow-y: auto;
+  height: 100%;
 }
 
 .menu-drawer__navigation {
@@ -82,9 +89,9 @@ menu-drawer>details[open]>summary::before {
 }
 
 .menu-drawer__inner-submenu {
-  height: auto;
+  height: 100%;
   overflow-x: hidden;
-  overflow-y: visible;
+  overflow-y: auto;
 }
 
 .js .menu-drawer__menu li {
@@ -92,11 +99,9 @@ menu-drawer>details[open]>summary::before {
 }
 
 .menu-drawer__menu-item {
-  padding: 1.1rem 2rem;
+  padding: 1.1rem 3rem;
   text-decoration: none;
   font-size: 1.8rem;
-  position: relative;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .menu-drawer summary.menu-drawer__menu-item {
@@ -120,7 +125,7 @@ menu-drawer>details[open]>summary::before {
   display: none;
 }
 
-.menu-drawer__menu-item>.svg-wrapper {
+.menu-drawer__menu-item > .svg-wrapper {
   width: 15px;
   position: absolute;
   right: 3rem;
@@ -129,40 +134,33 @@ menu-drawer>details[open]>summary::before {
 }
 
 .js .menu-drawer__submenu {
-  display: block;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease-in-out;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  bottom: 0;
+  left: 0;
   background-color: #EAE5DF;
   z-index: 1;
-}
-
-details[open]>.menu-drawer__submenu,
-.custom-accordion.is-open>.menu-drawer__submenu {
-  /* No display block here, handled by JS max-height */
+  transform: translateX(100%);
+  visibility: hidden;
 }
 
 .js .menu-drawer__submenu .menu-drawer__submenu {
-  overflow-y: visible;
+  overflow-y: auto;
 }
 
 .menu-drawer__close-button {
-  display: none !important;
-}
-
-.custom-accordion-toggle .accordion-icons .icon-minus,
-details>summary .accordion-icons .icon-minus {
-  display: none;
-}
-
-.custom-accordion.is-open>.custom-accordion-toggle .accordion-icons .icon-plus,
-details[open]>summary .accordion-icons .icon-plus {
-  display: none;
-}
-
-.custom-accordion.is-open>.custom-accordion-toggle .accordion-icons .icon-minus,
-details[open]>summary .accordion-icons .icon-minus {
-  display: block;
+  margin-top: 1.5rem;
+  /* padding: 1.2rem 2.6rem 1.2rem 3rem; */
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  font-size: 1.4rem;
+  width: 100%;
+  background-color: transparent;
+  font-family: var(--font-body-family);
+  font-style: var(--font-body-style);
+  text-align: left;
 }
 
 .menu-drawer__close-button .svg-wrapper {
@@ -207,7 +205,7 @@ details[open]>summary .accordion-icons .icon-minus {
   margin: 0;
 }
 
-.menu-drawer__account account-icon>.svg-wrapper {
+.menu-drawer__account account-icon > .svg-wrapper {
   height: 2rem;
   width: 2rem;
   margin-right: 1rem;
@@ -219,7 +217,7 @@ details[open]>summary .accordion-icons .icon-minus {
   margin-left: -0.45rem;
 }
 
-.menu-drawer__account:hover account-icon>.svg-wrapper {
+.menu-drawer__account:hover account-icon > .svg-wrapper {
   transform: scale(1.07);
 }
 
