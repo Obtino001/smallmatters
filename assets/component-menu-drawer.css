@@ -87,9 +87,9 @@ menu-drawer > details[open] > summary::before {
 }
 
 .menu-drawer__inner-submenu {
-  height: 100%;
+  height: auto;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: visible;
 }
 
 .js .menu-drawer__menu li {
@@ -147,7 +147,7 @@ details[open] > .menu-drawer__submenu,
 }
 
 .js .menu-drawer__submenu .menu-drawer__submenu {
-  overflow-y: auto;
+  overflow-y: visible;
 }
 
 .menu-drawer__close-button {
