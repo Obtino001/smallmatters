@@ -1888,9 +1888,10 @@ a.custom_menu_image_item {
     margin-top: 10px !important;
 }
   .custom_menu_images {
-    scroll-snap-type: x mandatory;
-    overflow-x: auto;
-    scrollbar-width: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
   }
   .custom_menu_images::-webkit-scrollbar {
     display: none;
@@ -1943,13 +1944,13 @@ a.custom_menu_image_item {
     display: none;
   }
 .custom_menu_products {
-    overflow: scroll;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
 }
 .custom_menu_product_item {
-    min-width: calc(70% - 10px);
-    scroll-snap-align: start;
+    width: calc(50% - 5px);
+    min-width: unset;
 }
   .mega-menu__linklist_____inner {
     padding-bottom: 10px;
@@ -1966,17 +1967,16 @@ a.custom_menu_image_item {
     scroll-snap-align: start;
   }
 
-  /* 1. Default Rule: If there are MULTIPLE images, show 2 per row */
+/* 1. Default Rule: If there are MULTIPLE images, show 2 per row */
 a.custom_menu_image_item {
     /* Shows 2 items (adjust the -10px depending on your gap/margin preference) */
-    min-width: calc(50% - 10px);
-    scroll-snap-align: start;
+    width: calc(50% - 5px);
     
 }
 
 /* 2. Override Rule: If there is ONLY ONE image, show it full width */
 a.custom_menu_image_item:only-child {
-    min-width: 100%;
+    width: 100%;
     margin-right: 0;
 }
 
@@ -1993,9 +1993,9 @@ a.custom_menu_image_item {
     box-sizing: border-box;
 }
   .custom_menu_article_wrapper {
-    overflow: scroll;
-    scroll-snap-type: x mandatory;
     display: none;
+    flex-wrap: wrap;
+    gap: 12px;
     gap: 12px;
   }
   span.Write-heretext {
