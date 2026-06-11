@@ -308,14 +308,14 @@
 }
 
 .gs-drawer__featured-scroll {
-  display: flex;
-  gap: 16px;
-  padding: 0 20px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  scroll-snap-type: x mandatory;
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-snap-type: x mandatory;
+    margin-left: 20px;
 }
 
 .gs-drawer__featured-scroll::-webkit-scrollbar {
