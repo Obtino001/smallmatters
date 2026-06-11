@@ -342,6 +342,16 @@
   transform: scale(0.98);
 }
 
+.gs-drawer__product-card,
+.gs-drawer__article-card {
+  color: inherit;
+  background: #ffffff;
+}
+
+.gs-drawer__product-card .card-wrapper {
+  height: 100%;
+}
+
 .gs-drawer__featured-img {
   position: relative;
   width: 100%;
