@@ -2546,9 +2546,9 @@ color:  #3C3C3C;
 
 .header__icon--menu[aria-expanded='true']::before {
   content: '';
-  top: 0;
+  top: var(--header-bottom-position, 0px);
   left: 0;
-  height: 100%;
+  bottom: 0;
   width: 100%;
   display: block;
   position: fixed;
