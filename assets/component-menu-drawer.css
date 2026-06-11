@@ -783,7 +783,7 @@
   }
   
   .gs-hamburger {
-    display: none;
+    display: none !important;
   }
 }
 

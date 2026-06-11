@@ -7,6 +7,7 @@
 
 {{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-list-payment.css' | asset_url | stylesheet_tag }}
 
 <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
@@ -14,6 +15,18 @@
 <style>
   .drawer {
     visibility: hidden;
+  }
+  .cart-drawer__payments {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+  }
+  .cart-drawer__payments .payment-wrapper {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  .cart-drawer__payments .payment-icons {
+    justify-content: center;
   }
 </style>
 
@@ -623,7 +636,9 @@
             {{ 'sections.cart.checkout' | t }}
           </button>
         </div>
-        {% render 'payments-footer' %}
+        <div class="cart-drawer__payments">
+          {% render 'payments-footer' %}
+        </div>
       </div>
     {% endif %}
     </div>
