@@ -122,6 +122,7 @@
 }
 
 .gs-drawer__icon-link {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -293,6 +294,7 @@
     opacity: 0;
     transform: translateY(4px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -355,7 +357,7 @@
 .gs-drawer__featured-img {
   position: relative;
   width: 100%;
-  padding-top: 66%;
+  padding-top: 100%;
   overflow: hidden;
   border-radius: 8px;
   background-color: #f0f0f0;
@@ -586,7 +588,6 @@
 /* ── Bottom Utility Links ── */
 .gs-drawer__footer-section {
   margin-top: 16px;
-  border-top: 1px solid #f0f0f0;
 }
 
 .gs-drawer__bottom-links {
@@ -644,7 +645,7 @@
   color: #6b6b6b;
 }
 
-#gs-lang-toggle:checked ~ .gs-drawer__lang-current .gs-drawer__lang-arrow {
+#gs-lang-toggle:checked~.gs-drawer__lang-current .gs-drawer__lang-arrow {
   transform: rotate(180deg);
 }
 
@@ -663,7 +664,7 @@
   margin-bottom: 4px;
 }
 
-#gs-lang-toggle:checked ~ .gs-drawer__lang-options {
+#gs-lang-toggle:checked~.gs-drawer__lang-options {
   display: block;
   animation: gsLangFadeIn 0.2s ease;
 }
@@ -673,6 +674,7 @@
     opacity: 0;
     transform: translateY(4px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -791,7 +793,7 @@
   .gs-drawer {
     display: none;
   }
-  
+
   .gs-hamburger {
     display: none !important;
   }
@@ -801,6 +803,7 @@
    MOTION PREFERENCE: REDUCE MOTION
    ══════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
+
   .gs-drawer__panel,
   .gs-drawer__submenu,
   .gs-drawer__backdrop,

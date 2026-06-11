@@ -47,10 +47,22 @@
             <circle cx="12" cy="7" r="4"></circle>
           </svg>
         </a>
-        <a href="#swym-wishlist" class="gs-drawer__icon-link gs-drawer__wishlist" aria-label="View wishlist">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+        <a href="{{ routes.cart_url }}" class="gs-drawer__icon-link" id="cart-icon-bubble-drawer" aria-label="{{ 'templates.cart.cart' | t }}">
+          <span class="svg-wrapper" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="20" viewBox="0 0 19 20" fill="none">
+            <mask id="mask0_drawer_cart" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="17" height="17">
+              <path d="M17.2464 1.65829H1.32682V17.5779H17.2464V1.65829Z" fill="white"/>
+            </mask>
+            <g mask="url(#mask0_drawer_cart)">
+              <path d="M14.5931 5.37195H3.98002V16.4493H14.5931V5.37195Z" stroke="currentColor" stroke-width="0.994974" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M7.62828 7.03128V3.64837C7.62828 3.18405 8.02627 2.78606 8.49059 2.78606H10.2152C10.6795 2.78606 11.0775 3.18405 11.0775 3.64837V7.09761" stroke="currentColor" stroke-width="0.994974" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+          </svg></span>
+          <div class="cart-count-bubble">
+            {%- if cart.item_count < 100 -%}
+              <span aria-hidden="true">{{ cart.item_count }}</span>
+            {%- endif -%}
+            <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+          </div>
         </a>
       </div>
     </div>
