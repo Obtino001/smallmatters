@@ -4,6 +4,11 @@
   font-weight: 500;
 }
 
+html,
+body {
+  overflow-x: clip;
+}
+
 .collection button.slider-button.slider-button--next:hover svg path,
 .collection button.slider-button.slider-button--prev:hover svg path,
 .related-products button.slider-button.slider-button--next:hover svg path,
