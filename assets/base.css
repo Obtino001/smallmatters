@@ -2546,12 +2546,12 @@ color:  #3C3C3C;
 
 .header__icon--menu[aria-expanded='true']::before {
   content: '';
-  top: var(--header-bottom-position, 0px);
+  top: 100%;
   left: 0;
-  bottom: 0;
+  height: calc(var(--viewport-height, 100vh) - (var(--header-bottom-position, 100%)));
   width: 100%;
   display: block;
-  position: fixed;
+  position: absolute;
   background: rgba(var(--color-foreground), 0.5);
 }
 

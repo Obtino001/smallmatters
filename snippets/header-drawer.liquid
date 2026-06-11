@@ -55,21 +55,20 @@
 
       <li>
         {% if mega_menu_block != "" %}
-          <div id="Details-menu-drawer-menu-item-{{ forloop.index }}" class="custom-accordion{% if forloop.index == 1 %} is-open{% endif %}">
-            <div
+          <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+            <summary
               id="HeaderDrawer-{{ link.handle }}"
-              class="custom-accordion-toggle menu-drawer__menu-item list-menu__item link link--text focus-inset{% if link.child_active %} menu-drawer__menu-item--active{% endif %}"
+              class="menu-drawer__menu-item list-menu__item link link--text focus-inset{% if link.child_active %} menu-drawer__menu-item--active{% endif %}"
             >
               <a
                 href="{{ link.url }}">
               {{ link.title | escape }}
               </a>
 
-              <span class="svg-wrapper accordion-icons">
-                <svg class="icon icon-plus" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1V13M1 7H13" stroke="currentColor" stroke-width="1.5"/></svg>
-                <svg class="icon icon-minus" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7H13" stroke="currentColor" stroke-width="1.5"/></svg>
+              <span class="svg-wrapper">
+                {{- 'icon-arrow.svg' | inline_asset_content -}}
               </span>
-            </div>
+            </summary>
             <div id="link-{{ link.handle | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce" tabindex="-1">
               <div class="menu-drawer__inner-submenu">
                 <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
@@ -77,24 +76,23 @@
                   <span>{{ link.title | escape }}</span>
                   <svg class="cross_button_svg" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M12.243 11.182a.75.75 0 1 1-1.06 1.06L8 9.062l-3.182 3.182a.75.75 0 0 1-1.06 0 .75.75 0 0 1 0-1.06L6.938 8 3.757 4.818a.75.75 0 1 1 1.06-1.06L8 6.938l3.182-3.182a.75.75 0 1 1 1.06 1.06L9.062 8z"></path></svg>
                 </button>
-                <div class="container-xx mega-menu__custom mega-menu__custom-mobile">
+                <div class="container-xx mega-menu__custom mega menu__custom-mobile">
                   {% render "mega-menu-mobile" block: mega_menu_block %}
                 </div>
               </div>
             </div>
-          </div>
+          </details>
         {%- elsif link.links != blank -%}
-          <div id="Details-menu-drawer-menu-item-{{ forloop.index }}" class="custom-accordion{% if forloop.index == 1 %} is-open{% endif %}">
-            <div
+          <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+            <summary
               id="HeaderDrawer-{{ link.handle }}"
-              class="custom-accordion-toggle menu-drawer__menu-item list-menu__item link link--text focus-inset{% if link.child_active %} menu-drawer__menu-item--active{% endif %}"
+              class="menu-drawer__menu-item list-menu__item link link--text focus-inset{% if link.child_active %} menu-drawer__menu-item--active{% endif %}"
             >
               {{ link.title }}
-              <span class="svg-wrapper accordion-icons">
-                <svg class="icon icon-plus" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1V13M1 7H13" stroke="currentColor" stroke-width="1.5"/></svg>
-                <svg class="icon icon-minus" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7H13" stroke="currentColor" stroke-width="1.5"/></svg>
+              <span class="svg-wrapper">
+                {{- 'icon-arrow.svg' | inline_asset_content -}}
               </span>
-            </div>
+            </summary>
             <div
               id="link-{{ link.handle | escape }}"
               class="menu-drawer__submenu has-submenu gradient motion-reduce"
@@ -122,17 +120,16 @@
                           {{ childlink.title }}
                         </a>
                       {%- else -%}
-                        <div id="Details-menu-drawer-{{ link.handle }}-{{ childlink.handle }}" class="custom-accordion">
-                          <div
+                        <details id="Details-menu-drawer-{{ link.handle }}-{{ childlink.handle }}">
+                          <summary
                             id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}"
-                            class="custom-accordion-toggle menu-drawer__menu-item link link--text list-menu__item focus-inset"
+                            class="menu-drawer__menu-item link link--text list-menu__item focus-inset"
                           >
                             {{ childlink.title }}
-                            <span class="svg-wrapper accordion-icons">
-                              <svg class="icon icon-plus" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1V13M1 7H13" stroke="currentColor" stroke-width="1.5"/></svg>
-                              <svg class="icon icon-minus" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7H13" stroke="currentColor" stroke-width="1.5"/></svg>
+                            <span class="svg-wrapper">
+                              {{- 'icon-arrow.svg' | inline_asset_content -}}
                             </span>
-                          </div>
+                          </summary>
                           <div
                             id="childlink-{{ childlink.handle | escape }}"
                             class="menu-drawer__submenu has-submenu gradient motion-reduce"
@@ -167,14 +164,14 @@
                               {%- endfor -%}
                             </ul>
                           </div>
-                        </div>
+                        </details>
                       {%- endif -%}
                     </li>
                   {%- endfor -%}
                 </ul>
               </div>
             </div>
-          </div>
+          </details>
         {%- else -%}
           <a
             id="HeaderDrawer-{{ link.handle }}"
@@ -242,7 +239,7 @@
               </a>
             {%- endif -%}
             {%- if localization.available_countries or localization.available_languages -%}
-<div class="country-aesthatc _mobile">
+<li class="country-aesthatc _mobile">
   <localization-form>
     {%- form 'localization', id: 'LocalizationForm-Mobile', class: 'localization-form' -%}
       
@@ -294,12 +291,13 @@
       </div>
     {%- endform -%}
   </localization-form>
-</div>
+</li>
 
 <style>
   /* Basic Mobile Styles */
   .country-aesthatc._mobile {
     display: block; /* Ensure it takes width in drawer */
+    margin-top: 20px;
   }
   
   /* Make sure the options open nicely in mobile (optional tweak) */
@@ -414,47 +412,3 @@
     </div>
   </details>
 </header-drawer>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const accordions = document.querySelectorAll('.custom-accordion');
-    
-    accordions.forEach(accordion => {
-      const toggle = accordion.querySelector('.custom-accordion-toggle');
-      const submenu = accordion.querySelector('.menu-drawer__submenu');
-      
-      if (!toggle || !submenu) return;
-      
-      // Initialize height if open by default
-      if (accordion.classList.contains('is-open')) {
-        submenu.style.maxHeight = submenu.scrollHeight + 'px';
-      }
-      
-      toggle.addEventListener('click', (e) => {
-        e.preventDefault();
-        
-        const isOpen = accordion.classList.contains('is-open');
-        
-        if (isOpen) {
-          accordion.classList.remove('is-open');
-          submenu.style.maxHeight = null;
-        } else {
-          // Close other accordions at the same level if desired
-          // (Leaving them open independently is usually fine for mobile menus)
-          accordion.classList.add('is-open');
-          submenu.style.maxHeight = submenu.scrollHeight + 'px';
-        }
-      });
-    });
-    
-    // Also re-calculate heights on window resize to prevent cut-offs
-    window.addEventListener('resize', () => {
-      accordions.forEach(accordion => {
-        if (accordion.classList.contains('is-open')) {
-          const submenu = accordion.querySelector('.menu-drawer__submenu');
-          if(submenu) submenu.style.maxHeight = submenu.scrollHeight + 'px';
-        }
-      });
-    });
-  });
-</script>

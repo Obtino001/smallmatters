@@ -482,7 +482,9 @@ class MenuDrawer extends HTMLElement {
   }
 
   openMenuDrawer(summaryElement) {
-    this.mainDetailsToggle.classList.add('menu-opening');
+    setTimeout(() => {
+      this.mainDetailsToggle.classList.add('menu-opening');
+    });
     summaryElement.setAttribute('aria-expanded', true);
     trapFocus(this.mainDetailsToggle, summaryElement);
     document.body.classList.add(`overflow-hidden-${this.dataset.breakpoint}`);
@@ -528,10 +530,26 @@ class MenuDrawer extends HTMLElement {
   }
 
   closeAnimation(detailsElement) {
-    detailsElement.removeAttribute('open');
-    if (detailsElement.closest('details[open]')) {
-      trapFocus(detailsElement.closest('details[open]'), detailsElement.querySelector('summary'));
-    }
+    let animationStart;
+
+    const handleAnimation = (time) => {
+      if (animationStart === undefined) {
+        animationStart = time;
+      }
+
+      const elapsedTime = time - animationStart;
+
+      if (elapsedTime < 400) {
+        window.requestAnimationFrame(handleAnimation);
+      } else {
+        detailsElement.removeAttribute('open');
+        if (detailsElement.closest('details[open]')) {
+          trapFocus(detailsElement.closest('details[open]'), detailsElement.querySelector('summary'));
+        }
+      }
+    };
+
+    window.requestAnimationFrame(handleAnimation);
   }
 }
 
@@ -552,7 +570,9 @@ class HeaderDrawer extends MenuDrawer {
     );
     this.header.classList.add('menu-open');
 
-    this.mainDetailsToggle.classList.add('menu-opening');
+    setTimeout(() => {
+      this.mainDetailsToggle.classList.add('menu-opening');
+    });
 
     summaryElement.setAttribute('aria-expanded', true);
     window.addEventListener('resize', this.onResize);
