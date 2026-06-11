@@ -15,6 +15,9 @@
 .vvv-cc {
   position: relative;
 }
+html{
+  overflow-x: clip;
+}
 .custom-h2-title,
 cart-drawer .cart-remove-button {
   text-decoration: underline;
