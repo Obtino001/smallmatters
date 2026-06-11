@@ -73,15 +73,13 @@ menu-drawer>details[open]>summary::before {
 }
 
 .menu-drawer__navigation-container {
-  display: flex;
-  flex-direction: column;
+  display: block;
   overflow-y: auto;
   height: 100%;
 }
 
 .menu-drawer__navigation {
   padding: 3rem 0;
-  flex-grow: 1;
 }
 
 .menu-drawer__inner-submenu {
