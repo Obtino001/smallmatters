@@ -242,7 +242,7 @@
               </a>
             {%- endif -%}
             {%- if localization.available_countries or localization.available_languages -%}
-<li class="country-aesthatc _mobile">
+<div class="country-aesthatc _mobile">
   <localization-form>
     {%- form 'localization', id: 'LocalizationForm-Mobile', class: 'localization-form' -%}
       
@@ -294,13 +294,14 @@
       </div>
     {%- endform -%}
   </localization-form>
-</li>
+</div>
 
 <style>
   /* Basic Mobile Styles */
   .country-aesthatc._mobile {
     display: block; /* Ensure it takes width in drawer */
     margin-top: 20px;
+    margin-bottom: 20px;
   }
   
   /* Make sure the options open nicely in mobile (optional tweak) */

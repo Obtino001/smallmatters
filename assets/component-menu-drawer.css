@@ -73,15 +73,15 @@ menu-drawer>details[open]>summary::before {
 }
 
 .menu-drawer__navigation-container {
-  display: grid;
-  grid-template-rows: 1fr auto;
-  align-content: space-between;
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
   height: 100%;
 }
 
 .menu-drawer__navigation {
   padding: 3rem 0;
+  flex-grow: 1;
 }
 
 .menu-drawer__inner-submenu {
