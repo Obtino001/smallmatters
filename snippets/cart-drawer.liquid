@@ -65,7 +65,7 @@
         </div>
       {%- endif -%}
       <div class="drawer__header">
-        <h2 class="drawer__heading">Shopping cart</h2>
+        <h2 class="drawer__heading">{{ 'sections.cart.title' | t }}</h2>
         <button
           class="drawer__close"
           type="button"
@@ -356,7 +356,7 @@
                                     class="hidden"
                                   {% endif %}
                                 >
-                                Remove
+                                  {{ 'sections.cart.remove' | t }}
                                 </button>
                               </cart-remove-button>
                             </div>
@@ -531,7 +531,7 @@
               <span class="Write-heretext">
                 {{ 'sections.cart.note' | t }}
               </span>
-             <span class="Write-here">Write here</span>
+             <span class="Write-here">{{ 'sections.cart.write_here' | t }}</span>
               </span>
             </summary>
             <cart-note class="cart__note field">
