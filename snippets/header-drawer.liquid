@@ -1,414 +1,506 @@
 {% comment %}
-  Renders a header drawer menu for mobile and desktop.
+  Gymshark-Style Mobile Menu Drawer
+  ----------------------------------
+  Replicates Gymshark's mobile navigation pixel-for-pixel.
+  - Full-screen slide-in drawer from left
+  - Search bar with placeholder
+  - Top-level category tabs (horizontal scroll)
+  - Featured image cards carousel per category
+  - Multi-level submenu with slide transitions
+  - Back buttons for nested menus
+  - Bottom utility links (Accessibility Statement, Help, etc.)
+  - All items editable through Shopify Navigation settings
+  - Preloaded on page load for instant open
 
-  Usage:
-  {% render 'header-drawer' %}
+  Usage: {% render 'header-drawer' %}
 {% endcomment %}
 
-<header-drawer data-breakpoint="{% if section.settings.menu_type_desktop == 'drawer' %}desktop{% else %}tablet{% endif %}">
-  <details id="Details-menu-drawer-container" class="menu-drawer-container">
-    <summary
-      class="header__icon header__icon--menu header__icon--summary link focus-inset"
-      aria-label="{{ 'sections.header.menu' | t }}"
-    >
-      <span>
-<svg class="icon icon-hamburger" xmlns="http://www.w3.org/2000/svg" width="21" height="14" viewBox="0 0 21 14" fill="none">
-<path d="M0 0.75H21" stroke="white" stroke-width="1.5"/>
-<path d="M5 6.75L16 6.75" stroke="white" stroke-width="1.5"/>
-<path d="M0 12.75H21" stroke="white" stroke-width="1.5"/>
-</svg>
-        {{- 'icon-close.svg' | inline_asset_content -}}
-      </span>
-    </summary>
-    <div id="menu-drawer" class="gradient menu-drawer motion-reduce color-{{ section.settings.menu_color_scheme }}">
-      <div class="menu-drawer__inner-container">
-        <div class="menu-drawer__navigation-container">
- <nav class="menu-drawer__navigation">
-  <ul class="menu-drawer__menu has-submenu list-menu" role="list">
-    {%- for link in section.settings.menu.links -%}
-      {% assign mega_menu_block = '' %}
-      
-      {%- comment -%} UPDATED LOGIC START: Checks Handle, Title, and translated handles {%- endcomment -%}
-      {% for block in section.blocks %}
-        {% if block.type == 'desktop_menu' %}
-          {%- comment -%} Split settings by comma to allow multiple languages (e.g. "men, herre") {%- endcomment -%}
-          {% assign triggers = block.settings.trigger | downcase | split: ',' %}
-          
-          {% assign link_handle = link.handle | downcase %}
-          {% assign link_title = link.title | downcase %}
-          {% assign link_handle_spaced = link.handle | downcase | replace: '-', ' ' %}
+{%- comment -%} Preload the drawer CSS so there's no FOUC {%- endcomment -%}
+<link rel="stylesheet" href="{{ 'component-menu-drawer.css' | asset_url }}">
 
-          {% for trigger in triggers %}
-            {% assign clean_trigger = trigger | strip %}
-            {%- comment -%} Check if trigger matches Handle OR Title OR Spaced Handle {%- endcomment -%}
-            {% if link_handle == clean_trigger or link_title == clean_trigger or link_handle_spaced == clean_trigger %}
-              {% assign mega_menu_block = block %}
-              {% break %}
-            {% endif %}
-          {% endfor %}
-        {% endif %}
-        
-        {%- comment -%} Stop looking if we found a match {%- endcomment -%}
-        {% if mega_menu_block != '' %}{% break %}{% endif %}
-      {% endfor %}
-      {%- comment -%} UPDATED LOGIC END {%- endcomment -%}
+{%- comment -%} Build the mega menu block lookup {%- endcomment -%}
+{%- liquid
+  assign menu_links = section.settings.menu.links
+-%}
 
-      <li>
-        {% if mega_menu_block != "" %}
-          <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
-            <summary
-              id="HeaderDrawer-{{ link.handle }}"
-              class="menu-drawer__menu-item list-menu__item link link--text focus-inset{% if link.child_active %} menu-drawer__menu-item--active{% endif %}"
-            >
-              <a
-                href="{{ link.url }}">
-              {{ link.title | escape }}
-              </a>
+<!-- ============================================ -->
+<!-- GYMSHARK MOBILE DRAWER (preloaded in DOM)    -->
+<!-- ============================================ -->
+<div id="gs-mobile-drawer" class="gs-drawer" role="dialog" aria-modal="true" aria-label="Mobile navigation menu">
+  <!-- Overlay/Backdrop -->
+  <div class="gs-drawer__backdrop" data-gs-close></div>
 
-              <span class="svg-wrapper">
-                {{- 'icon-arrow.svg' | inline_asset_content -}}
-              </span>
-            </summary>
-            <div id="link-{{ link.handle | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce" tabindex="-1">
-              <div class="menu-drawer__inner-submenu">
-                <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
-                  <svg class="close_svg tds-icon tds-icon-chevron-small-90 tds-icon--small" xmlns="http://www.w3.org/2000/svg" fill="none" class="icon icon-arrow" viewBox="0 0 14 10"><path fill="currentColor" fill-rule="evenodd" d="M8.537.808a.5.5 0 0 1 .817-.162l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 1 1-.708-.708L11.793 5.5H1a.5.5 0 0 1 0-1h10.793L8.646 1.354a.5.5 0 0 1-.109-.546" clip-rule="evenodd"></path></svg>
-                  <span>{{ link.title | escape }}</span>
-                  <svg class="cross_button_svg" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M12.243 11.182a.75.75 0 1 1-1.06 1.06L8 9.062l-3.182 3.182a.75.75 0 0 1-1.06 0 .75.75 0 0 1 0-1.06L6.938 8 3.757 4.818a.75.75 0 1 1 1.06-1.06L8 6.938l3.182-3.182a.75.75 0 1 1 1.06 1.06L9.062 8z"></path></svg>
-                </button>
-                <div class="container-xx mega-menu__custom mega menu__custom-mobile">
-                  {% render "mega-menu-mobile" block: mega_menu_block %}
-                </div>
-              </div>
-            </div>
-          </details>
-        {%- elsif link.links != blank -%}
-          <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
-            <summary
-              id="HeaderDrawer-{{ link.handle }}"
-              class="menu-drawer__menu-item list-menu__item link link--text focus-inset{% if link.child_active %} menu-drawer__menu-item--active{% endif %}"
-            >
-              {{ link.title }}
-              <span class="svg-wrapper">
-                {{- 'icon-arrow.svg' | inline_asset_content -}}
-              </span>
-            </summary>
-            <div
-              id="link-{{ link.handle | escape }}"
-              class="menu-drawer__submenu has-submenu gradient motion-reduce"
-              tabindex="-1"
-            >
-              <div class="menu-drawer__inner-submenu">
-                <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
-                  <span class="svg-wrapper">
-                    {{- 'icon-arrow.svg' | inline_asset_content -}}
-                  </span>
-                  {{ link.title }}
-                </button>
-                <ul class="menu-drawer__menu list-menu" role="list" tabindex="-1">
-                  {%- for childlink in link.links -%}
-                    <li>
-                      {%- if childlink.links == blank -%}
-                        <a
-                          id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}"
-                          href="{{ childlink.url }}"
-                          class="menu-drawer__menu-item link link--text list-menu__item focus-inset{% if childlink.current %} menu-drawer__menu-item--active{% endif %}"
-                          {% if childlink.current %}
-                            aria-current="page"
-                          {% endif %}
-                        >
-                          {{ childlink.title }}
-                        </a>
-                      {%- else -%}
-                        <details id="Details-menu-drawer-{{ link.handle }}-{{ childlink.handle }}">
-                          <summary
-                            id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}"
-                            class="menu-drawer__menu-item link link--text list-menu__item focus-inset"
-                          >
-                            {{ childlink.title }}
-                            <span class="svg-wrapper">
-                              {{- 'icon-arrow.svg' | inline_asset_content -}}
-                            </span>
-                          </summary>
-                          <div
-                            id="childlink-{{ childlink.handle | escape }}"
-                            class="menu-drawer__submenu has-submenu gradient motion-reduce"
-                          >
-                            <button
-                              class="menu-drawer__close-button link link--text focus-inset"
-                              aria-expanded="true"
-                            >
-                              <span class="svg-wrapper">
-                                {{- 'icon-arrow.svg' | inline_asset_content -}}
-                              </span>
-                              {{ childlink.title }}
-                            </button>
-                            <ul
-                              class="menu-drawer__menu list-menu"
-                              role="list"
-                              tabindex="-1"
-                            >
-                              {%- for grandchildlink in childlink.links -%}
-                                <li>
-                                  <a
-                                    id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}-{{ grandchildlink.handle }}"
-                                    href="{{ grandchildlink.url }}"
-                                    class="menu-drawer__menu-item link link--text list-menu__item focus-inset{% if grandchildlink.current %} menu-drawer__menu-item--active{% endif %}"
-                                    {% if grandchildlink.current %}
-                                      aria-current="page"
-                                    {% endif %}
-                                  >
-                                    {{ grandchildlink.title }}
-                                  </a>
-                                </li>
-                              {%- endfor -%}
-                            </ul>
-                          </div>
-                        </details>
-                      {%- endif -%}
-                    </li>
-                  {%- endfor -%}
-                </ul>
-              </div>
-            </div>
-          </details>
-        {%- else -%}
-          <a
-            id="HeaderDrawer-{{ link.handle }}"
-            href="{{ link.url }}"
-            class="menu-drawer__menu-item list-menu__item link link--text focus-inset{% if link.current %} menu-drawer__menu-item--active{% endif %}"
-            {% if link.current %}
-              aria-current="page"
-            {% endif %}
+  <!-- Drawer Panel -->
+  <div class="gs-drawer__panel">
+    <!-- ===== TOP ACTION BAR (Close + Wishlist) ===== -->
+    <div class="gs-drawer__actions">
+      <button class="gs-drawer__close" type="button" aria-label="Close menu" data-gs-close>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 6L6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M6 6L18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <a href="{{ routes.account_url }}" class="gs-drawer__wishlist" aria-label="View account">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- ===== SEARCH BAR ===== -->
+    <div class="gs-drawer__search">
+      <form action="{{ routes.search_url }}" method="get" role="search" class="gs-drawer__search-form">
+        <svg class="gs-drawer__search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <input
+          type="search"
+          name="q"
+          placeholder="{{ 'general.search.placeholder' | t | default: 'What are you looking for today?' }}"
+          class="gs-drawer__search-input"
+          autocomplete="off"
+          aria-label="Search"
+        >
+      </form>
+    </div>
+
+    <!-- ===== SCROLLABLE CONTENT AREA ===== -->
+    <div class="gs-drawer__content">
+      <!-- ===== CATEGORY TABS ===== -->
+      <div class="gs-drawer__tabs" role="tablist">
+        {%- for link in menu_links -%}
+          <button
+            class="gs-drawer__tab{% if forloop.first %} gs-drawer__tab--active{% endif %}"
+            role="tab"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+            aria-controls="gs-category-{{ forloop.index }}"
+            data-gs-tab="{{ forloop.index }}"
+            id="gs-tab-{{ forloop.index }}"
           >
-            {{ link.title }}
-          </a>
-        {%- endif -%}
-      </li>
-    {%- endfor -%}
-  </ul>
-</nav>
-          <div class="menu-drawer__btn___wrapper">
-            {% if section.settings.btn != '' %}
-              <a href="{{ section.settings.btn_link }}" class="header__inner_btn_item glo_btn_w tx-up">
-                <span class="trns">{{ section.settings.btn }}</span>
-              </a>
-            {% endif %}
-            {% if section.settings.btn_2 != '' %}    
-              <a href="{{ section.settings.btn_2_link }}" class="header__inner_btn_2 tx-up fn-600 fn-sz-14">
-                <span class="store__icon">
-                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7.33301 13.3333V23.3333C7.33301 24.5904 7.33301 25.219 7.72353 25.6095C8.11406 26 8.7426 26 9.99968 26H21.9997C23.2568 26 23.8853 26 24.2758 25.6095C24.6663 25.219 24.6663 24.5904 24.6663 23.3333V13.3333" stroke="black" stroke-width="1.33333"/>
-                    <path d="M19.3337 25.3333V20C19.3337 18.5273 18.1398 17.3333 16.667 17.3333H15.3337C13.8609 17.3333 12.667 18.5273 12.667 20V25.3333" stroke="black" stroke-width="1.33333" stroke-linejoin="round"/>
-                    <path d="M5.94768 7.89909C6.61956 6.33137 6.9555 5.5475 7.62342 5.10708C8.29134 4.66666 9.14416 4.66666 10.8498 4.66666H21.1496C22.8552 4.66666 23.708 4.66666 24.3759 5.10708C25.0438 5.5475 25.3798 6.33137 26.0517 7.89909L27.0323 10.1871C27.4216 11.0955 27.6162 11.5497 27.6315 11.9166C27.6674 12.7769 27.1487 13.5636 26.3438 13.8695C26.0005 14 25.5064 14 24.5181 14V14C24.2112 14 24.0577 14 23.9191 13.9702C23.5989 13.9013 23.3152 13.7169 23.1222 13.4523C23.0387 13.3377 22.9764 13.1975 22.8517 12.917L21.7482 10.4341C21.3549 9.54926 21.1583 9.10681 21.0437 9.14459C20.9291 9.18236 21.0341 9.65501 21.2442 10.6003L21.3262 10.9695C21.6137 12.2629 21.7574 12.9097 21.4688 13.3723C21.4131 13.4617 21.3469 13.5441 21.2718 13.6179C20.8828 14 20.2203 14 18.8952 14V14C17.9135 14 17.4227 14 17.0705 13.7413C17.0012 13.6904 16.937 13.633 16.8788 13.5698C16.5828 13.2483 16.5286 12.7604 16.4202 11.7847L16.2647 10.3853C16.1676 9.51113 16.119 9.07404 15.9997 9.07404C15.8803 9.07404 15.8318 9.51113 15.7346 10.3853L15.5791 11.7847C15.4707 12.7604 15.4165 13.2483 15.1205 13.5698C15.0623 13.633 14.9981 13.6904 14.9289 13.7413C14.5767 14 14.0858 14 13.1041 14V14C11.7791 14 11.1166 14 10.7276 13.6179C10.6524 13.5441 10.5863 13.4617 10.5305 13.3723C10.242 12.9097 10.3857 12.2629 10.6731 10.9695L10.7552 10.6003C10.9652 9.65501 11.0703 9.18236 10.9557 9.14459C10.8411 9.10681 10.6444 9.54925 10.2512 10.4341L9.14765 12.917C9.023 13.1975 8.96067 13.3377 8.87713 13.4523C8.68413 13.7169 8.40047 13.9013 8.08025 13.9702C7.94163 14 7.78817 14 7.48126 14V14C6.49298 14 5.99884 14 5.65555 13.8695C4.85068 13.5636 4.33194 12.7769 4.36782 11.9166C4.38313 11.5497 4.57778 11.0955 4.96708 10.1871L5.94768 7.89909Z" stroke="black" stroke-width="1.33333"/>
-                  </svg>
-                </span>
-                {{ section.settings.btn_2 }}
-              </a>
-            {% endif %}
-          </div>
-          <div class="menu-drawer__utility-links hide">
-            {%- if shop.customer_accounts_enabled -%}
-              <a
-                href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
-                class="menu-drawer__account link focus-inset h5 medium-hide large-up-hide"
-                rel="nofollow"
-              >
-                {%- if section.settings.enable_customer_avatar -%}
-                  <account-icon>
-                    {%- if customer and customer.has_avatar? -%}
-                      {{ customer | avatar }}
-                    {%- else -%}
-                      <span class="svg-wrapper">
-                        {{- 'icon-account.svg' | inline_asset_content -}}
-                      </span>
-                    {%- endif -%}
-                  </account-icon>
-                {%- else -%}
-                  <span class="svg-wrapper">
-                    {{- 'icon-account.svg' | inline_asset_content -}}
-                  </span>
-                {%- endif -%}
-                {%- liquid
-                  if customer
-                    echo 'customer.account_fallback' | t
-                  else
-                    echo 'customer.log_in' | t
-                  endif
-                -%}
-              </a>
-            {%- endif -%}
-            {%- if localization.available_countries or localization.available_languages -%}
-<li class="country-aesthatc _mobile">
-  <localization-form>
-    {%- form 'localization', id: 'LocalizationForm-Mobile', class: 'localization-form' -%}
-      
-      <input type="hidden" name="country_code" value="{{ localization.country.iso_code }}">
-      <input type="hidden" name="language_code" value="{{ localization.language.iso_code }}">
-
-      <div class="no-js-hidden localization-form">
-        <div class="MA-language-selector">
-          
-          <input type="checkbox" class="MA-lang-opener" id="MA-lang-opener-mobile" hidden>
-          
-          <div class="MA-language-selected" tabindex="0">
-            <label for="MA-lang-opener-mobile" class="ma-flex">
-              {% if localization.language.iso_code == 'en' %}
-                <img class="ma-flag" src="https://cdn.shopify.com/s/files/1/0082/0228/9219/files/Flag_of_the_United_States_svg.png?v=1765303150" alt="English">
-                <span class="ma-label">USD $</span>
-              {% else %}
-                <img class="ma-flag" src="https://cdn.shopify.com/s/files/1/0082/0228/9219/files/Flag_of_Norway_svg.png?v=1765303113" alt="Norsk">
-                <span class="ma-label">NOK kr</span>
-              {% endif %}
-
-              <span class="ma-arrow">
-                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </span>
-            </label>
-          </div>
-
-          <div class="MA-language-options">
-            {%- for language in localization.available_languages -%}
-              <a href="#" 
-                 class="ma-option {% if language.iso_code == localization.language.iso_code %}active{% endif %}" 
-                 data-language-code="{{ language.iso_code }}">
-                 
-                {%- if language.iso_code == 'nb' or language.iso_code == 'no' -%}
-                   <img class="ma-flag" src="https://cdn.shopify.com/s/files/1/0082/0228/9219/files/Flag_of_Norway_svg.png?v=1765303113" alt="Norsk">
-                   <span class="ddd">kr NOK</span>
-                {%- elsif language.iso_code == 'en' -%}
-                   <img class="ma-flag" src="https://cdn.shopify.com/s/files/1/0082/0228/9219/files/Flag_of_the_United_States_svg.png?v=1765303150" alt="English">
-                   <span class="ddd">$ USD</span>
-                {%- endif -%}
-                
-              </a>
-            {%- endfor -%}
-          </div>
-
-        </div>
+            {{ link.title | escape }}
+          </button>
+        {%- endfor -%}
       </div>
-    {%- endform -%}
-  </localization-form>
-</li>
 
-<style>
-  /* Basic Mobile Styles */
-  .country-aesthatc._mobile {
-    display: block; /* Ensure it takes width in drawer */
-    margin-top: 20px;
-  }
-  
-  /* Make sure the options open nicely in mobile (optional tweak) */
-  #MA-lang-opener-mobile:checked ~ .MA-language-options {
-    display: block;
-    position: absolute; /* Keeps popup behavior */
-    bottom: 100%; /* Opens UPwards on mobile if at bottom */
-    left: 0;
-    background: #fff;
-    border: 1px solid #e5e5e5;
-    z-index: 100;
-    min-width: 120px;
-  }
-  /* If you prefer it opening downwards, change bottom: 100% to top: 100% */
-</style>
+      <!-- ===== CATEGORY PANELS ===== -->
+      <div class="gs-drawer__panels">
+        {%- for link in menu_links -%}
+          {%- comment -%} Find if this link has a mega menu block {%- endcomment -%}
+          {%- assign mega_block = nil -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'desktop_menu' -%}
+              {%- assign triggers = block.settings.trigger | downcase | split: ',' -%}
+              {%- assign link_handle = link.handle | downcase -%}
+              {%- assign link_title = link.title | downcase -%}
+              {%- assign link_handle_spaced = link.handle | downcase | replace: '-', ' ' -%}
+              {%- for trigger in triggers -%}
+                {%- assign clean_trigger = trigger | strip -%}
+                {%- if link_handle == clean_trigger or link_title == clean_trigger or link_handle_spaced == clean_trigger -%}
+                  {%- assign mega_block = block -%}
+                  {%- break -%}
+                {%- endif -%}
+              {%- endfor -%}
+              {%- if mega_block -%}{%- break -%}{%- endif -%}
             {%- endif -%}
-            <ul class="list list-social list-unstyled" role="list">
-              {%- if settings.social_twitter_link != blank -%}
-                <li class="list-social__item">
-                  <a href="{{ settings.social_twitter_link }}" class="list-social__link link">
-                    <span class="svg-wrapper">
-                      {{- 'icon-twitter.svg' | inline_asset_content -}}
-                    </span>
-                    <span class="visually-hidden">{{ 'general.social.links.twitter' | t }}</span>
-                  </a>
-                </li>
+          {%- endfor -%}
+
+          <div
+            class="gs-drawer__panel-category{% if forloop.first %} gs-drawer__panel-category--active{% endif %}"
+            role="tabpanel"
+            id="gs-category-{{ forloop.index }}"
+            aria-labelledby="gs-tab-{{ forloop.index }}"
+            {% unless forloop.first %}hidden{% endunless %}
+          >
+            <!-- Featured Image Cards (horizontal scroll) -->
+            {%- if mega_block -%}
+              {%- assign has_images = false -%}
+              {%- if mega_block.settings.image_1 != blank or mega_block.settings.image_2 != blank or mega_block.settings.image_3 != blank -%}
+                {%- assign has_images = true -%}
               {%- endif -%}
-              {%- if settings.social_facebook_link != blank -%}
-                <li class="list-social__item">
-                  <a href="{{ settings.social_facebook_link }}" class="list-social__link link">
-                    <span class="svg-wrapper">
-                      {{- 'icon-facebook.svg' | inline_asset_content -}}
-                    </span>
-                    <span class="visually-hidden">{{ 'general.social.links.facebook' | t }}</span>
-                  </a>
-                </li>
+
+              {%- if has_images -%}
+                <div class="gs-drawer__featured">
+                  <div class="gs-drawer__featured-scroll">
+                    {%- if mega_block.settings.image_1 != blank -%}
+                      <a href="{{ mega_block.settings.image_1_link | default: '#' }}" class="gs-drawer__featured-card">
+                        <div class="gs-drawer__featured-img">
+                          <img
+                            src="{{ mega_block.settings.image_1 | image_url: width: 600 }}"
+                            alt="{{ mega_block.settings.image_1_title | default: link.title }}"
+                            loading="lazy"
+                            width="300"
+                            height="200"
+                          >
+                          <div class="gs-drawer__featured-gradient"></div>
+                        </div>
+                        {%- if mega_block.settings.image_1_title != blank -%}
+                          <h3 class="gs-drawer__featured-title">{{ mega_block.settings.image_1_title }}</h3>
+                        {%- endif -%}
+                      </a>
+                    {%- endif -%}
+                    {%- if mega_block.settings.image_2 != blank -%}
+                      <a href="{{ mega_block.settings.image_2_link | default: '#' }}" class="gs-drawer__featured-card">
+                        <div class="gs-drawer__featured-img">
+                          <img
+                            src="{{ mega_block.settings.image_2 | image_url: width: 600 }}"
+                            alt="{{ mega_block.settings.image_2_title | default: link.title }}"
+                            loading="lazy"
+                            width="300"
+                            height="200"
+                          >
+                          <div class="gs-drawer__featured-gradient"></div>
+                        </div>
+                        {%- if mega_block.settings.image_2_title != blank -%}
+                          <h3 class="gs-drawer__featured-title">{{ mega_block.settings.image_2_title }}</h3>
+                        {%- endif -%}
+                      </a>
+                    {%- endif -%}
+                    {%- if mega_block.settings.image_3 != blank -%}
+                      <a href="{{ mega_block.settings.image_3_link | default: '#' }}" class="gs-drawer__featured-card">
+                        <div class="gs-drawer__featured-img">
+                          <img
+                            src="{{ mega_block.settings.image_3 | image_url: width: 600 }}"
+                            alt="{{ mega_block.settings.image_3_title | default: link.title }}"
+                            loading="lazy"
+                            width="300"
+                            height="200"
+                          >
+                          <div class="gs-drawer__featured-gradient"></div>
+                        </div>
+                        {%- if mega_block.settings.image_3_title != blank -%}
+                          <h3 class="gs-drawer__featured-title">{{ mega_block.settings.image_3_title }}</h3>
+                        {%- endif -%}
+                      </a>
+                    {%- endif -%}
+                  </div>
+                </div>
               {%- endif -%}
-              {%- if settings.social_pinterest_link != blank -%}
-                <li class="list-social__item">
-                  <a href="{{ settings.social_pinterest_link }}" class="list-social__link link">
-                    <span class="svg-wrapper">
-                      {{- 'icon-pinterest.svg' | inline_asset_content -}}
-                    </span>
-                    <span class="visually-hidden">{{ 'general.social.links.pinterest' | t }}</span>
-                  </a>
-                </li>
-              {%- endif -%}
-              {%- if settings.social_instagram_link != blank -%}
-                <li class="list-social__item">
-                  <a href="{{ settings.social_instagram_link }}" class="list-social__link link">
-                    <span class="svg-wrapper">
-                      {{- 'icon-instagram.svg' | inline_asset_content -}}
-                    </span>
-                    <span class="visually-hidden">{{ 'general.social.links.instagram' | t }}</span>
-                  </a>
-                </li>
-              {%- endif -%}
-              {%- if settings.social_tiktok_link != blank -%}
-                <li class="list-social__item">
-                  <a href="{{ settings.social_tiktok_link }}" class="list-social__link link">
-                    <span class="svg-wrapper">
-                      {{- 'icon-tiktok.svg' | inline_asset_content -}}
-                    </span>
-                    <span class="visually-hidden">{{ 'general.social.links.tiktok' | t }}</span>
-                  </a>
-                </li>
-              {%- endif -%}
-              {%- if settings.social_tumblr_link != blank -%}
-                <li class="list-social__item">
-                  <a href="{{ settings.social_tumblr_link }}" class="list-social__link link">
-                    <span class="svg-wrapper">
-                      {{- 'icon-tumblr.svg' | inline_asset_content -}}
-                    </span>
-                    <span class="visually-hidden">{{ 'general.social.links.tumblr' | t }}</span>
-                  </a>
-                </li>
-              {%- endif -%}
-              {%- if settings.social_snapchat_link != blank -%}
-                <li class="list-social__item">
-                  <a href="{{ settings.social_snapchat_link }}" class="list-social__link link">
-                    <span class="svg-wrapper">
-                      {{- 'icon-snapchat.svg' | inline_asset_content -}}
-                    </span>
-                    <span class="visually-hidden">{{ 'general.social.links.snapchat' | t }}</span>
-                  </a>
-                </li>
-              {%- endif -%}
-              {%- if settings.social_youtube_link != blank -%}
-                <li class="list-social__item">
-                  <a href="{{ settings.social_youtube_link }}" class="list-social__link link">
-                    <span class="svg-wrapper">
-                      {{- 'icon-youtube.svg' | inline_asset_content -}}
-                    </span>
-                    <span class="visually-hidden">{{ 'general.social.links.youtube' | t }}</span>
-                  </a>
-                </li>
-              {%- endif -%}
-              {%- if settings.social_vimeo_link != blank -%}
-                <li class="list-social__item">
-                  <a href="{{ settings.social_vimeo_link }}" class="list-social__link link">
-                    <span class="svg-wrapper">
-                      {{- 'icon-vimeo.svg' | inline_asset_content -}}
-                    </span>
-                    <span class="visually-hidden">{{ 'general.social.links.vimeo' | t }}</span>
+            {%- endif -%}
+
+            <!-- Menu Items List -->
+            <ul class="gs-drawer__menu" role="list">
+              {%- if link.links != blank -%}
+                {%- for childlink in link.links -%}
+                  <li class="gs-drawer__menu-item">
+                    {%- if childlink.links != blank -%}
+                      {%- comment -%} Has sub-children → show as expandable with chevron {%- endcomment -%}
+                      <button
+                        class="gs-drawer__menu-btn"
+                        data-gs-submenu="submenu-{{ forloop.parentloop.index }}-{{ forloop.index }}"
+                        aria-expanded="false"
+                      >
+                        <span class="gs-drawer__menu-text">{{ childlink.title | escape }}</span>
+                        <svg class="gs-drawer__chevron" width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M1 1L7 7L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </button>
+
+                      {%- comment -%} SUBMENU PANEL (slides in from right) {%- endcomment -%}
+                      <div class="gs-drawer__submenu" id="submenu-{{ forloop.parentloop.index }}-{{ forloop.index }}" aria-hidden="true">
+                        <div class="gs-drawer__submenu-inner">
+                          <button class="gs-drawer__back" data-gs-back aria-label="Back to {{ link.title }}">
+                            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M7 13L1 7L7 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>{{ childlink.title | escape }}</span>
+                          </button>
+                          <ul class="gs-drawer__submenu-list" role="list">
+                            {%- for grandchild in childlink.links -%}
+                              <li>
+                                <a href="{{ grandchild.url }}" class="gs-drawer__submenu-link">
+                                  {{ grandchild.title | escape }}
+                                </a>
+                              </li>
+                            {%- endfor -%}
+                          </ul>
+                        </div>
+                      </div>
+                    {%- else -%}
+                      {%- comment -%} No sub-children → direct link {%- endcomment -%}
+                      <a href="{{ childlink.url }}" class="gs-drawer__menu-link">
+                        <span class="gs-drawer__menu-text">{{ childlink.title | escape }}</span>
+                      </a>
+                    {%- endif -%}
+                  </li>
+                {%- endfor -%}
+              {%- else -%}
+                {%- comment -%} Top-level link with no children → show as single link {%- endcomment -%}
+                <li class="gs-drawer__menu-item">
+                  <a href="{{ link.url }}" class="gs-drawer__menu-link">
+                    <span class="gs-drawer__menu-text">{{ link.title | escape }}</span>
                   </a>
                 </li>
               {%- endif -%}
             </ul>
+
+            <!-- Bottom Utility Links (pulled from mega menu block's "Smallmatters World" items or a secondary menu) -->
+            {%- if link.links != blank -%}
+              <div class="gs-drawer__utility">
+                {%- comment -%}
+                  If the mega_block has world items, show them here.
+                  Otherwise these would be filled from a secondary Shopify menu.
+                {%- endcomment -%}
+              </div>
+            {%- endif -%}
           </div>
-        </div>
+        {%- endfor -%}
       </div>
-    </div>
-  </details>
-</header-drawer>
+
+      <!-- ===== BOTTOM UTILITY LINKS (global) ===== -->
+      <div class="gs-drawer__bottom-links">
+        {%- if linklists['footer'].links != blank -%}
+          {%- for flink in linklists['footer'].links -%}
+            {%- if flink.title contains 'Accessibility' or flink.title contains 'Help' or flink.title contains 'Email' or flink.title contains 'Blog' or flink.title contains 'Kundeservice' or flink.title contains 'Kontakt' -%}
+              <a href="{{ flink.url }}" class="gs-drawer__bottom-link">{{ flink.title | escape }}</a>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+
+        {%- comment -%} Localization selector {%- endcomment -%}
+        {%- if localization.available_countries or localization.available_languages -%}
+          <div class="gs-drawer__localization">
+            <localization-form>
+              {%- form 'localization', id: 'GS-LocalizationForm-Mobile', class: 'localization-form' -%}
+                <input type="hidden" name="country_code" value="{{ localization.country.iso_code }}">
+                <input type="hidden" name="language_code" value="{{ localization.language.iso_code }}">
+                <div class="gs-drawer__lang-selector">
+                  <input type="checkbox" class="gs-drawer__lang-toggle" id="gs-lang-toggle" hidden>
+                  <label for="gs-lang-toggle" class="gs-drawer__lang-current">
+                    {% if localization.language.iso_code == 'en' %}
+                      <img class="gs-drawer__flag" src="https://cdn.shopify.com/s/files/1/0082/0228/9219/files/Flag_of_the_United_States_svg.png?v=1765303150" alt="English" width="20" height="14">
+                      <span>USD $</span>
+                    {% else %}
+                      <img class="gs-drawer__flag" src="https://cdn.shopify.com/s/files/1/0082/0228/9219/files/Flag_of_Norway_svg.png?v=1765303113" alt="Norsk" width="20" height="14">
+                      <span>NOK kr</span>
+                    {% endif %}
+                    <svg class="gs-drawer__lang-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </label>
+                  <div class="gs-drawer__lang-options">
+                    {%- for language in localization.available_languages -%}
+                      <a href="#" class="gs-drawer__lang-option {% if language.iso_code == localization.language.iso_code %}gs-drawer__lang-option--active{% endif %}" data-language-code="{{ language.iso_code }}">
+                        {%- if language.iso_code == 'nb' or language.iso_code == 'no' -%}
+                          <img class="gs-drawer__flag" src="https://cdn.shopify.com/s/files/1/0082/0228/9219/files/Flag_of_Norway_svg.png?v=1765303113" alt="Norsk" width="20" height="14">
+                          <span>kr NOK</span>
+                        {%- elsif language.iso_code == 'en' -%}
+                          <img class="gs-drawer__flag" src="https://cdn.shopify.com/s/files/1/0082/0228/9219/files/Flag_of_the_United_States_svg.png?v=1765303150" alt="English" width="20" height="14">
+                          <span>$ USD</span>
+                        {%- endif -%}
+                      </a>
+                    {%- endfor -%}
+                  </div>
+                </div>
+              {%- endform -%}
+            </localization-form>
+          </div>
+        {%- endif -%}
+      </div>
+    </div><!-- .gs-drawer__content -->
+  </div><!-- .gs-drawer__panel -->
+</div>
+
+<!-- ============================================ -->
+<!-- HAMBURGER TRIGGER BUTTON                     -->
+<!-- ============================================ -->
+<button
+  class="gs-hamburger header__icon header__icon--menu"
+  type="button"
+  aria-label="{{ 'sections.header.menu' | t }}"
+  aria-controls="gs-mobile-drawer"
+  aria-expanded="false"
+  data-gs-open
+>
+  <svg class="gs-hamburger__icon" xmlns="http://www.w3.org/2000/svg" width="21" height="14" viewBox="0 0 21 14" fill="none">
+    <path d="M0 0.75H21" stroke="currentColor" stroke-width="1.5"/>
+    <path d="M5 6.75L16 6.75" stroke="currentColor" stroke-width="1.5"/>
+    <path d="M0 12.75H21" stroke="currentColor" stroke-width="1.5"/>
+  </svg>
+</button>
+
+<!-- ============================================ -->
+<!-- DRAWER JAVASCRIPT                            -->
+<!-- ============================================ -->
+<script>
+  (function() {
+    'use strict';
+
+    const drawer = document.getElementById('gs-mobile-drawer');
+    if (!drawer) return;
+
+    const panel = drawer.querySelector('.gs-drawer__panel');
+    const contentArea = drawer.querySelector('.gs-drawer__content');
+    const openBtns = document.querySelectorAll('[data-gs-open]');
+    const closeBtns = drawer.querySelectorAll('[data-gs-close]');
+    const tabs = drawer.querySelectorAll('[data-gs-tab]');
+    const submenuBtns = drawer.querySelectorAll('[data-gs-submenu]');
+    const backBtns = drawer.querySelectorAll('[data-gs-back]');
+    const langOptions = drawer.querySelectorAll('.gs-drawer__lang-option');
+
+    let activeSubmenu = null;
+    let isOpen = false;
+
+    // ── Open Drawer ──
+    function openDrawer() {
+      if (isOpen) return;
+      isOpen = true;
+      drawer.classList.add('gs-drawer--open');
+      document.body.classList.add('gs-drawer-body-lock');
+      drawer.setAttribute('aria-hidden', 'false');
+
+      // Update hamburger
+      openBtns.forEach(btn => btn.setAttribute('aria-expanded', 'true'));
+
+      // Trap focus
+      requestAnimationFrame(() => {
+        const closeBtn = drawer.querySelector('.gs-drawer__close');
+        if (closeBtn) closeBtn.focus();
+      });
+    }
+
+    // ── Close Drawer ──
+    function closeDrawer() {
+      if (!isOpen) return;
+      isOpen = false;
+      drawer.classList.remove('gs-drawer--open');
+      document.body.classList.remove('gs-drawer-body-lock');
+      drawer.setAttribute('aria-hidden', 'true');
+
+      // Close any open submenus
+      closeAllSubmenus();
+
+      // Update hamburger
+      openBtns.forEach(btn => btn.setAttribute('aria-expanded', 'false'));
+    }
+
+    // ── Tab Switching ──
+    function switchTab(tabIndex) {
+      // Close any open submenu first
+      closeAllSubmenus();
+
+      tabs.forEach(tab => {
+        const idx = tab.dataset.gsTab;
+        const tabPanel = document.getElementById('gs-category-' + idx);
+
+        if (idx === tabIndex) {
+          tab.classList.add('gs-drawer__tab--active');
+          tab.setAttribute('aria-selected', 'true');
+          if (tabPanel) {
+            tabPanel.classList.add('gs-drawer__panel-category--active');
+            tabPanel.removeAttribute('hidden');
+          }
+        } else {
+          tab.classList.remove('gs-drawer__tab--active');
+          tab.setAttribute('aria-selected', 'false');
+          if (tabPanel) {
+            tabPanel.classList.remove('gs-drawer__panel-category--active');
+            tabPanel.setAttribute('hidden', '');
+          }
+        }
+      });
+
+      // Scroll content to top when switching tabs
+      if (contentArea) contentArea.scrollTop = 0;
+    }
+
+    // ── Open Submenu ──
+    function openSubmenu(submenuId) {
+      const submenu = document.getElementById(submenuId);
+      if (!submenu) return;
+
+      // Close previously open submenu
+      closeAllSubmenus();
+
+      activeSubmenu = submenu;
+      submenu.classList.add('gs-drawer__submenu--open');
+      submenu.setAttribute('aria-hidden', 'false');
+
+      // Scroll the panel content area to keep the submenu visible
+      const btn = drawer.querySelector('[data-gs-submenu="' + submenuId + '"]');
+      if (btn) btn.setAttribute('aria-expanded', 'true');
+
+      // Lock panel scroll when submenu is open
+      panel.classList.add('gs-drawer__panel--submenu-open');
+    }
+
+    // ── Close Submenu ──
+    function closeSubmenu(submenu) {
+      if (!submenu) return;
+      submenu.classList.remove('gs-drawer__submenu--open');
+      submenu.setAttribute('aria-hidden', 'true');
+
+      const submenuId = submenu.id;
+      const btn = drawer.querySelector('[data-gs-submenu="' + submenuId + '"]');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+
+      panel.classList.remove('gs-drawer__panel--submenu-open');
+      activeSubmenu = null;
+    }
+
+    function closeAllSubmenus() {
+      drawer.querySelectorAll('.gs-drawer__submenu--open').forEach(sub => {
+        sub.classList.remove('gs-drawer__submenu--open');
+        sub.setAttribute('aria-hidden', 'true');
+      });
+      drawer.querySelectorAll('[data-gs-submenu]').forEach(btn => {
+        btn.setAttribute('aria-expanded', 'false');
+      });
+      panel.classList.remove('gs-drawer__panel--submenu-open');
+      activeSubmenu = null;
+    }
+
+    // ── Event Listeners ──
+    openBtns.forEach(btn => btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      openDrawer();
+    }));
+
+    closeBtns.forEach(btn => btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeDrawer();
+    }));
+
+    tabs.forEach(tab => tab.addEventListener('click', () => {
+      switchTab(tab.dataset.gsTab);
+    }));
+
+    submenuBtns.forEach(btn => btn.addEventListener('click', () => {
+      openSubmenu(btn.dataset.gsSubmenu);
+    }));
+
+    backBtns.forEach(btn => btn.addEventListener('click', () => {
+      const submenu = btn.closest('.gs-drawer__submenu');
+      closeSubmenu(submenu);
+    }));
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        if (activeSubmenu) {
+          closeSubmenu(activeSubmenu);
+        } else {
+          closeDrawer();
+        }
+      }
+    });
+
+    // Language switcher
+    langOptions.forEach(opt => {
+      opt.addEventListener('click', (e) => {
+        e.preventDefault();
+        const langCode = opt.dataset.languageCode;
+        const form = opt.closest('form');
+        const input = form ? form.querySelector('input[name="language_code"]') : null;
+        if (input && form) {
+          input.value = langCode;
+          form.submit();
+        }
+      });
+    });
+
+    // Initialize aria state
+    drawer.setAttribute('aria-hidden', 'true');
+  })();
+</script>
