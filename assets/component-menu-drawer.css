@@ -5,18 +5,16 @@
 .js menu-drawer>details>summary::before,
 .js menu-drawer>details[open]:not(.menu-opening)>summary::before {
   content: '';
-  position: absolute;
+  position: fixed;
   cursor: default;
   width: 100%;
-  height: calc(100vh - 100%);
-  height: calc(var(--viewport-height, 100vh) - (var(--header-bottom-position, 100%)));
-  top: 100%;
+  height: 100vh;
+  top: 0;
   left: 0;
   background: rgba(var(--color-foreground), 0.5);
   opacity: 0;
   visibility: hidden;
   z-index: 2;
-  transition: opacity 0s, visibility 0s;
 }
 
 menu-drawer>details[open]>summary::before {
@@ -25,28 +23,28 @@ menu-drawer>details[open]>summary::before {
 }
 
 .menu-drawer {
-  position: absolute;
+  position: fixed;
   transform: translateX(-100%);
   visibility: hidden;
   z-index: 3;
   left: 0;
-  top: 100%;
+  top: 0;
+  bottom: 0;
   width: 100%;
   padding: 0;
   background-color: #EAE5DF;
   overflow-x: hidden;
+  overflow-y: auto;
   filter: drop-shadow(var(--drawer-shadow-horizontal-offset) var(--drawer-shadow-vertical-offset) var(--drawer-shadow-blur-radius) rgba(var(--color-shadow), var(--drawer-shadow-opacity)));
   scrollbar-width: none;
 }
 
 .js .menu-drawer {
-  height: calc(100vh - 100%);
-  height: calc(var(--viewport-height, 100vh) - (var(--header-bottom-position, 100%)));
-  min-height: 100vh;
+  /* fixed positioning with top:0 + bottom:0 handles the full viewport height */
 }
 
 .js details[open]>.menu-drawer {
-  /* transition removed for instant opening */
+  /* no transition — opens instantly */
 }
 
 .js details[open].menu-opening>.menu-drawer {
@@ -69,13 +67,12 @@ menu-drawer>details[open]>summary::before {
 
 .menu-drawer__inner-container {
   position: relative;
-  height: 100%;
+  min-height: 100%;
 }
 
 .menu-drawer__navigation-container {
   display: block;
-  overflow-y: auto;
-  height: 100%;
+  min-height: 100%;
 }
 
 .menu-drawer__navigation {
