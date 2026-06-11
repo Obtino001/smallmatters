@@ -32,7 +32,7 @@
 
   <!-- Drawer Panel -->
   <div class="gs-drawer__panel">
-    <!-- ===== TOP ACTION BAR (Close + Wishlist) ===== -->
+    <!-- ===== TOP ACTION BAR (Close + Wishlist + Account) ===== -->
     <div class="gs-drawer__actions">
       <button class="gs-drawer__close" type="button" aria-label="Close menu" data-gs-close>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -40,11 +40,19 @@
           <path d="M6 6L18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
-      <a href="{{ routes.account_url }}" class="gs-drawer__wishlist" aria-label="View account">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </a>
+      <div class="gs-drawer__actions-right">
+        <a href="{{ routes.account_url }}" class="gs-drawer__icon-link" aria-label="View account">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </a>
+        <a href="#swym-wishlist" class="gs-drawer__icon-link gs-drawer__wishlist" aria-label="View wishlist">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
     </div>
 
     <!-- ===== SEARCH BAR ===== -->
@@ -289,13 +297,24 @@
       </div>
 
       <!-- ===== BOTTOM UTILITY LINKS (global) ===== -->
-      <div class="gs-drawer__bottom-links">
-        {%- if linklists['footer'].links != blank -%}
-          {%- for flink in linklists['footer'].links -%}
-            {%- if flink.title contains 'Accessibility' or flink.title contains 'Help' or flink.title contains 'Email' or flink.title contains 'Blog' or flink.title contains 'Kundeservice' or flink.title contains 'Kontakt' -%}
-              <a href="{{ flink.url }}" class="gs-drawer__bottom-link">{{ flink.title | escape }}</a>
-            {%- endif -%}
-          {%- endfor -%}
+      {%- assign has_bottom_links = false -%}
+      {%- if linklists['footer'].links != blank -%}
+        {%- for flink in linklists['footer'].links -%}
+          {%- if flink.title contains 'Accessibility' or flink.title contains 'Help' or flink.title contains 'Email' or flink.title contains 'Blog' or flink.title contains 'Kundeservice' or flink.title contains 'Kontakt' -%}
+            {%- assign has_bottom_links = true -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+
+      <div class="gs-drawer__footer-section">
+        {%- if has_bottom_links -%}
+          <div class="gs-drawer__bottom-links">
+            {%- for flink in linklists['footer'].links -%}
+              {%- if flink.title contains 'Accessibility' or flink.title contains 'Help' or flink.title contains 'Email' or flink.title contains 'Blog' or flink.title contains 'Kundeservice' or flink.title contains 'Kontakt' -%}
+                <a href="{{ flink.url }}" class="gs-drawer__bottom-link">{{ flink.title | escape }}</a>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
         {%- endif -%}
 
         {%- comment -%} Localization selector {%- endcomment -%}
@@ -306,7 +325,7 @@
                 <input type="hidden" name="country_code" value="{{ localization.country.iso_code }}">
                 <input type="hidden" name="language_code" value="{{ localization.language.iso_code }}">
                 <div class="gs-drawer__lang-selector">
-                  <input type="checkbox" class="gs-drawer__lang-toggle" id="gs-lang-toggle" hidden>
+                  <input type="checkbox" class="gs-drawer__lang-toggle" id="gs-lang-toggle" hidden style="display: none !important;">
                   <label for="gs-lang-toggle" class="gs-drawer__lang-current">
                     {% if localization.language.iso_code == 'en' %}
                       <img class="gs-drawer__flag" src="https://cdn.shopify.com/s/files/1/0082/0228/9219/files/Flag_of_the_United_States_svg.png?v=1765303150" alt="English" width="20" height="14">

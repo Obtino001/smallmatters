@@ -115,7 +115,13 @@
   outline-offset: 2px;
 }
 
-.gs-drawer__wishlist {
+.gs-drawer__actions-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gs-drawer__icon-link {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -128,8 +134,8 @@
   transition: background-color 0.2s ease;
 }
 
-.gs-drawer__wishlist:hover,
-.gs-drawer__wishlist:focus-visible {
+.gs-drawer__icon-link:hover,
+.gs-drawer__icon-link:focus-visible {
   background-color: rgba(0, 0, 0, 0.06);
 }
 
@@ -295,13 +301,13 @@
 
 /* ── Featured Image Cards ── */
 .gs-drawer__featured {
-  padding: 20px 0 8px;
+  padding: 24px 0 16px;
   overflow: hidden;
 }
 
 .gs-drawer__featured-scroll {
   display: flex;
-  gap: 12px;
+  gap: 16px;
   padding: 0 20px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -568,10 +574,13 @@
 }
 
 /* ── Bottom Utility Links ── */
-.gs-drawer__bottom-links {
-  padding: 24px 20px 40px;
-  border-top: 1px solid #e5e5e5;
+.gs-drawer__footer-section {
   margin-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.gs-drawer__bottom-links {
+  padding: 24px 20px 0;
 }
 
 .gs-drawer__bottom-link {
@@ -592,9 +601,7 @@
 
 /* ── Localization / Language Selector ── */
 .gs-drawer__localization {
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid #f0f0f0;
+  padding: 24px 20px 40px;
 }
 
 .gs-drawer__lang-selector {
