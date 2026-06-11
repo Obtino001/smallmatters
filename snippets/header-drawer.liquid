@@ -49,20 +49,20 @@
 
     <!-- ===== SEARCH BAR ===== -->
     <div class="gs-drawer__search">
-      <form action="{{ routes.search_url }}" method="get" role="search" class="gs-drawer__search-form">
+      <div class="gs-drawer__search-form" data-gs-search-trigger style="cursor: pointer;">
         <svg class="gs-drawer__search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5"/>
           <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
         <input
-          type="search"
-          name="q"
-          placeholder="{{ 'general.search.placeholder' | t | default: 'What are you looking for today?' }}"
+          type="text"
+          readonly
+          placeholder="{{ 'general.search.placeholder' | t | default: 'Search for products' }}"
           class="gs-drawer__search-input"
-          autocomplete="off"
+          style="cursor: pointer;"
           aria-label="Search"
         >
-      </form>
+      </div>
     </div>
 
     <!-- ===== SCROLLABLE CONTENT AREA ===== -->
@@ -180,23 +180,68 @@
 
             <!-- Menu Items List -->
             <ul class="gs-drawer__menu" role="list">
-              {%- if link.links != blank -%}
+              {%- assign has_mega_menus = false -%}
+              {%- if mega_block -%}
+                {%- if mega_block.settings.title_1 != blank or mega_block.settings.title_2 != blank or mega_block.settings.title_3 != blank -%}
+                  {%- assign has_mega_menus = true -%}
+                {%- endif -%}
+              {%- endif -%}
+
+              {%- if has_mega_menus -%}
+                {%- for i in (1..3) -%}
+                  {%- assign title_key = 'title_' | append: i -%}
+                  {%- assign link_key = 'title_' | append: i | append: '_link' -%}
+                  {%- assign menu_key = 'menu_' | append: i -%}
+                  
+                  {%- assign col_title = mega_block.settings[title_key] -%}
+                  {%- assign col_link = mega_block.settings[link_key] -%}
+                  {%- assign col_menu = mega_block.settings[menu_key] -%}
+                  {%- assign col_linklist = linklists[col_menu] -%}
+
+                  {%- if col_title != blank -%}
+                    <li class="gs-drawer__menu-item">
+                      {%- if col_linklist.links != blank -%}
+                        <button class="gs-drawer__menu-btn" data-gs-submenu="submenu-mega-{{ forloop.parentloop.index }}-{{ i }}" aria-expanded="false">
+                          <span class="gs-drawer__menu-text">{{ col_title | escape }}</span>
+                          <svg class="gs-drawer__chevron" width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 1L7 7L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </button>
+                        <div class="gs-drawer__submenu" id="submenu-mega-{{ forloop.parentloop.index }}-{{ i }}" aria-hidden="true">
+                          <div class="gs-drawer__submenu-inner">
+                            <button class="gs-drawer__back" data-gs-back aria-label="Back to {{ link.title }}">
+                              <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M7 13L1 7L7 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                              </svg>
+                              <span>{{ col_title | escape }}</span>
+                            </button>
+                            <ul class="gs-drawer__submenu-list" role="list">
+                              {%- for childlink in col_linklist.links -%}
+                                <li>
+                                  <a href="{{ childlink.url }}" class="gs-drawer__submenu-link">{{ childlink.title | escape }}</a>
+                                </li>
+                              {%- endfor -%}
+                            </ul>
+                          </div>
+                        </div>
+                      {%- else -%}
+                        <a href="{{ col_link | default: '#' }}" class="gs-drawer__menu-link">
+                          <span class="gs-drawer__menu-text">{{ col_title | escape }}</span>
+                        </a>
+                      {%- endif -%}
+                    </li>
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- elsif link.links != blank -%}
                 {%- for childlink in link.links -%}
                   <li class="gs-drawer__menu-item">
                     {%- if childlink.links != blank -%}
-                      {%- comment -%} Has sub-children → show as expandable with chevron {%- endcomment -%}
-                      <button
-                        class="gs-drawer__menu-btn"
-                        data-gs-submenu="submenu-{{ forloop.parentloop.index }}-{{ forloop.index }}"
-                        aria-expanded="false"
-                      >
+                      <button class="gs-drawer__menu-btn" data-gs-submenu="submenu-{{ forloop.parentloop.index }}-{{ forloop.index }}" aria-expanded="false">
                         <span class="gs-drawer__menu-text">{{ childlink.title | escape }}</span>
                         <svg class="gs-drawer__chevron" width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M1 1L7 7L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                       </button>
-
-                      {%- comment -%} SUBMENU PANEL (slides in from right) {%- endcomment -%}
                       <div class="gs-drawer__submenu" id="submenu-{{ forloop.parentloop.index }}-{{ forloop.index }}" aria-hidden="true">
                         <div class="gs-drawer__submenu-inner">
                           <button class="gs-drawer__back" data-gs-back aria-label="Back to {{ link.title }}">
@@ -208,16 +253,13 @@
                           <ul class="gs-drawer__submenu-list" role="list">
                             {%- for grandchild in childlink.links -%}
                               <li>
-                                <a href="{{ grandchild.url }}" class="gs-drawer__submenu-link">
-                                  {{ grandchild.title | escape }}
-                                </a>
+                                <a href="{{ grandchild.url }}" class="gs-drawer__submenu-link">{{ grandchild.title | escape }}</a>
                               </li>
                             {%- endfor -%}
                           </ul>
                         </div>
                       </div>
                     {%- else -%}
-                      {%- comment -%} No sub-children → direct link {%- endcomment -%}
                       <a href="{{ childlink.url }}" class="gs-drawer__menu-link">
                         <span class="gs-drawer__menu-text">{{ childlink.title | escape }}</span>
                       </a>
@@ -225,7 +267,6 @@
                   </li>
                 {%- endfor -%}
               {%- else -%}
-                {%- comment -%} Top-level link with no children → show as single link {%- endcomment -%}
                 <li class="gs-drawer__menu-item">
                   <a href="{{ link.url }}" class="gs-drawer__menu-link">
                     <span class="gs-drawer__menu-text">{{ link.title | escape }}</span>
@@ -461,6 +502,19 @@
       e.preventDefault();
       closeDrawer();
     }));
+
+    // Trigger existing search modal
+    const searchFakeInput = drawer.querySelector('[data-gs-search-trigger]');
+    if (searchFakeInput) {
+      searchFakeInput.addEventListener('click', (e) => {
+        e.preventDefault();
+        const mainSearchBtn = document.querySelector('.header__icon--search');
+        if (mainSearchBtn) {
+          closeDrawer();
+          setTimeout(() => mainSearchBtn.click(), 50); // slight delay to allow drawer to close
+        }
+      });
+    }
 
     tabs.forEach(tab => tab.addEventListener('click', () => {
       switchTab(tab.dataset.gsTab);
