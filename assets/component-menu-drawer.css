@@ -95,7 +95,7 @@ menu-drawer>details[open]>summary::before {
 }
 
 .menu-drawer__menu-item {
-  padding: 1.1rem 3rem;
+  padding: 1.1rem 2rem;
   text-decoration: none;
   font-size: 1.8rem;
   position: relative;
