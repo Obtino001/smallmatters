@@ -483,8 +483,10 @@
       document.body.classList.remove('gs-drawer-body-lock');
       drawer.setAttribute('aria-hidden', 'true');
 
-      // Close any open submenus
-      closeAllSubmenus();
+      // Close any open submenus after a delay to allow the drawer to slide out seamlessly
+      setTimeout(() => {
+        closeAllSubmenus();
+      }, 350);
 
       // Update hamburger
       openBtns.forEach(btn => btn.setAttribute('aria-expanded', 'false'));
