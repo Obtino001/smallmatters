@@ -4392,3 +4392,12 @@ vipps-button#vipps-button {
 body:has(.scrolled-past-header) .header--transparent--cc .gs-hamburger__icon path {
     stroke: #3C3C3C;
 }
+
+.gs-drawer__featured .WI_controls_CSS{
+  display: none;
+}
+
+.gs-drawer__featured  .card__inner {
+    width: 100%;
+    height: 200px;
+}
