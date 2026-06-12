@@ -26,7 +26,7 @@
   position: fixed;
   inset: 0;
   z-index: 99998;
-  background: rgba(var(--color-foreground), 0.4);
+  background: rgba(0, 0, 0, 0.5);
   opacity: 0;
   visibility: hidden;
   transition: opacity var(--exr-transition), visibility var(--exr-transition);
