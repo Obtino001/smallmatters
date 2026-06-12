@@ -216,6 +216,17 @@
                   </span>
                 </div>
               </div>
+
+              {%- if current_collection.products.size > section.settings.products_to_show -%}
+                <div class="featured-collection-banner__view-all">
+                  <a href="{{ current_collection.url }}" class="featured-collection-banner__view-all-btn">
+                    {{ section.settings.view_all_text | default: 'View All Products' }}
+                    <svg width="18" height="10" viewBox="0 0 18 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M13 1L17 5M17 5L13 9M17 5H1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </a>
+                </div>
+              {%- endif -%}
             {% endif %}
           </div>
         {% endfor %}
@@ -468,6 +479,16 @@
       "unit": "px",
       "label": "Padding Bottom",
       "default": 36
+    },
+    {
+      "type": "header",
+      "content": "View All Button"
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View All Button Text",
+      "default": "View All Products"
     }
   ],
   "blocks": [
