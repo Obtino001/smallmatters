@@ -296,7 +296,7 @@ h2.title {
     bottom: -40px;
   }
   .featured-collection-banner__view-all {
-    margin-top: 2rem;
+    margin-bottom: 2rem;
   }
 }
 @media (prefers-reduced-motion: no-preference) {
