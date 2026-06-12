@@ -87,7 +87,7 @@
                   {%- comment -%} Detect if this is a color filter {%- endcomment -%}
                   {%- assign is_color = false -%}
                   {%- assign label_lower = filter.label | downcase -%}
-                  {%- if label_lower == 'color' or label_lower == 'colour' or label_lower == 'farge' -%}
+                  {%- if label_lower contains 'color' or label_lower contains 'colour' or label_lower contains 'farge' -%}
                     {%- assign is_color = true -%}
                   {%- endif -%}
 
@@ -95,45 +95,68 @@
                     {%- comment -%} ── COLOR SWATCHES ── {%- endcomment -%}
                     <ul class="exr-swatches">
                       {%- for value in filter.values -%}
-                        {%- assign swatch_handle = value.label | downcase | replace: ' ', '-' -%}
-                        {%- comment -%} Map Norwegian + common color names to hex codes {%- endcomment -%}
-                        {%- assign swatch_color_css = '' -%}
-                        {%- case swatch_handle -%}
-                          {%- when 'beige' -%}{%- assign swatch_color_css = '#C8B69E' -%}
-                          {%- when 'blå' or 'bla' -%}{%- assign swatch_color_css = '#3B82F6' -%}
-                          {%- when 'brun' -%}{%- assign swatch_color_css = '#8B6914' -%}
-                          {%- when 'grå' or 'gra' -%}{%- assign swatch_color_css = '#9CA3AF' -%}
-                          {%- when 'grønn' or 'gronn' or 'grön' -%}{%- assign swatch_color_css = '#22C55E' -%}
-                          {%- when 'gul' -%}{%- assign swatch_color_css = '#EAB308' -%}
-                          {%- when 'hvit' or 'hvitt' -%}{%- assign swatch_color_css = '#FFFFFF' -%}
-                          {%- when 'lilla' -%}{%- assign swatch_color_css = '#A855F7' -%}
-                          {%- when 'marineblå' or 'marinebla' -%}{%- assign swatch_color_css = '#1E3A5F' -%}
-                          {%- when 'rosa' -%}{%- assign swatch_color_css = '#F9A8D4' -%}
-                          {%- when 'rød' or 'rod' -%}{%- assign swatch_color_css = '#EF4444' -%}
-                          {%- when 'sort' or 'svart' -%}{%- assign swatch_color_css = '#1A1A1A' -%}
-                          {%- when 'black' -%}{%- assign swatch_color_css = '#000000' -%}
-                          {%- when 'white' or 'off-white' -%}{%- assign swatch_color_css = '#F5F5F0' -%}
-                          {%- when 'navy' or 'dark-navy' -%}{%- assign swatch_color_css = '#1B2A4A' -%}
-                          {%- when 'denim' or 'dueblå' or 'duebla' -%}{%- assign swatch_color_css = '#6B8CAE' -%}
-                          {%- when 'burgunder' -%}{%- assign swatch_color_css = '#800020' -%}
-                          {%- when 'sand' or 'lyssand' -%}{%- assign swatch_color_css = '#D2B48C' -%}
-                          {%- when 'lysegrå' or 'lysegra' -%}{%- assign swatch_color_css = '#D1D5DB' -%}
-                          {%- when 'lysegul' -%}{%- assign swatch_color_css = '#FDE68A' -%}
-                          {%- when 'lyserosa' -%}{%- assign swatch_color_css = '#FBCFE8' -%}
-                          {%- when 'lyseblå' or 'lysebla' -%}{%- assign swatch_color_css = '#93C5FD' -%}
-                          {%- when 'mørk-brun' or 'mork-brun' -%}{%- assign swatch_color_css = '#5C3317' -%}
-                          {%- when 'mørk-oliven' or 'mork-oliven' -%}{%- assign swatch_color_css = '#556B2F' -%}
-                          {%- when 'pink' -%}{%- assign swatch_color_css = '#EC4899' -%}
-                          {%- when 'red' -%}{%- assign swatch_color_css = '#EF4444' -%}
-                          {%- when 'blue' -%}{%- assign swatch_color_css = '#3B82F6' -%}
-                          {%- when 'green' -%}{%- assign swatch_color_css = '#22C55E' -%}
-                          {%- when 'yellow' -%}{%- assign swatch_color_css = '#EAB308' -%}
-                          {%- when 'orange' -%}{%- assign swatch_color_css = '#F97316' -%}
-                          {%- when 'brown' -%}{%- assign swatch_color_css = '#92400E' -%}
-                          {%- when 'grey' or 'gray' -%}{%- assign swatch_color_css = '#9CA3AF' -%}
-                          {%- when 'purple' -%}{%- assign swatch_color_css = '#A855F7' -%}
-                          {%- else -%}{%- assign swatch_color_css = value.label | downcase -%}
-                        {%- endcase -%}
+                        {%- assign swatch_parts = value.label | split: '/' -%}
+                        {%- assign c1 = blank -%}
+                        {%- assign c2 = blank -%}
+                        {%- assign c3 = blank -%}
+
+                        {%- for part in swatch_parts -%}
+                          {%- assign swatch_handle = part | downcase | replace: ' ', '-' -%}
+                          {%- assign part_hex = '' -%}
+                          {%- case swatch_handle -%}
+                            {%- when 'beige' -%}{%- assign part_hex = '#C8B69E' -%}
+                            {%- when 'blå' or 'bla' -%}{%- assign part_hex = '#3B82F6' -%}
+                            {%- when 'brun' -%}{%- assign part_hex = '#8B6914' -%}
+                            {%- when 'grå' or 'gra' or 'mørk-grå' -%}{%- assign part_hex = '#9CA3AF' -%}
+                            {%- when 'grønn' or 'gronn' or 'grön' -%}{%- assign part_hex = '#22C55E' -%}
+                            {%- when 'gul' -%}{%- assign part_hex = '#EAB308' -%}
+                            {%- when 'hvit' or 'hvitt' -%}{%- assign part_hex = '#FFFFFF' -%}
+                            {%- when 'lilla' -%}{%- assign part_hex = '#A855F7' -%}
+                            {%- when 'marineblå' or 'marinebla' -%}{%- assign part_hex = '#1E3A5F' -%}
+                            {%- when 'rosa' -%}{%- assign part_hex = '#F9A8D4' -%}
+                            {%- when 'rød' or 'rod' -%}{%- assign part_hex = '#EF4444' -%}
+                            {%- when 'sort' or 'svart' -%}{%- assign part_hex = '#1A1A1A' -%}
+                            {%- when 'black' -%}{%- assign part_hex = '#000000' -%}
+                            {%- when 'white' or 'off-white' or 'offwhite' -%}{%- assign part_hex = '#F5F5F0' -%}
+                            {%- when 'navy' or 'dark-navy' -%}{%- assign part_hex = '#1B2A4A' -%}
+                            {%- when 'denim' or 'dueblå' or 'duebla' -%}{%- assign part_hex = '#6B8CAE' -%}
+                            {%- when 'burgunder' -%}{%- assign part_hex = '#800020' -%}
+                            {%- when 'sand' or 'lyssand' -%}{%- assign part_hex = '#D2B48C' -%}
+                            {%- when 'lysegrå' or 'lysegra' or 'blågrå' -%}{%- assign part_hex = '#D1D5DB' -%}
+                            {%- when 'lysegul' -%}{%- assign part_hex = '#FDE68A' -%}
+                            {%- when 'lyserosa' -%}{%- assign part_hex = '#FBCFE8' -%}
+                            {%- when 'lyseblå' or 'lysebla' or 'lysblå' -%}{%- assign part_hex = '#93C5FD' -%}
+                            {%- when 'mørk-brun' or 'mork-brun' -%}{%- assign part_hex = '#5C3317' -%}
+                            {%- when 'mørk-oliven' or 'mork-oliven' or 'oliven' -%}{%- assign part_hex = '#556B2F' -%}
+                            {%- when 'pink' -%}{%- assign part_hex = '#EC4899' -%}
+                            {%- when 'red' -%}{%- assign part_hex = '#EF4444' -%}
+                            {%- when 'blue' -%}{%- assign part_hex = '#3B82F6' -%}
+                            {%- when 'green' -%}{%- assign part_hex = '#22C55E' -%}
+                            {%- when 'yellow' -%}{%- assign part_hex = '#EAB308' -%}
+                            {%- when 'orange' -%}{%- assign part_hex = '#F97316' -%}
+                            {%- when 'brown' -%}{%- assign part_hex = '#92400E' -%}
+                            {%- when 'grey' or 'gray' -%}{%- assign part_hex = '#9CA3AF' -%}
+                            {%- when 'purple' -%}{%- assign part_hex = '#A855F7' -%}
+                            {%- else -%}{%- assign part_hex = swatch_handle -%}
+                          {%- endcase -%}
+
+                          {%- if forloop.first -%}
+                            {%- assign c1 = part_hex -%}
+                          {%- elsif forloop.index == 2 -%}
+                            {%- assign c2 = part_hex -%}
+                          {%- elsif forloop.index == 3 -%}
+                            {%- assign c3 = part_hex -%}
+                          {%- endif -%}
+                        {%- endfor -%}
+
+                        {%- if c1 != blank and c2 != blank and c3 != blank -%}
+                          {%- assign swatch_color_css = 'linear-gradient(90deg, ' | append: c1 | append: ' 50%, transparent 50%), linear-gradient(180deg, ' | append: c2 | append: ' 50%, ' | append: c3 | append: ' 50%)' -%}
+                        {%- elsif c1 != blank and c2 != blank -%}
+                          {%- assign swatch_color_css = 'linear-gradient(90deg, ' | append: c1 | append: ' 50%, ' | append: c2 | append: ' 50%)' -%}
+                        {%- else -%}
+                          {%- assign swatch_color_css = c1 -%}
+                        {%- endif -%}
+
                         <li class="exr-swatch{% if value.count == 0 and value.active == false %} exr-swatch--disabled{% endif %}">
                           <input
                             class="exr-swatch__input"
@@ -148,7 +171,7 @@
                             <span class="exr-swatch__check">
                               <svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </span>
-                            <span class="exr-swatch__color" style="background-color: {{ swatch_color_css }};"></span>
+                            <span class="exr-swatch__color" style="background: {{ swatch_color_css }};"></span>
                             <span class="exr-swatch__name">{{ value.label }}</span>
                           </label>
                         </li>
