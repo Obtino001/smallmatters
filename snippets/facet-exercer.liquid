@@ -96,6 +96,44 @@
                     <ul class="exr-swatches">
                       {%- for value in filter.values -%}
                         {%- assign swatch_handle = value.label | downcase | replace: ' ', '-' -%}
+                        {%- comment -%} Map Norwegian + common color names to hex codes {%- endcomment -%}
+                        {%- assign swatch_color_css = '' -%}
+                        {%- case swatch_handle -%}
+                          {%- when 'beige' -%}{%- assign swatch_color_css = '#C8B69E' -%}
+                          {%- when 'blå' or 'bla' -%}{%- assign swatch_color_css = '#3B82F6' -%}
+                          {%- when 'brun' -%}{%- assign swatch_color_css = '#8B6914' -%}
+                          {%- when 'grå' or 'gra' -%}{%- assign swatch_color_css = '#9CA3AF' -%}
+                          {%- when 'grønn' or 'gronn' or 'grön' -%}{%- assign swatch_color_css = '#22C55E' -%}
+                          {%- when 'gul' -%}{%- assign swatch_color_css = '#EAB308' -%}
+                          {%- when 'hvit' or 'hvitt' -%}{%- assign swatch_color_css = '#FFFFFF' -%}
+                          {%- when 'lilla' -%}{%- assign swatch_color_css = '#A855F7' -%}
+                          {%- when 'marineblå' or 'marinebla' -%}{%- assign swatch_color_css = '#1E3A5F' -%}
+                          {%- when 'rosa' -%}{%- assign swatch_color_css = '#F9A8D4' -%}
+                          {%- when 'rød' or 'rod' -%}{%- assign swatch_color_css = '#EF4444' -%}
+                          {%- when 'sort' or 'svart' -%}{%- assign swatch_color_css = '#1A1A1A' -%}
+                          {%- when 'black' -%}{%- assign swatch_color_css = '#000000' -%}
+                          {%- when 'white' or 'off-white' -%}{%- assign swatch_color_css = '#F5F5F0' -%}
+                          {%- when 'navy' or 'dark-navy' -%}{%- assign swatch_color_css = '#1B2A4A' -%}
+                          {%- when 'denim' or 'dueblå' or 'duebla' -%}{%- assign swatch_color_css = '#6B8CAE' -%}
+                          {%- when 'burgunder' -%}{%- assign swatch_color_css = '#800020' -%}
+                          {%- when 'sand' or 'lyssand' -%}{%- assign swatch_color_css = '#D2B48C' -%}
+                          {%- when 'lysegrå' or 'lysegra' -%}{%- assign swatch_color_css = '#D1D5DB' -%}
+                          {%- when 'lysegul' -%}{%- assign swatch_color_css = '#FDE68A' -%}
+                          {%- when 'lyserosa' -%}{%- assign swatch_color_css = '#FBCFE8' -%}
+                          {%- when 'lyseblå' or 'lysebla' -%}{%- assign swatch_color_css = '#93C5FD' -%}
+                          {%- when 'mørk-brun' or 'mork-brun' -%}{%- assign swatch_color_css = '#5C3317' -%}
+                          {%- when 'mørk-oliven' or 'mork-oliven' -%}{%- assign swatch_color_css = '#556B2F' -%}
+                          {%- when 'pink' -%}{%- assign swatch_color_css = '#EC4899' -%}
+                          {%- when 'red' -%}{%- assign swatch_color_css = '#EF4444' -%}
+                          {%- when 'blue' -%}{%- assign swatch_color_css = '#3B82F6' -%}
+                          {%- when 'green' -%}{%- assign swatch_color_css = '#22C55E' -%}
+                          {%- when 'yellow' -%}{%- assign swatch_color_css = '#EAB308' -%}
+                          {%- when 'orange' -%}{%- assign swatch_color_css = '#F97316' -%}
+                          {%- when 'brown' -%}{%- assign swatch_color_css = '#92400E' -%}
+                          {%- when 'grey' or 'gray' -%}{%- assign swatch_color_css = '#9CA3AF' -%}
+                          {%- when 'purple' -%}{%- assign swatch_color_css = '#A855F7' -%}
+                          {%- else -%}{%- assign swatch_color_css = value.label | downcase -%}
+                        {%- endcase -%}
                         <li class="exr-swatch{% if value.count == 0 and value.active == false %} exr-swatch--disabled{% endif %}">
                           <input
                             class="exr-swatch__input"
@@ -110,7 +148,7 @@
                             <span class="exr-swatch__check">
                               <svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </span>
-                            <span class="exr-swatch__color" style="background-color: {{ value.label | downcase }};"></span>
+                            <span class="exr-swatch__color" style="background-color: {{ swatch_color_css }};"></span>
                             <span class="exr-swatch__name">{{ value.label }}</span>
                           </label>
                         </li>
