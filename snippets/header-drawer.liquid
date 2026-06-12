@@ -454,7 +454,7 @@
     const backBtns = drawer.querySelectorAll('[data-gs-back]');
     const langOptions = drawer.querySelectorAll('.gs-drawer__lang-option');
 
-    let activeSubmenu = null;
+    let submenuStack = [];
     let isOpen = false;
 
     // ── Open Drawer ──
@@ -522,28 +522,33 @@
       if (contentArea) contentArea.scrollTop = 0;
     }
 
-    // ── Open Submenu ──
+    // ── Open Submenu (stack-based: does NOT close parent) ──
     function openSubmenu(submenuId) {
       const submenu = document.getElementById(submenuId);
       if (!submenu) return;
 
-      // Close previously open submenu
-      closeAllSubmenus();
+      // Only close sibling submenus at the same depth, not the entire stack
+      // Find and close any submenu at the same nesting level
+      if (submenuStack.length > 0) {
+        const currentTop = submenuStack[submenuStack.length - 1];
+        // If the new submenu is NOT inside the current top, close the current top (sibling case)
+        if (!currentTop.contains(submenu)) {
+          popSubmenu(currentTop);
+        }
+      }
 
-      activeSubmenu = submenu;
       submenu.classList.add('gs-drawer__submenu--open');
       submenu.setAttribute('aria-hidden', 'false');
 
-      // Scroll the panel content area to keep the submenu visible
       const btn = drawer.querySelector('[data-gs-submenu="' + submenuId + '"]');
       if (btn) btn.setAttribute('aria-expanded', 'true');
 
-      // Lock panel scroll when submenu is open
+      submenuStack.push(submenu);
       panel.classList.add('gs-drawer__panel--submenu-open');
     }
 
-    // ── Close Submenu ──
-    function closeSubmenu(submenu) {
+    // ── Pop top submenu off stack ──
+    function popSubmenu(submenu) {
       if (!submenu) return;
       submenu.classList.remove('gs-drawer__submenu--open');
       submenu.setAttribute('aria-hidden', 'true');
@@ -552,8 +557,39 @@
       const btn = drawer.querySelector('[data-gs-submenu="' + submenuId + '"]');
       if (btn) btn.setAttribute('aria-expanded', 'false');
 
-      panel.classList.remove('gs-drawer__panel--submenu-open');
-      activeSubmenu = null;
+      const idx = submenuStack.indexOf(submenu);
+      if (idx !== -1) submenuStack.splice(idx, 1);
+
+      if (submenuStack.length === 0) {
+        panel.classList.remove('gs-drawer__panel--submenu-open');
+      }
+    }
+
+    // ── Close Submenu (called by back button — closes this level and anything above) ──
+    function closeSubmenu(submenu) {
+      if (!submenu) return;
+
+      // Close this submenu and all children above it in the stack
+      const idx = submenuStack.indexOf(submenu);
+      if (idx !== -1) {
+        // Close everything from idx upward
+        const toClose = submenuStack.splice(idx);
+        toClose.reverse().forEach(sub => {
+          sub.classList.remove('gs-drawer__submenu--open');
+          sub.setAttribute('aria-hidden', 'true');
+          const sid = sub.id;
+          const btn = drawer.querySelector('[data-gs-submenu="' + sid + '"]');
+          if (btn) btn.setAttribute('aria-expanded', 'false');
+        });
+      } else {
+        // Fallback: just close this one
+        submenu.classList.remove('gs-drawer__submenu--open');
+        submenu.setAttribute('aria-hidden', 'true');
+      }
+
+      if (submenuStack.length === 0) {
+        panel.classList.remove('gs-drawer__panel--submenu-open');
+      }
     }
 
     function closeAllSubmenus() {
@@ -565,7 +601,7 @@
         btn.setAttribute('aria-expanded', 'false');
       });
       panel.classList.remove('gs-drawer__panel--submenu-open');
-      activeSubmenu = null;
+      submenuStack = [];
     }
 
     // ── Event Listeners ──
@@ -597,20 +633,28 @@
       switchTab(tab.dataset.gsTab);
     }));
 
-    submenuBtns.forEach(btn => btn.addEventListener('click', () => {
-      openSubmenu(btn.dataset.gsSubmenu);
-    }));
-
-    backBtns.forEach(btn => btn.addEventListener('click', () => {
-      const submenu = btn.closest('.gs-drawer__submenu');
-      closeSubmenu(submenu);
-    }));
+    // Use event delegation for submenu buttons (handles dynamically relevant submenus)
+    drawer.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-gs-submenu]');
+      if (btn && drawer.contains(btn)) {
+        e.stopPropagation();
+        openSubmenu(btn.dataset.gsSubmenu);
+        return;
+      }
+      const backBtn = e.target.closest('[data-gs-back]');
+      if (backBtn && drawer.contains(backBtn)) {
+        e.stopPropagation();
+        const submenu = backBtn.closest('.gs-drawer__submenu');
+        closeSubmenu(submenu);
+        return;
+      }
+    });
 
     // Close on Escape
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && isOpen) {
-        if (activeSubmenu) {
-          closeSubmenu(activeSubmenu);
+        if (submenuStack.length > 0) {
+          closeSubmenu(submenuStack[submenuStack.length - 1]);
         } else {
           closeDrawer();
         }
