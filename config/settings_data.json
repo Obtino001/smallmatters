@@ -176,15 +176,15 @@
       "cart-drawer": {
         "type": "cart-drawer",
         "settings": {
-          "complete_look_title": "COMPLETE THE LOOK",
-          "complete_look_add_btn_text": "+ ADD",
-          "you_may_also_like_title": "YOU MAY ALSO LIKE",
-          "bundle_title": "SMALLMATTERS BUNDLE",
-          "bundle_desc": "<p>Save 15% off when buying a bundle. Simply add a <a href=\"/collections/tops\">Top</a>, <a href=\"/collections/blouses\">Blouse</a> and <a href=\"/collections/bottoms\">Bottom</a> to your cart. Already discounted items are excluded.</p>",
-          "discount_placeholder": "Enter discount code",
-          "discount_btn_text": "APPLY",
-          "discount_applied_btn_text": "APPLIED",
-          "checkout_btn_text": "GO TO CHECKOUT"
+          "complete_look_title": "FULLFØR STILEN",
+          "complete_look_add_btn_text": "+ LEGG TIL",
+          "you_may_also_like_title": "DU VIL KANSKJE OGSÅ LIKE",
+          "bundle_title": "SMALLMATTERS-PAKKE",
+          "bundle_desc": "<p>Spar 15 % når du kjøper en pakke. Bare legg til en topp, bluse og underdel i handlekurven din. Allerede nedsatte varer er ekskludert.</p>",
+          "discount_placeholder": "Skriv inn rabattkode",
+          "discount_btn_text": "BRUK",
+          "discount_applied_btn_text": "LAGT TIL",
+          "checkout_btn_text": "GÅ TIL KASSEN"
         }
       }
     },
