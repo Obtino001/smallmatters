@@ -1,16 +1,16 @@
 /* ============================================================================
    CUSTOM FILTER SYSTEM - Exercer
-   Built from scratch. Zero Dawn dependency.
+   (Dawn Theme Color Schema Applied)
    ============================================================================ */
 
 :root {
   --exr-drawer-width: 520px;
-  --exr-bg: #EAE5DF;
-  --exr-text: #0B0B0B;
-  --exr-text-light: #9A9A9A;
-  --exr-border: #EAEAEA;
-  --exr-accent: #0B0B0B;
-  --exr-disabled: #c8c8c8;
+  --exr-bg: rgb(var(--color-background));
+  --exr-text: rgb(var(--color-foreground));
+  --exr-text-light: rgba(var(--color-foreground), 0.6);
+  --exr-border: rgba(var(--color-foreground), 0.1);
+  --exr-accent: rgb(var(--color-foreground));
+  --exr-disabled: rgba(var(--color-foreground), 0.3);
   --exr-radius: 4px;
   --exr-swatch-size: 18px;
   --exr-transition: 0.35s cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -26,7 +26,7 @@
   position: fixed;
   inset: 0;
   z-index: 99998;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(var(--color-foreground), 0.4);
   opacity: 0;
   visibility: hidden;
   transition: opacity var(--exr-transition), visibility var(--exr-transition);
@@ -217,7 +217,7 @@
 .exr-pill__input:checked+.exr-pill__label {
   background: var(--exr-accent);
   border-color: var(--exr-accent);
-  color: #fff;
+  color: rgb(var(--color-background));
   font-weight: 500;
 }
 
@@ -297,7 +297,7 @@
 
 .exr-swatch__input:checked~.exr-swatch__label .exr-swatch__check svg {
   display: block;
-  color: #fff;
+  color: rgb(var(--color-background));
 }
 
 /* Color circle */
@@ -306,7 +306,7 @@
   width: var(--exr-swatch-size);
   height: var(--exr-swatch-size);
   border-radius: 3px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(var(--color-foreground), 0.08);
   flex-shrink: 0;
 }
 
@@ -457,17 +457,17 @@
 
 .exr-btn:hover {
   background: var(--exr-accent);
-  color: #fff;
+  color: rgb(var(--color-background));
 }
 
 .exr-btn--primary {
   background: var(--exr-accent);
-  color: #fff;
+  color: rgb(var(--color-background));
   border-color: var(--exr-accent);
 }
 
 .exr-btn--primary:hover {
-  background: #333;
+  background: rgba(var(--color-foreground), 0.8);
 }
 
 /* ---- Loading State ---- */
@@ -480,7 +480,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(var(--color-background), 0.6);
   z-index: 10;
 }
 
