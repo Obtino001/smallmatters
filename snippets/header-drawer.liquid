@@ -139,6 +139,17 @@
                 {%- if mega_block.settings.title_1 != blank or mega_block.settings.title_2 != blank or mega_block.settings.title_3 != blank -%}
                   {%- assign has_mega_menus = true -%}
                 {%- endif -%}
+                {%- comment -%} Also check if any menu linklist has links even without a title {%- endcomment -%}
+                {%- unless has_mega_menus -%}
+                  {%- for mi in (1..3) -%}
+                    {%- assign mk = 'menu_' | append: mi -%}
+                    {%- assign ml = linklists[mega_block.settings[mk]] -%}
+                    {%- if ml.links != blank -%}
+                      {%- assign has_mega_menus = true -%}
+                      {%- break -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endunless -%}
               {%- endif -%}
 
               {%- assign has_custom_items = false -%}
@@ -157,11 +168,17 @@
                   {%- assign col_menu = mega_block.settings[menu_key] -%}
                   {%- assign col_linklist = linklists[col_menu] -%}
 
-                  {%- if col_title != blank -%}
+                  {%- comment -%} Use the linklist title as fallback if column title is blank {%- endcomment -%}
+                  {%- assign display_title = col_title -%}
+                  {%- if display_title == blank and col_linklist.links != blank -%}
+                    {%- assign display_title = col_linklist.title | default: col_menu | replace: '-', ' ' | capitalize -%}
+                  {%- endif -%}
+
+                  {%- if display_title != blank -%}
                     <li class="gs-drawer__menu-item">
                       {%- if col_linklist.links != blank -%}
                         <button class="gs-drawer__menu-btn" data-gs-submenu="submenu-mega-{{ forloop.parentloop.index }}-{{ i }}" aria-expanded="false">
-                          <span class="gs-drawer__menu-text">{{ col_title | escape }}</span>
+                          <span class="gs-drawer__menu-text">{{ display_title | escape }}</span>
                           <svg class="gs-drawer__chevron" width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M1 1L7 7L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                           </svg>
@@ -172,7 +189,7 @@
                               <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M7 13L1 7L7 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                               </svg>
-                              <span>{{ col_title | escape }}</span>
+                              <span>{{ display_title | escape }}</span>
                             </button>
                             <ul class="gs-drawer__submenu-list" role="list">
                               {%- for childlink in col_linklist.links -%}
@@ -185,7 +202,7 @@
                         </div>
                       {%- else -%}
                         <a href="{{ col_link | default: '#' }}" class="gs-drawer__menu-link">
-                          <span class="gs-drawer__menu-text">{{ col_title | escape }}</span>
+                          <span class="gs-drawer__menu-text">{{ display_title | escape }}</span>
                         </a>
                       {%- endif -%}
                     </li>
