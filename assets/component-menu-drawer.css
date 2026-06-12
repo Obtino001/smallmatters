@@ -327,8 +327,8 @@
 .gs-drawer__featured-card {
   position: relative;
   flex-shrink: 0;
-  width: 75%;
-  max-width: 300px;
+  width: 45%;
+  max-width: 180px;
   text-decoration: none;
   color: #ffffff; /* Kept white for contrast on image gradient */
   overflow: hidden;
@@ -776,8 +776,8 @@
 /* Larger phones (> 430px) */
 @media screen and (min-width: 430px) {
   .gs-drawer__featured-card {
-    width: 65%;
-    max-width: 280px;
+    width: 48%;
+    max-width: 220px;
   }
 }
 
