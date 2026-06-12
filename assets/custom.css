@@ -4388,3 +4388,7 @@ vipps-button#vipps-button {
 .header--transparent--cc .gs-hamburger__icon path {
   stroke: #fff;
 }
+
+body:has(.scrolled-past-header) .header--transparent--cc .gs-hamburger__icon path {
+    stroke: #3C3C3C;
+}
