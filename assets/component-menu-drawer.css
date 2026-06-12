@@ -10,6 +10,10 @@
   height: 100%;
 }
 
+#gs-mobile-drawer * {
+  font-family: lato;
+}
+
 /* ── Drawer Root ── */
 .gs-drawer {
   position: fixed;
@@ -306,14 +310,14 @@
 }
 
 .gs-drawer__featured-scroll {
-    display: flex;
-    gap: 16px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    scroll-snap-type: x mandatory;
-    margin-left: 20px;
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-snap-type: x mandatory;
+  margin-left: 20px;
 }
 
 .gs-drawer__featured-scroll::-webkit-scrollbar {
