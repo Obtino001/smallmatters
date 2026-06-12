@@ -305,13 +305,13 @@
 
 /* ── Featured Image Cards ── */
 .gs-drawer__featured {
-  padding: 12px 0 8px;
+  padding: 16px 0 12px;
   overflow: hidden;
 }
 
 .gs-drawer__featured-scroll {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -327,19 +327,19 @@
 .gs-drawer__featured-card {
   position: relative;
   flex-shrink: 0;
-  width: 110px;
-  height: 110px;
+  width: 200px;
+  min-height: 300px;
   text-decoration: none;
   color: #ffffff;
   overflow: hidden;
   scroll-snap-align: start;
   transition: transform 0.2s ease;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 .gs-drawer__featured-card:first-child:last-child {
-  width: 110px;
-  max-width: 110px;
+  width: 260px;
+  max-width: 80%;
 }
 
 .gs-drawer__featured-card:active {
@@ -350,24 +350,30 @@
 .gs-drawer__article-card {
   color: inherit;
   background: rgb(var(--color-background));
-  border-radius: 4px;
+  border-radius: 6px;
   overflow: hidden;
+  height: auto;
+  min-height: 300px;
 }
 
 .gs-drawer__product-card .card-wrapper {
-  height: 110px;
-  overflow: hidden;
+  height: auto;
+  overflow: visible;
 }
 
 .gs-drawer__featured-img {
   position: relative;
-  width: 110px;
-  height: 110px;
+  width: 100%;
+  height: 0;
+  padding-top: 120%;
   overflow: hidden;
   background-color: rgba(var(--color-foreground), 0.04);
 }
 
 .gs-drawer__featured-img img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -779,13 +785,7 @@
 /* Larger phones (> 430px) */
 @media screen and (min-width: 430px) {
   .gs-drawer__featured-card {
-    width: 120px;
-    height: 120px;
-  }
-
-  .gs-drawer__featured-img {
-    width: 120px;
-    height: 120px;
+    width: 220px;
   }
 }
 
