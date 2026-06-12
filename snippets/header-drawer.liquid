@@ -47,7 +47,7 @@
             <circle cx="12" cy="7" r="4"></circle>
           </svg>
         </a>
-        <a href="{{ routes.cart_url }}" class="gs-drawer__icon-link" id="cart-icon-bubble-drawer" aria-label="{{ 'templates.cart.cart' | t }}">
+        <button type="button" class="gs-drawer__icon-link" id="cart-icon-bubble-drawer" aria-label="{{ 'templates.cart.cart' | t }}" data-gs-open-cart>
           <span class="svg-wrapper" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="20" viewBox="0 0 19 20" fill="none">
             <mask id="mask0_drawer_cart" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="17" height="17">
               <path d="M17.2464 1.65829H1.32682V17.5779H17.2464V1.65829Z" fill="white"/>
@@ -63,7 +63,7 @@
             {%- endif -%}
             <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
           </div>
-        </a>
+        </button>
       </div>
     </div>
 
@@ -649,6 +649,22 @@
     tabs.forEach(tab => tab.addEventListener('click', () => {
       switchTab(tab.dataset.gsTab);
     }));
+
+    // Cart icon inside drawer → close menu drawer, open cart drawer
+    const cartIconDrawer = drawer.querySelector('[data-gs-open-cart]');
+    if (cartIconDrawer) {
+      cartIconDrawer.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        closeDrawer();
+        setTimeout(() => {
+          const cartDrawerEl = document.querySelector('wi-cartdrawer');
+          if (cartDrawerEl && typeof cartDrawerEl.openCart === 'function') {
+            cartDrawerEl.openCart();
+          }
+        }, 100);
+      });
+    }
 
     // Use event delegation for submenu buttons (handles dynamically relevant submenus)
     drawer.addEventListener('click', (e) => {
