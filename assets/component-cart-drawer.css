@@ -26,7 +26,7 @@
     flex-direction: column;
     transform: translate(100%);
     transition: transform var(--duration-default) ease;
-    background: #F2F0EB;
+    background: #EAE5DF;
 }
 
 .drawer__inner-empty {

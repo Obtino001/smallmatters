@@ -723,7 +723,8 @@ WI-quickAdd {
   background-color: #eae5df;
   pointer-events: all;
   opacity: 0;
-  transition: 0.2s ease-out;
+  visibility: hidden;
+  transition: opacity 0.2s ease-out, visibility 0.2s ease-out;
   border: 1.03px solid #8e7c6b;
   margin: 10px;
   position: absolute;
