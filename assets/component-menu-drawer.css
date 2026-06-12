@@ -331,7 +331,6 @@
   max-width: 300px;
   text-decoration: none;
   color: #ffffff;
-  border-radius: 8px;
   overflow: hidden;
   scroll-snap-align: start;
   transition: transform 0.2s ease;
@@ -361,7 +360,6 @@
   width: 100%;
   padding-top: 100%;
   overflow: hidden;
-  border-radius: 8px;
   background-color: #f0f0f0;
 }
 
@@ -632,7 +630,6 @@
   width: 20px;
   height: 14px;
   object-fit: cover;
-  border-radius: 2px;
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
@@ -652,7 +649,6 @@
   left: 0;
   background: #EAE5DF;
   border: 1px solid #e5e5e5;
-  border-radius: 8px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
   min-width: 140px;
   z-index: 100;
