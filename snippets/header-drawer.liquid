@@ -225,6 +225,11 @@
                 {%- endif -%}
               {%- endif -%}
 
+              {%- assign has_custom_items = false -%}
+              {%- if mega_block and mega_block.settings.item_title_1 != blank -%}
+                {%- assign has_custom_items = true -%}
+              {%- endif -%}
+
               {%- if has_mega_menus -%}
                 {%- for i in (1..3) -%}
                   {%- assign title_key = 'title_' | append: i -%}
@@ -304,6 +309,27 @@
                     {%- endif -%}
                   </li>
                 {%- endfor -%}
+              {%- elsif has_custom_items -%}
+                <li class="gs-drawer__menu-item" style="padding: 16px;">
+                  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+                    {%- for i in (1..12) -%}
+                      {%- assign title_key = 'item_title_' | append: i -%}
+                      {%- assign link_key = 'item_link_' | append: i -%}
+                      {%- assign image_key = 'item_image_' | append: i -%}
+                      
+                      {%- if mega_block.settings[title_key] != blank -%}
+                        <a href="{{ mega_block.settings[link_key] | default: '#' }}" style="display: flex; flex-direction: column; gap: 8px; text-decoration: none;">
+                          {%- if mega_block.settings[image_key] != blank -%}
+                            <div style="aspect-ratio: 4/3; overflow: hidden; background: #f4f4f4; border-radius: 4px;">
+                              <img src="{{ mega_block.settings[image_key] | image_url: width: 300 }}" alt="{{ mega_block.settings[title_key] | escape }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                          {%- endif -%}
+                          <span style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #000;">{{ mega_block.settings[title_key] }}</span>
+                        </a>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </div>
+                </li>
               {%- else -%}
                 <li class="gs-drawer__menu-item">
                   <a href="{{ link.url }}" class="gs-drawer__menu-link">

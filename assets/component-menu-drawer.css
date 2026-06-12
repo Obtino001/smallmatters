@@ -483,6 +483,10 @@
   will-change: transform;
 }
 
+.gs-drawer:not(.gs-drawer--open) .gs-drawer__submenu {
+  transition: none !important;
+}
+
 @media screen and (min-width: 768px) {
   .gs-drawer__submenu {
     width: 420px;
