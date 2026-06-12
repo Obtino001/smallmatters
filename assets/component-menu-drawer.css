@@ -305,19 +305,19 @@
 
 /* ── Featured Image Cards ── */
 .gs-drawer__featured {
-  padding: 24px 0 16px;
+  padding: 12px 0 8px;
   overflow: hidden;
 }
 
 .gs-drawer__featured-scroll {
   display: flex;
-  gap: 16px;
+  gap: 10px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
   scroll-snap-type: x mandatory;
-  margin-left: 20px;
+  padding: 0 20px 8px;
 }
 
 .gs-drawer__featured-scroll::-webkit-scrollbar {
@@ -327,47 +327,47 @@
 .gs-drawer__featured-card {
   position: relative;
   flex-shrink: 0;
-  width: 45%;
-  max-width: 180px;
+  width: 110px;
+  height: 110px;
   text-decoration: none;
-  color: #ffffff; /* Kept white for contrast on image gradient */
+  color: #ffffff;
   overflow: hidden;
   scroll-snap-align: start;
   transition: transform 0.2s ease;
+  border-radius: 4px;
 }
 
 .gs-drawer__featured-card:first-child:last-child {
-  width: calc(100% - 0px);
-  max-width: 100%;
+  width: 110px;
+  max-width: 110px;
 }
 
 .gs-drawer__featured-card:active {
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 
 .gs-drawer__product-card,
 .gs-drawer__article-card {
   color: inherit;
   background: rgb(var(--color-background));
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .gs-drawer__product-card .card-wrapper {
-  height: 100%;
+  height: 110px;
+  overflow: hidden;
 }
 
 .gs-drawer__featured-img {
   position: relative;
-  width: 100%;
-  height: 100%;
+  width: 110px;
+  height: 110px;
   overflow: hidden;
-  padding-top: 100%;
   background-color: rgba(var(--color-foreground), 0.04);
 }
 
 .gs-drawer__featured-img img {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -386,16 +386,16 @@
 
 .gs-drawer__featured-title {
   position: absolute;
-  bottom: 14px;
-  left: 14px;
-  right: 14px;
+  bottom: 6px;
+  left: 6px;
+  right: 6px;
   margin: 0;
-  font-size: 13px;
+  font-size: 10px;
   font-weight: 700;
-  color: #ffffff; /* Kept white for contrast on image gradient */
+  color: #ffffff;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  line-height: 1.3;
+  line-height: 1.2;
   z-index: 1;
 }
 
@@ -473,17 +473,18 @@
 
 /* ── Submenu Panel (slides from right) ── */
 .gs-drawer__submenu {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background-color: rgb(var(--color-background));
-  z-index: 10;
+  z-index: 10000;
   transform: translateX(100%);
   transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   visibility: hidden;
   will-change: transform;
+  overflow: hidden;
 }
 
 @media screen and (min-width: 768px) {
@@ -778,8 +779,13 @@
 /* Larger phones (> 430px) */
 @media screen and (min-width: 430px) {
   .gs-drawer__featured-card {
-    width: 48%;
-    max-width: 220px;
+    width: 120px;
+    height: 120px;
+  }
+
+  .gs-drawer__featured-img {
+    width: 120px;
+    height: 120px;
   }
 }
 
