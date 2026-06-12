@@ -1,7 +1,7 @@
 <style>
 wi-cartdrawer { width: 100%; height: 100dvh; position: fixed; top: 0; left: 0; z-index: 10000; background-color: transparent; justify-content: flex-end; overflow: hidden; display: none; transition: 0.3s ease; font-family: var(--font-body-family), sans-serif; }
 .WI_cartDrawerin { height: 100dvh; position: relative; display: flex; justify-content: flex-start; transform: translateX(100%); transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1); }
-.WI_cartDrawerin_cart { width: 480px; height: 100%; background-color: rgb(var(--color-background)); z-index: 1; display: flex; flex-direction: column; position: relative; }
+.WI_cartDrawerin_cart { width: 540px; height: 100%; background-color: rgb(var(--color-background)); z-index: 1; display: flex; flex-direction: column; position: relative; }
 .WI_cartDrawerin_upsell { display: none !important; }
 .WI_cartDrawerin_cart_header { width: 100%; padding: 24px 24px 16px 24px; border-bottom: 1px solid rgba(var(--color-foreground), 0.08); background-color: rgb(var(--color-background)); }
 .WI_cartDrawerin_cart_headerH { width: 100%; margin: 0; display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 500; color: rgb(var(--color-foreground)); text-transform: uppercase; letter-spacing: 1.5px; }
@@ -287,8 +287,8 @@ wi-cartdrawer:not(.active) .WI_cartDrawerin_cart_header, wi-cartdrawer:not(.acti
                           <div class="WI_complete_look_header" onclick="this.closest('.WI_complete_look').classList.toggle('open')">
                             <span>{{ section.settings.complete_look_title | default: 'FULLFØR LOOKEN' }}</span>
                             <span class="WI_complete_look_toggle"><svg xmlns="http://www.w3.org/2000/svg" class="icon-cancel" width="9" height="9" viewBox="0 0 9 9" fill="none">
-    <path d="M0.5 8.5L4.5 4.5L0.5 8.5ZM8.5 0.5L4.49924 4.5L8.5 0.5ZM4.49924 4.5L0.5 0.5L4.49924 4.5ZM4.5 4.5L8.5 8.5L4.5 4.5Z" fill="#0B0B0B"></path>
-    <path d="M0.5 8.5L4.5 4.5L8.5 8.5M8.5 0.5L4.49924 4.5L0.5 0.5" stroke="#0B0B0B" stroke-linecap="round" stroke-linejoin="round"></path>
+    <path d="M0.5 8.5L4.5 4.5L0.5 8.5ZM8.5 0.5L4.49924 4.5L8.5 0.5ZM4.49924 4.5L0.5 0.5L4.49924 4.5ZM4.5 4.5L8.5 8.5L4.5 4.5Z" fill="#fff"></path>
+    <path d="M0.5 8.5L4.5 4.5L8.5 8.5M8.5 0.5L4.49924 4.5L0.5 0.5" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"></path>
 </svg></span>
                           </div>
                           <div class="WI_complete_look_body">
