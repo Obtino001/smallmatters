@@ -296,6 +296,7 @@ h2.title {
     bottom: -40px;
   }
   .featured-collection-banner__view-all {
+    margin-top: 1.5rem;
     margin-bottom: 2rem;
   }
 }
@@ -362,7 +363,7 @@ h2.title {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-block: 20px 10px;
+    padding-block: 0;
     gap: 10px;
   }
 }
