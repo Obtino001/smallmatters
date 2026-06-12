@@ -118,6 +118,9 @@ class ExercerFilters extends HTMLElement {
       clearTimeout(this.debounceTimer);
       this.debounceTimer = setTimeout(() => {
         this.submitFilters();
+        if (window.innerWidth < 990) {
+          this.closeDrawer();
+        }
       }, 350);
     });
 
@@ -127,12 +130,18 @@ class ExercerFilters extends HTMLElement {
         if (e.key === 'Enter') {
           e.preventDefault();
           this.submitFilters();
+          if (window.innerWidth < 990) {
+            this.closeDrawer();
+          }
         }
       });
       input.addEventListener('blur', () => {
         clearTimeout(this.debounceTimer);
         this.debounceTimer = setTimeout(() => {
           this.submitFilters();
+          if (window.innerWidth < 990) {
+            this.closeDrawer();
+          }
         }, 400);
       });
     });
