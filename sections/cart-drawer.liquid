@@ -11,13 +11,6 @@ wi-cartdrawer { width: 100%; height: 100dvh; position: fixed; top: 0; left: 0; z
 .WI_cartDrawer_count { font-weight: 600; }
 .WI_cartDrawerCls { cursor: pointer; display: flex; align-items: center; color: rgba(var(--color-foreground), 0.55); transition: color 0.2s; }
 .WI_cartDrawerCls:hover { color: rgb(var(--color-foreground)); }
-.WI_cartDrawerin_cart_header .fsb-section { background-color: transparent !important; padding: 12px 0 0 0 !important; }
-.WI_cartDrawerin_cart_header .fsb-container { text-align: left !important; }
-.WI_cartDrawerin_cart_header .fsb-text { font-size: 13px !important; color: rgb(var(--color-foreground)) !important; letter-spacing: 0.5px !important; margin: 0 0 8px 0 !important; text-transform: none !important; }
-.WI_cartDrawerin_cart_header .fsb-text strong { text-transform: uppercase; font-weight: 700; margin-right: 4px; letter-spacing: 1px; }
-.WI_cartDrawerin_cart_header .fsb-money { font-weight: 700; }
-.WI_cartDrawerin_cart_header .fsb-progress-track { height: 3px !important; background-color: rgba(var(--color-foreground), 0.08) !important; border-radius: 0 !important; }
-.WI_cartDrawerin_cart_header .fsb-progress-fill { background-color: rgb(var(--color-foreground)) !important; border-radius: 0 !important; }
 .WI_cartDrawerin_cart_body { flex: 1; position: relative; overflow: hidden; min-height: 0; }
 .WI_cartDrawerin_cart_body form { width: 100%; height: 100%; display: flex; flex-direction: column; min-height: 0; }
 .WI_cartDrawerin_cart_form_in { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; min-height: 0; padding: 0 24px 24px 24px; }
@@ -155,7 +148,6 @@ wi-cartdrawer:not(.active) .WI_cartDrawerin_cart_header, wi-cartdrawer:not(.acti
                     </svg>
                   </span>
                 </h2>
-                {% render 'free-shipping' %}
             </div>
             <div class="WI_loadingCartItemBlock">
               <div class="WI_loadingCartItemBlock_in">
