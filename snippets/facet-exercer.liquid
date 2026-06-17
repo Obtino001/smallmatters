@@ -169,11 +169,16 @@
                               {%- if title_down contains val_down or val_down == var_color_name or val_down == var_color_val -%}
                                  {%- assign main_meta = sibling.metafields.custom.variant_color.value -%}
                                  {%- assign contrast_meta = sibling.metafields.custom.variant_secondary_color.value -%}
+                                 {%- assign third_meta = sibling.metafields.custom.variant_third_color.value -%}
+                                 
                                  {%- assign main_color = main_meta.color | default: main_meta.value | default: main_meta -%}
                                  {%- assign contrast_color = contrast_meta.color | default: contrast_meta.value | default: contrast_meta -%}
+                                 {%- assign third_color = third_meta.color | default: third_meta.value | default: third_meta -%}
                                  
                                  {%- if main_color != blank -%}
-                                   {%- if contrast_color != blank -%}
+                                   {%- if contrast_color != blank and third_color != blank -%}
+                                     {%- assign swatch_bg = 'linear-gradient(90deg, ' | append: main_color | append: ' 50%, transparent 50%), linear-gradient(180deg, ' | append: contrast_color | append: ' 50%, ' | append: third_color | append: ' 50%)' -%}
+                                   {%- elsif contrast_color != blank -%}
                                      {%- assign swatch_bg = 'linear-gradient(90deg, ' | append: main_color | append: ' 50%, ' | append: contrast_color | append: ' 50%)' -%}
                                    {%- else -%}
                                      {%- assign swatch_bg = main_color -%}
@@ -203,7 +208,7 @@
                             <span class="exr-swatch__check">
                               <svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </span>
-                            <span class="exr-swatch__color" style="background: {{ swatch_color_css }};"></span>
+                            <span class="exr-swatch__color" style="background: {{ swatch_color_css }}; border-radius: 0px !important; width: 22px !important; height: 22px !important; min-width: 22px !important; border: 1px solid #e5e5e5;"></span>
                             <span class="exr-swatch__name">{{ value.label }}</span>
                           </label>
                         </li>
