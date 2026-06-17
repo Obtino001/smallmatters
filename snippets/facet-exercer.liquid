@@ -172,11 +172,15 @@
                               {%- if title_down contains val_down or title_down contains val_value_down -%}
                                 {%- assign is_match = true -%}
                               {%- endif -%}
-                              {%- if var_color_name != blank and (val_down contains var_color_name or var_color_name contains val_down or val_value_down contains var_color_name or var_color_name contains val_value_down) -%}
-                                {%- assign is_match = true -%}
+                              {%- if var_color_name != blank -%}
+                                {%- if val_down contains var_color_name or var_color_name contains val_down or val_value_down contains var_color_name or var_color_name contains val_value_down -%}
+                                  {%- assign is_match = true -%}
+                                {%- endif -%}
                               {%- endif -%}
-                              {%- if var_color_val != blank and (val_down contains var_color_val or var_color_val contains val_down or val_value_down contains var_color_val or var_color_val contains val_value_down) -%}
-                                {%- assign is_match = true -%}
+                              {%- if var_color_val != blank -%}
+                                {%- if val_down contains var_color_val or var_color_val contains val_down or val_value_down contains var_color_val or var_color_val contains val_value_down -%}
+                                  {%- assign is_match = true -%}
+                                {%- endif -%}
                               {%- endif -%}
                               
                               {%- if is_match -%}
