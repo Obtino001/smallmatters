@@ -49,8 +49,10 @@
                               {%- if title_down contains val_down or title_down contains val_value_down or title_down contains val_down_check -%}
                                 {%- assign match_prod = prod -%}
                               {%- endif -%}
-                              {%- if var_color_name != blank and (val_down contains var_color_name or var_color_name contains val_down or val_down_check contains var_color_name or var_color_name contains val_down_check) -%}
-                                {%- assign match_prod = prod -%}
+                              {%- if var_color_name != blank -%}
+                                {%- if val_down contains var_color_name or var_color_name contains val_down or val_down_check contains var_color_name or var_color_name contains val_down_check -%}
+                                  {%- assign match_prod = prod -%}
+                                {%- endif -%}
                               {%- endif -%}
                             {%- endif -%}
                             
@@ -69,9 +71,11 @@
                                       {%- assign match_prod = sibling -%}
                                       {%- break -%}
                                     {%- endif -%}
-                                    {%- if var_color_name != blank and (val_down contains var_color_name or var_color_name contains val_down or val_down_check contains var_color_name or var_color_name contains val_down_check) -%}
-                                      {%- assign match_prod = sibling -%}
-                                      {%- break -%}
+                                    {%- if var_color_name != blank -%}
+                                      {%- if val_down contains var_color_name or var_color_name contains val_down or val_down_check contains var_color_name or var_color_name contains val_down_check -%}
+                                        {%- assign match_prod = sibling -%}
+                                        {%- break -%}
+                                      {%- endif -%}
                                     {%- endif -%}
                                   {%- endif -%}
                                 {%- endfor -%}
