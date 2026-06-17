@@ -270,74 +270,8 @@
   {%- endif -%}
 </div>
 {% if section.settings.infinite == 'infinite' %}
-<script src="{{ 'infinite-scroll.pkgd.min.js' | asset_url }}" defer="defer"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    var elem = document.querySelector('#product-grid');
-    if (elem) {
-      var params = new URLSearchParams(window.location.search);
-      var startPage = parseInt(params.get('page')) || 1;
-      var totalPagesInput = document.getElementById('total-pages');
-      var totalPages = totalPagesInput ? parseInt(totalPagesInput.value) : 1;
-
-      var infScroll = new InfiniteScroll( elem, {
-        path: function() {
-          var nextPage = startPage + this.loadCount + 1;
-          if (nextPage > totalPages) {
-            return undefined;
-          }
-          return window.location.pathname + '?page=' + nextPage;
-        },
-        append: '.collection-grid-item',
-        hideNav: '.pagination',
-        status: '.page-load-status',
-        {% if section.settings.infinite_btn %}
-          button: '.view-more-button', 
-          scrollThreshold: false
-        {% endif %}
-      });
-
-      {% if section.settings.infinite_progressbar %}
-      var totalItems = parseInt(document.getElementById('collection-total-count').value);
-      function updateProgress() {
-          var currentItems = document.querySelectorAll('.collection-grid-item').length;
-          var percent = Math.min((currentItems / totalItems) * 100, 100);
-          var bar = document.querySelector('#progress-bar-fill');
-          if(bar) bar.style.width = percent + '%';
-          var text = document.querySelector('#progress-text');
-         if(text) text.innerText = '{{ section.settings.infinite_showing_text | default: "Viser" }} ' + currentItems + ' {{ section.settings.infinite_of_text | default: "av" }} ' + totalItems + ' {{ section.settings.infinite_products_text | default: "produkter" }}';
-        }
-        updateProgress();
-      {% endif %}
-
-      {% if section.settings.infinite_btn %}
-        infScroll.on( 'request', function() {
-          var btn = document.querySelector('.view-more-button');
-          if(btn) btn.style.display = 'none';
-        });
-        
-        infScroll.on( 'last', function() {
-          var btn = document.querySelector('.view-more-button');
-          if(btn) btn.style.display = 'none';
-        });
-      {% endif %}
-
-        infScroll.on( 'append', function() {
-          if (this.pageIndex < totalPages) {
-             {% if section.settings.infinite_btn %}
-               var btn = document.querySelector('.view-more-button');
-               if(btn) btn.style.display = 'inline-block';
-             {% endif %}
-          }
-
-          {% if section.settings.infinite_progressbar %}
-            updateProgress();
-          {% endif %}
-      });
-    }
-  });
-</script>
-
+{% comment %} Infinite Scroll logic is now handled natively in custom-filters.js via IntersectionObserver {% endcomment %}
+{% endif %}
 <style>
 .page-load-status {
   text-align: center;
