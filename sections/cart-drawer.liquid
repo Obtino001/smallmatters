@@ -293,9 +293,11 @@ wi-cartdrawer:not(.active) .WI_cartDrawerin_cart_header, wi-cartdrawer:not(.acti
                           let optionsHTML = '';
                           if (prod.variants.length > 1) {
                             prod.options.forEach((opt, oi) => {
+                              // API returns options as {name: 'Size', values: ['S', 'M', 'L']}
+                              const optName = typeof opt === 'object' ? opt.name : opt;
                               const vals = [...new Set(prod.variants.map(v => v.options[oi]))];
                               optionsHTML += `<div class="WI_complete_look_option_group">
-                                <span class="WI_complete_look_option_label">${opt}:</span>
+                                <span class="WI_complete_look_option_label">${optName}:</span>
                                 <div class="WI_complete_look_option_values">
                                   ${vals.map((v, vi) => `<button type="button" class="WI_complete_look_option_val${vi === 0 ? ' selected' : ''}" data-option-index="${oi}" data-value="${v}">${v}</button>`).join('')}
                                 </div>
@@ -319,7 +321,7 @@ wi-cartdrawer:not(.active) .WI_cartDrawerin_cart_header, wi-cartdrawer:not(.acti
                                 </div>
                                 <div class="WI_complete_look_options">${optionsHTML}</div>
                                 <div class="WI_complete_look_form">
-                                  <input type="hidden" class="WI_complete_look_variant_id" value="${prod.variants[0].id}">
+                                  <input type="hidden" name="id" class="WI_complete_look_variant_id" value="${prod.variants[0].id}">
                                   <button type="button" class="WI_complete_look_add_btn">{{ section.settings.complete_look_add_btn_text | default: '+ LEGG TIL' }}</button>
                                 </div>
                               </div>
