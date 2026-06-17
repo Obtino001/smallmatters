@@ -32,6 +32,7 @@
                           <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" id="filter-{{ filter.label }}-{{ forloop.index }}" {% if value.active %}checked{% endif %} {% if value.count == 0 and value.active == false %}disabled{% endif %}>
                           {%- assign swatch_bg = '' -%}
                           {%- assign val_down = value.label | downcase | strip -%}
+                          {%- assign val_value_down = value.value | downcase | strip -%}
                           {%- for prod in collection.products -%}
                             {%- assign siblings = prod.metafields.custom.products_color.value -%}
                             {%- if siblings != blank -%}
@@ -39,7 +40,19 @@
                                 {%- assign title_down = sibling.title | downcase -%}
                                 {%- assign var_color_name = sibling.metafields.custom.variant_color.value.name | downcase -%}
                                 {%- assign var_color_val = sibling.metafields.custom.variant_color.value | downcase -%}
-                                {%- if title_down contains val_down or val_down == var_color_name or val_down == var_color_val -%}
+                                
+                                {%- assign is_match = false -%}
+                                {%- if title_down contains val_down or title_down contains val_value_down -%}
+                                  {%- assign is_match = true -%}
+                                {%- endif -%}
+                                {%- if var_color_name != blank and (val_down contains var_color_name or var_color_name contains val_down or val_value_down contains var_color_name or var_color_name contains val_value_down) -%}
+                                  {%- assign is_match = true -%}
+                                {%- endif -%}
+                                {%- if var_color_val != blank and (val_down contains var_color_val or var_color_val contains val_down or val_value_down contains var_color_val or var_color_val contains val_value_down) -%}
+                                  {%- assign is_match = true -%}
+                                {%- endif -%}
+                                
+                                {%- if is_match -%}
                                    {%- assign main_meta = sibling.metafields.custom.variant_color.value -%}
                                    {%- assign contrast_meta = sibling.metafields.custom.variant_secondary_color.value -%}
                                    {%- assign third_meta = sibling.metafields.custom.variant_third_color.value -%}
