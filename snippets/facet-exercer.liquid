@@ -157,6 +157,38 @@
                           {%- assign swatch_color_css = c1 -%}
                         {%- endif -%}
 
+                        {%- assign swatch_bg = '' -%}
+                        {%- assign val_down = value.label | downcase | strip -%}
+                        {%- for prod in collection.products -%}
+                          {%- assign siblings = prod.metafields.custom.products_color.value -%}
+                          {%- if siblings != blank -%}
+                            {%- for sibling in siblings -%}
+                              {%- assign title_down = sibling.title | downcase -%}
+                              {%- assign var_color_name = sibling.metafields.custom.variant_color.value.name | downcase -%}
+                              {%- assign var_color_val = sibling.metafields.custom.variant_color.value | downcase -%}
+                              {%- if title_down contains val_down or val_down == var_color_name or val_down == var_color_val -%}
+                                 {%- assign main_meta = sibling.metafields.custom.variant_color.value -%}
+                                 {%- assign contrast_meta = sibling.metafields.custom.variant_secondary_color.value -%}
+                                 {%- assign main_color = main_meta.color | default: main_meta.value | default: main_meta -%}
+                                 {%- assign contrast_color = contrast_meta.color | default: contrast_meta.value | default: contrast_meta -%}
+                                 
+                                 {%- if main_color != blank -%}
+                                   {%- if contrast_color != blank -%}
+                                     {%- assign swatch_bg = 'linear-gradient(90deg, ' | append: main_color | append: ' 50%, ' | append: contrast_color | append: ' 50%)' -%}
+                                   {%- else -%}
+                                     {%- assign swatch_bg = main_color -%}
+                                   {%- endif -%}
+                                 {%- endif -%}
+                                 {%- break -%}
+                              {%- endif -%}
+                            {%- endfor -%}
+                          {%- endif -%}
+                          {%- if swatch_bg != '' -%}{%- break -%}{%- endif -%}
+                        {%- endfor -%}
+                        {%- if swatch_bg != '' -%}
+                          {%- assign swatch_color_css = swatch_bg -%}
+                        {%- endif -%}
+
                         <li class="exr-swatch{% if value.count == 0 and value.active == false %} exr-swatch--disabled{% endif %}">
                           <input
                             class="exr-swatch__input"

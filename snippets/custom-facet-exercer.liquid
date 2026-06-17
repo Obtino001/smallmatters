@@ -30,8 +30,40 @@
                       <li class="sidebar__item {% if value.active %}sidebar__item--active{% endif %} {% if value.count == 0 and value.active == false %}link--disable{% else %}link--add{% endif %}">
                         {%- if filter.label == 'Color' or filter.label == 'Colour' -%}
                           <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" id="filter-{{ filter.label }}-{{ forloop.index }}" {% if value.active %}checked{% endif %} {% if value.count == 0 and value.active == false %}disabled{% endif %}>
+                          {%- assign swatch_bg = '' -%}
+                          {%- assign val_down = value.label | downcase | strip -%}
+                          {%- for prod in collection.products -%}
+                            {%- assign siblings = prod.metafields.custom.products_color.value -%}
+                            {%- if siblings != blank -%}
+                              {%- for sibling in siblings -%}
+                                {%- assign title_down = sibling.title | downcase -%}
+                                {%- assign var_color_name = sibling.metafields.custom.variant_color.value.name | downcase -%}
+                                {%- assign var_color_val = sibling.metafields.custom.variant_color.value | downcase -%}
+                                {%- if title_down contains val_down or val_down == var_color_name or val_down == var_color_val -%}
+                                   {%- assign main_meta = sibling.metafields.custom.variant_color.value -%}
+                                   {%- assign contrast_meta = sibling.metafields.custom.variant_secondary_color.value -%}
+                                   {%- assign main_color = main_meta.color | default: main_meta.value | default: main_meta -%}
+                                   {%- assign contrast_color = contrast_meta.color | default: contrast_meta.value | default: contrast_meta -%}
+                                   
+                                   {%- if main_color != blank -%}
+                                     {%- if contrast_color != blank -%}
+                                       {%- assign swatch_bg = 'linear-gradient(90deg, ' | append: main_color | append: ' 50%, ' | append: contrast_color | append: ' 50%)' -%}
+                                     {%- else -%}
+                                       {%- assign swatch_bg = main_color -%}
+                                     {%- endif -%}
+                                   {%- endif -%}
+                                   {%- break -%}
+                                {%- endif -%}
+                              {%- endfor -%}
+                            {%- endif -%}
+                            {%- if swatch_bg != '' -%}{%- break -%}{%- endif -%}
+                          {%- endfor -%}
+                          {%- if swatch_bg == '' -%}
+                             {%- assign swatch_bg = value.label | downcase -%}
+                          {%- endif -%}
+
                           <label class="checkbox-label" for="filter-{{ filter.label }}-{{ forloop.index }}">
-                            <span class="swatches swatch__button swatch__button--square swatch-{{ value.label | downcase | replace: ' ', '-' }}" data-swatch="{{ value.label }}" style="--swatch: var(--{{ value.label | downcase | replace: ' ', '-' }}); background-color: {{ value.label | downcase }};"></span>
+                            <span class="swatches swatch__button swatch__button--square swatch-{{ value.label | downcase | replace: ' ', '-' }}" data-swatch="{{ value.label }}" style="--swatch: var(--{{ value.label | downcase | replace: ' ', '-' }}); background: {{ swatch_bg }};"></span>
                             <span class="checkbox-color">{{ value.label }}</span>
                           </label>
                         {%- else -%}
