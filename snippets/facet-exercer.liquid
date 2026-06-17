@@ -160,52 +160,59 @@
                         {%- assign swatch_bg = '' -%}
                         {%- assign val_down = value.label | downcase | strip -%}
                         {%- assign val_value_down = value.value | downcase | strip -%}
+                        {%- assign val_down_check = val_down -%}
+                        {%- if val_down == 'oliven' -%}{%- assign val_down_check = 'olive' -%}{%- endif -%}
+                        
                         {%- for prod in collection.products -%}
-                          {%- assign siblings = prod.metafields.custom.products_color.value -%}
-                          {%- if siblings != blank -%}
-                            {%- for sibling in siblings -%}
-                              {%- assign title_down = sibling.title | downcase -%}
-                              {%- assign var_color_name = sibling.metafields.custom.variant_color.value.name | downcase -%}
-                              {%- assign var_color_val = sibling.metafields.custom.variant_color.value | downcase -%}
-                              
-                              {%- assign is_match = false -%}
-                              {%- if title_down contains val_down or title_down contains val_value_down -%}
-                                {%- assign is_match = true -%}
-                              {%- endif -%}
-                              {%- if var_color_name != blank -%}
-                                {%- if val_down contains var_color_name or var_color_name contains val_down or val_value_down contains var_color_name or var_color_name contains val_value_down -%}
-                                  {%- assign is_match = true -%}
-                                {%- endif -%}
-                              {%- endif -%}
-                              {%- if var_color_val != blank -%}
-                                {%- if val_down contains var_color_val or var_color_val contains val_down or val_value_down contains var_color_val or var_color_val contains val_value_down -%}
-                                  {%- assign is_match = true -%}
-                                {%- endif -%}
-                              {%- endif -%}
-                              
-                              {%- if is_match -%}
-                                 {%- assign main_meta = sibling.metafields.custom.variant_color.value -%}
-                                 {%- assign contrast_meta = sibling.metafields.custom.variant_secondary_color.value -%}
-                                 {%- assign third_meta = sibling.metafields.custom.variant_third_color.value -%}
-                                 
-                                 {%- assign main_color = main_meta.color | default: main_meta.value | default: main_meta -%}
-                                 {%- assign contrast_color = contrast_meta.color | default: contrast_meta.value | default: contrast_meta -%}
-                                 {%- assign third_color = third_meta.color | default: third_meta.value | default: third_meta -%}
-                                 
-                                 {%- if main_color != blank -%}
-                                   {%- if contrast_color != blank and third_color != blank -%}
-                                     {%- assign swatch_bg = 'linear-gradient(90deg, ' | append: main_color | append: ' 50%, transparent 50%), linear-gradient(180deg, ' | append: contrast_color | append: ' 50%, ' | append: third_color | append: ' 50%)' -%}
-                                   {%- elsif contrast_color != blank -%}
-                                     {%- assign swatch_bg = 'linear-gradient(90deg, ' | append: main_color | append: ' 50%, ' | append: contrast_color | append: ' 50%)' -%}
-                                   {%- else -%}
-                                     {%- assign swatch_bg = main_color -%}
-                                   {%- endif -%}
-                                 {%- endif -%}
-                                 {%- break -%}
-                              {%- endif -%}
-                            {%- endfor -%}
+                          {%- assign match_prod = blank -%}
+                          
+                          {%- comment -%} Check the product itself {%- endcomment -%}
+                          {%- assign title_down = prod.title | downcase -%}
+                          {%- assign is_match = false -%}
+                          {%- if title_down contains val_down or title_down contains val_value_down or title_down contains val_down_check -%}
+                            {%- assign is_match = true -%}
                           {%- endif -%}
-                          {%- if swatch_bg != '' -%}{%- break -%}{%- endif -%}
+                          
+                          {%- if is_match -%}
+                            {%- assign match_prod = prod -%}
+                          {%- else -%}
+                            {%- comment -%} Check siblings {%- endcomment -%}
+                            {%- assign siblings = prod.metafields.custom.products_color.value -%}
+                            {%- if siblings != blank -%}
+                              {%- for sibling in siblings -%}
+                                {%- assign title_down = sibling.title | downcase -%}
+                                {%- assign is_match = false -%}
+                                {%- if title_down contains val_down or title_down contains val_value_down or title_down contains val_down_check -%}
+                                  {%- assign is_match = true -%}
+                                {%- endif -%}
+                                {%- if is_match -%}
+                                  {%- assign match_prod = sibling -%}
+                                  {%- break -%}
+                                {%- endif -%}
+                              {%- endfor -%}
+                            {%- endif -%}
+                          {%- endif -%}
+                          
+                          {%- if match_prod != blank -%}
+                             {%- assign main_meta = match_prod.metafields.custom.variant_color.value -%}
+                             {%- assign contrast_meta = match_prod.metafields.custom.variant_secondary_color.value -%}
+                             {%- assign third_meta = match_prod.metafields.custom.variant_third_color.value -%}
+                             
+                             {%- assign main_color = main_meta.color | default: main_meta.value | default: main_meta -%}
+                             {%- assign contrast_color = contrast_meta.color | default: contrast_meta.value | default: contrast_meta -%}
+                             {%- assign third_color = third_meta.color | default: third_meta.value | default: third_meta -%}
+                             
+                             {%- if main_color != blank -%}
+                               {%- if contrast_color != blank and third_color != blank -%}
+                                 {%- assign swatch_bg = 'linear-gradient(90deg, ' | append: main_color | append: ' 50%, transparent 50%), linear-gradient(180deg, ' | append: contrast_color | append: ' 50%, ' | append: third_color | append: ' 50%)' -%}
+                               {%- elsif contrast_color != blank -%}
+                                 {%- assign swatch_bg = 'linear-gradient(90deg, ' | append: main_color | append: ' 50%, ' | append: contrast_color | append: ' 50%)' -%}
+                               {%- else -%}
+                                 {%- assign swatch_bg = main_color -%}
+                               {%- endif -%}
+                             {%- endif -%}
+                             {%- break -%}
+                          {%- endif -%}
                         {%- endfor -%}
                         {%- if swatch_bg != '' -%}
                           {%- assign swatch_color_css = swatch_bg -%}
