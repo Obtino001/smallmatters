@@ -3,14 +3,14 @@
    (Dawn Theme Color Schema Applied)
    ============================================================================ */
 
-:root {
+exercer-filters {
   --exr-drawer-width: 520px;
-  --exr-bg: rgb(var(--color-background));
-  --exr-text: rgb(var(--color-foreground));
-  --exr-text-light: rgba(var(--color-foreground), 0.6);
-  --exr-border: rgba(var(--color-foreground), 0.1);
-  --exr-accent: rgb(var(--color-foreground));
-  --exr-disabled: rgba(var(--color-foreground), 0.3);
+  --exr-bg: rgb(var(--color-background, 245, 245, 240));
+  --exr-text: rgb(var(--color-foreground, 18, 18, 18));
+  --exr-text-light: rgba(var(--color-foreground, 18, 18, 18), 0.6);
+  --exr-border: rgba(var(--color-foreground, 18, 18, 18), 0.1);
+  --exr-accent: rgb(var(--color-foreground, 18, 18, 18));
+  --exr-disabled: rgba(var(--color-foreground, 18, 18, 18), 0.3);
   --exr-radius: 4px;
   --exr-swatch-size: 18px;
   --exr-transition: 0.35s cubic-bezier(0.215, 0.61, 0.355, 1);

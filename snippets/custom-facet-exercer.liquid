@@ -40,27 +40,39 @@
                             {%- assign match_prod = blank -%}
                             
                             {%- comment -%} Check the product itself {%- endcomment -%}
-                            {%- assign title_down = prod.title | downcase -%}
-                            {%- assign is_match = false -%}
-                            {%- if title_down contains val_down or title_down contains val_value_down or title_down contains val_down_check -%}
-                              {%- assign is_match = true -%}
+                            {%- assign main_meta = prod.metafields.custom.variant_color.value -%}
+                            {%- assign test_main_color = main_meta.color | default: main_meta.value | default: main_meta -%}
+                            {%- if test_main_color != blank -%}
+                              {%- assign title_down = prod.title | downcase -%}
+                              {%- assign var_color_name = main_meta.name | downcase -%}
+                              
+                              {%- if title_down contains val_down or title_down contains val_value_down or title_down contains val_down_check -%}
+                                {%- assign match_prod = prod -%}
+                              {%- endif -%}
+                              {%- if var_color_name != blank and (val_down contains var_color_name or var_color_name contains val_down or val_down_check contains var_color_name or var_color_name contains val_down_check) -%}
+                                {%- assign match_prod = prod -%}
+                              {%- endif -%}
                             {%- endif -%}
                             
-                            {%- if is_match -%}
-                              {%- assign match_prod = prod -%}
-                            {%- else -%}
+                            {%- if match_prod == blank -%}
                               {%- comment -%} Check siblings {%- endcomment -%}
                               {%- assign siblings = prod.metafields.custom.products_color.value -%}
                               {%- if siblings != blank -%}
                                 {%- for sibling in siblings -%}
-                                  {%- assign title_down = sibling.title | downcase -%}
-                                  {%- assign is_match = false -%}
-                                  {%- if title_down contains val_down or title_down contains val_value_down or title_down contains val_down_check -%}
-                                    {%- assign is_match = true -%}
-                                  {%- endif -%}
-                                  {%- if is_match -%}
-                                    {%- assign match_prod = sibling -%}
-                                    {%- break -%}
+                                  {%- assign sib_main_meta = sibling.metafields.custom.variant_color.value -%}
+                                  {%- assign test_sib_color = sib_main_meta.color | default: sib_main_meta.value | default: sib_main_meta -%}
+                                  {%- if test_sib_color != blank -%}
+                                    {%- assign title_down = sibling.title | downcase -%}
+                                    {%- assign var_color_name = sib_main_meta.name | downcase -%}
+                                    
+                                    {%- if title_down contains val_down or title_down contains val_value_down or title_down contains val_down_check -%}
+                                      {%- assign match_prod = sibling -%}
+                                      {%- break -%}
+                                    {%- endif -%}
+                                    {%- if var_color_name != blank and (val_down contains var_color_name or var_color_name contains val_down or val_down_check contains var_color_name or var_color_name contains val_down_check) -%}
+                                      {%- assign match_prod = sibling -%}
+                                      {%- break -%}
+                                    {%- endif -%}
                                   {%- endif -%}
                                 {%- endfor -%}
                               {%- endif -%}
@@ -83,8 +95,8 @@
                                  {%- else -%}
                                    {%- assign swatch_bg = main_color -%}
                                  {%- endif -%}
+                                 {%- break -%}
                                {%- endif -%}
-                               {%- break -%}
                             {%- endif -%}
                           {%- endfor -%}
                           {%- if swatch_bg == '' -%}
