@@ -231,142 +231,159 @@ wi-cartdrawer:not(.active) .WI_cartDrawerin_cart_header, wi-cartdrawer:not(.acti
                         {% endfor %}
                     </div>
 
-                    {% comment %} Dynamic Recommendations logic for Complete the Look & You May Also Like {% endcomment %}
-                    {% assign exclusion_list = "" %}
-                    {% for item in cart.items %}
-                      {% assign exclusion_list = exclusion_list | append: item.product.handle | append: "," %}
-                    {% endfor %}
-
-                    {% assign recommended_products = "" %}
-                    {% for item in cart.items %}
-                      {% for col in item.product.collections %}
-                        {% unless col.handle == 'all' or col.handle == 'frontpage' %}
-                          {% for prod in col.products %}
-                            {% unless exclusion_list contains prod.handle %}
-                              {% if prod.available %}
-                                {% assign recommended_products = recommended_products | append: prod.handle | append: "," %}
-                                {% assign exclusion_list = exclusion_list | append: prod.handle | append: "," %}
-                              {% endif %}
-                            {% endunless %}
-                          {% endfor %}
-                        {% endunless %}
-                      {% endfor %}
-                    {% endfor %}
-
-                    {% comment %} Fallback to filling recommendations with general catalog products if needed {% endcomment %}
-                    {% assign rec_array = recommended_products | split: "," %}
-                    {% if rec_array.size < 6 %}
-                      {% for prod in collections['all'].products %}
-                        {% unless exclusion_list contains prod.handle %}
-                          {% if prod.available %}
-                            {% assign recommended_products = recommended_products | append: prod.handle | append: "," %}
-                            {% assign exclusion_list = exclusion_list | append: prod.handle | append: "," %}
-                          {% endif %}
-                        {% endunless %}
-                        {% assign temp_array = recommended_products | split: "," %}
-                        {% if temp_array.size >= 7 %}{% break %}{% endif %}
-                      {% endfor %}
-                    {% endif %}
-
-                    {% assign rec_handles = recommended_products | split: "," %}
-                    
-                    {% comment %} COMPLETE THE LOOK (Product 1) {% endcomment %}
-                    {% if rec_handles.size > 0 %}
-                      {% assign first_rec_handle = rec_handles[0] %}
-                      {% assign first_product = all_products[first_rec_handle] %}
-                      {% if first_product.handle != blank %}
-                        <div class="WI_complete_look open">
-                          <div class="WI_complete_look_header" onclick="this.closest('.WI_complete_look').classList.toggle('open')">
-                            <span>{{ section.settings.complete_look_title | default: 'FULLFØR LOOKEN' }}</span>
-                            <span class="WI_complete_look_toggle"><svg xmlns="http://www.w3.org/2000/svg" class="icon-cancel" width="9" height="9" viewBox="0 0 9 9" fill="none">
+                    {% comment %} COMPLETE THE LOOK - Powered by Shopify Complementary Products (Search & Discovery) {% endcomment %}
+                    <div class="WI_complete_look open" id="WI_complete_look_section" style="display:none;">
+                      <div class="WI_complete_look_header" onclick="this.closest('.WI_complete_look').classList.toggle('open')">
+                        <span>{{ section.settings.complete_look_title | default: 'FULLFØR STILEN' }}</span>
+                        <span class="WI_complete_look_toggle"><svg xmlns="http://www.w3.org/2000/svg" class="icon-cancel" width="9" height="9" viewBox="0 0 9 9" fill="none">
     <path d="M0.5 8.5L4.5 4.5L0.5 8.5ZM8.5 0.5L4.49924 4.5L8.5 0.5ZM4.49924 4.5L0.5 0.5L4.49924 4.5ZM4.5 4.5L8.5 8.5L4.5 4.5Z" fill="#fff"></path>
     <path d="M0.5 8.5L4.5 4.5L8.5 8.5M8.5 0.5L4.49924 4.5L0.5 0.5" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"></path>
 </svg></span>
-                          </div>
-                          <div class="WI_complete_look_body">
-                            <div class="WI_complete_look_product">
+                      </div>
+                      <div class="WI_complete_look_body"></div>
+                    </div>
+
+                    {% comment %} YOU MAY ALSO LIKE - Powered by Shopify Related Products (Search & Discovery) {% endcomment %}
+                    <div class="WI_also_like" id="WI_also_like_section" style="display:none;">
+                      <div class="WI_also_like_header">
+                        <span>{{ section.settings.you_may_also_like_title | default: 'DU VIL KANSKJE OGSÅ LIKE' }}</span>
+                        <div class="WI_also_like_nav">
+                          <button type="button" class="WI_also_like_prev">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                          </button>
+                          <button type="button" class="WI_also_like_next">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="WI_also_like_body">
+                        <div class="WI_also_like_list"></div>
+                      </div>
+                    </div>
+
+                    <script>
+                    (function(){
+                      const cartItems = [
+                        {%- for item in cart.items -%}
+                          { id: {{ item.product.id }}, handle: "{{ item.product.handle }}" }{%- unless forloop.last -%},{%- endunless -%}
+                        {%- endfor -%}
+                      ];
+                      if (!cartItems.length) return;
+
+                      const baseUrl = window.Shopify && Shopify.routes ? Shopify.routes.root : '/';
+                      const cartHandles = cartItems.map(i => i.handle);
+                      const firstProductId = cartItems[0].id;
+
+                      /* ---- COMPLETE THE LOOK (complementary) ---- */
+                      fetch(`${baseUrl}recommendations/products.json?product_id=${firstProductId}&limit=4&intent=complementary`)
+                        .then(r => r.json())
+                        .then(data => {
+                          const prods = (data.products || []).filter(p => !cartHandles.includes(p.handle) && p.available);
+                          if (!prods.length) return;
+
+                          const prod = prods[0];
+                          const section = document.getElementById('WI_complete_look_section');
+                          if (!section) return;
+                          section.style.display = '';
+
+                          let optionsHTML = '';
+                          if (prod.variants.length > 1) {
+                            prod.options.forEach((opt, oi) => {
+                              const vals = [...new Set(prod.variants.map(v => v.options[oi]))];
+                              optionsHTML += `<div class="WI_complete_look_option_group">
+                                <span class="WI_complete_look_option_label">${opt}:</span>
+                                <div class="WI_complete_look_option_values">
+                                  ${vals.map((v, vi) => `<button type="button" class="WI_complete_look_option_val${vi === 0 ? ' selected' : ''}" data-option-index="${oi}" data-value="${v}">${v}</button>`).join('')}
+                                </div>
+                              </div>`;
+                            });
+                          }
+
+                          const variantsJSON = JSON.stringify(prod.variants.map(v => ({ id: v.id, options: v.options, available: v.available })));
+
+                          const imgSrc = prod.featured_image ? (prod.featured_image.replace(/\.([^.]+)$/, '_150x.$1')) : '';
+
+                          section.querySelector('.WI_complete_look_body').innerHTML = `
+                            <div class="WI_complete_look_product" data-variants='${variantsJSON}'>
                               <div class="WI_complete_look_img">
-                                <img src="{{ first_product.featured_image | image_url: width: 150 }}" alt="{{ first_product.title | escape }}">
+                                <img src="${imgSrc}" alt="${prod.title}">
                               </div>
                               <div class="WI_complete_look_info">
                                 <div class="WI_complete_look_info_top">
-                                  <span class="WI_complete_look_title">{{ first_product.title }}</span>
-                                  <span class="WI_complete_look_price">{{ first_product.price | money }}</span>
+                                  <span class="WI_complete_look_title">${prod.title}</span>
+                                  <span class="WI_complete_look_price">${formatMoney(prod.price)}</span>
                                 </div>
-                                
-                                <div class="WI_complete_look_options">
-                                  {%- unless first_product.has_only_default_variant -%}
-                                    {%- for option in first_product.options_with_values -%}
-                                      <div class="WI_complete_look_option_group">
-                                        <span class="WI_complete_look_option_label">{{ option.name }}:</span>
-                                        <div class="WI_complete_look_option_values">
-                                          {%- for value in option.values -%}
-                                            <button type="button" class="WI_complete_look_option_val {% if forloop.first %}selected{% endif %}" data-value="{{ value | escape }}">{{ value }}</button>
-                                          {%- endfor -%}
-                                        </div>
-                                      </div>
-                                    {%- endfor -%}
-                                  {%- endunless -%}
-                                </div>
-
+                                <div class="WI_complete_look_options">${optionsHTML}</div>
                                 <div class="WI_complete_look_form">
-                                  {% if first_product.variants.size == 1 %}
-                                    <input type="hidden" name="id" value="{{ first_product.variants[0].id }}">
-                                  {% else %}
-                                    <input type="hidden" name="id" class="WI_complete_look_variant_id" value="{{ first_product.variants[0].id }}">
-                                    <select name="id" class="WI_complete_look_variant_select" style="display:none;">
-                                      {% for variant in first_product.variants %}
-                                        <option value="{{ variant.id }}" data-options="{{ variant.options | join: ',' }}">{{ variant.title }}</option>
-                                      {% endfor %}
-                                    </select>
-                                  {% endif %}
+                                  <input type="hidden" class="WI_complete_look_variant_id" value="${prod.variants[0].id}">
                                   <button type="button" class="WI_complete_look_add_btn">{{ section.settings.complete_look_add_btn_text | default: '+ LEGG TIL' }}</button>
                                 </div>
                               </div>
-                            </div>
-                          </div>
-                        </div>
-                      {% endif %}
-                    {% endif %}
+                            </div>`;
 
-                    {% comment %} YOU MAY ALSO LIKE (Products 2+) {% endcomment %}
-                    {% if rec_handles.size > 1 %}
-                      <div class="WI_also_like">
-                        <div class="WI_also_like_header">
-                          <span>{{ section.settings.you_may_also_like_title | default: 'DU LIKER KANSKJE OGSÅ' }}</span>
-                          <div class="WI_also_like_nav">
-                            <button type="button" class="WI_also_like_prev">
-                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="15 18 9 12 15 6"></polyline>
-                              </svg>
-                            </button>
-                            <button type="button" class="WI_also_like_next">
-                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="9 18 15 12 9 6"></polyline>
-                              </svg>
-                            </button>
-                          </div>
-                        </div>
-                        <div class="WI_also_like_body">
-                          <div class="WI_also_like_list">
-                            {% for handle in rec_handles offset: 1 limit: 6 %}
-                              {% assign prod = all_products[handle] %}
-                              {% if prod.handle != blank %}
-                                <div class="WI_also_like_item">
-                                  <div class="WI_also_like_item_img">
-                                    <a href="{{ prod.url }}">
-                                      <img src="{{ prod.featured_image | image_url: width: 250 }}" alt="{{ prod.title | escape }}">
-                                    </a>
-                                  </div>
-                                  <a href="{{ prod.url }}" class="WI_also_like_item_title">{{ prod.title }}</a>
-                                  <span class="WI_also_like_item_price">{{ prod.price | money }}</span>
-                                </div>
-                              {% endif %}
-                            {% endfor %}
-                          </div>
-                        </div>
-                      </div>
-                    {% endif %}
+                          /* Option selection logic */
+                          section.querySelectorAll('.WI_complete_look_option_val').forEach(btn => {
+                            btn.addEventListener('click', function(){
+                              this.closest('.WI_complete_look_option_values').querySelectorAll('.WI_complete_look_option_val').forEach(b => b.classList.remove('selected'));
+                              this.classList.add('selected');
+                              const selected = [];
+                              section.querySelectorAll('.WI_complete_look_option_group').forEach(g => {
+                                const sel = g.querySelector('.WI_complete_look_option_val.selected');
+                                if (sel) selected.push(sel.dataset.value);
+                              });
+                              const variants = JSON.parse(section.querySelector('[data-variants]').dataset.variants);
+                              const match = variants.find(v => v.options.every((o,i) => o === selected[i]));
+                              if (match) {
+                                section.querySelector('.WI_complete_look_variant_id').value = match.id;
+                              }
+                            });
+                          });
+                        })
+                        .catch(() => {});
+
+                      /* ---- YOU MAY ALSO LIKE (related) ---- */
+                      fetch(`${baseUrl}recommendations/products.json?product_id=${firstProductId}&limit=8&intent=related`)
+                        .then(r => r.json())
+                        .then(data => {
+                          const prods = (data.products || []).filter(p => !cartHandles.includes(p.handle) && p.available);
+                          if (!prods.length) return;
+
+                          const section = document.getElementById('WI_also_like_section');
+                          if (!section) return;
+                          section.style.display = '';
+
+                          const list = section.querySelector('.WI_also_like_list');
+                          list.innerHTML = prods.slice(0, 6).map(prod => {
+                            const imgSrc = prod.featured_image ? (prod.featured_image.replace(/\.([^.]+)$/, '_250x.$1')) : '';
+                            return `<div class="WI_also_like_item">
+                              <div class="WI_also_like_item_img">
+                                <a href="${prod.url}"><img src="${imgSrc}" alt="${prod.title}"></a>
+                              </div>
+                              <a href="${prod.url}" class="WI_also_like_item_title">${prod.title}</a>
+                              <span class="WI_also_like_item_price">${formatMoney(prod.price)}</span>
+                            </div>`;
+                          }).join('');
+
+                          /* Carousel navigation */
+                          const prev = section.querySelector('.WI_also_like_prev');
+                          const next = section.querySelector('.WI_also_like_next');
+                          if (prev && next) {
+                            prev.addEventListener('click', () => list.scrollBy({ left: -172, behavior: 'smooth' }));
+                            next.addEventListener('click', () => list.scrollBy({ left: 172, behavior: 'smooth' }));
+                          }
+                        })
+                        .catch(() => {});
+
+                      function formatMoney(cents) {
+                        const amt = (cents / 100).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                        return amt + ' kr';
+                      }
+                    })();
+                    </script>
 
                     {% comment %} EXERCERE BUNDLE promo box {% endcomment %}
                     <div class="WI_bundle_promo">
