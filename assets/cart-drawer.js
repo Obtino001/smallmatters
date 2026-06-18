@@ -486,16 +486,8 @@ class WIcartDrawer extends HTMLElement {
                             form.appendChild(discountHidden);
                         }
                         discountHidden.value = input.value;
-                        const originalText = btn.textContent;
-                        const appliedText = btn.getAttribute('data-applied-text') || 'APPLIED';
-                        btn.textContent = appliedText;
-                        btn.style.backgroundColor = '#E2ECF5';
-                        btn.style.borderColor = '#000';
-                        setTimeout(() => {
-                            btn.textContent = originalText;
-                            btn.style.backgroundColor = '';
-                            btn.style.borderColor = '';
-                        }, 3000);
+                        // NEW LOGIC: Redirect to checkout with discount applied
+                        window.location.href = '/checkout?discount=' + encodeURIComponent(input.value);
                     }
                 }
             }
