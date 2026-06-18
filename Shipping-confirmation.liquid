@@ -1,0 +1,700 @@
+{% if fulfillment.item_count == item_count %} 
+  {% capture email_title %}Bestillingen din er på vei{% endcapture %}
+  {% capture email_body %}
+    <p>Gode nyheter! Bestillingen din er på vei til deg{% if fulfillment.tracking_company %} med {{ fulfillment.tracking_company }}{% endif %}.</p>
+    <p>Du kan enkelt følge pakken ved å bruke knappen nedenfor.</p>
+    <p>Vi håper du blir kjempefornøyd med produktene dine. Skulle du ha noen spørsmål om bestillingen din, er du alltid hjertelig velkommen til å svare på denne e-posten.</p>
+    
+    <h3>Besøk oss gjerne i butikken vår</h3>
+    <p>Du er også hjertelig velkommen innom butikken vår for å kjenne på materialene, prøve ulike modeller og få personlig hjelp. Vi setter stor pris på å møte kundene våre, enten det er for en hyggelig prat eller for å hjelpe deg med spørsmål.</p>
+    
+    <p style="margin-top:30px;">
+    Varm hilsen,<br>
+    <strong>Team Smallmatters</strong><br>
+    Holmenveien 20, 0374 Oslo<br>
+    Åpningstider: tir 11-16 og tor 11-18, eller etter avtale.
+    </p>
+  {% endcapture %}
+{% elsif fulfillment.item_count > 1 %} 
+  {% if fulfillment_status == 'fulfilled' %}
+    {% capture email_title %}De siste varene i bestillingen din er på vei{% endcapture %}
+    {% capture email_body %}<p>De siste varene i bestillingen din er på vei. Spor forsendelsen din for å se leveringsstatusen.</p>{% endcapture %}
+  {% else %}
+    {% capture email_title %}Noen av varene i bestillingen din er på vei{% endcapture %}
+    {% capture email_body %}<p>Noen av varene i bestillingen din er på vei. Spor forsendelsen din for å se leveringsstatusen.</p>{% endcapture %}
+  {% endif %}
+{% else %} 
+  {% if fulfillment_status == 'fulfilled' %}
+    {% capture email_title %}Den siste varen i bestillingen din er på vei{% endcapture %}
+    {% capture email_body %}<p>Den siste varen i bestillingen din er på vei. Spor forsendelsen din for å se leveringsstatusen.</p>{% endcapture %}
+  {% else %}
+    {% capture email_title %}En vare i bestillingen din er på vei{% endcapture %}
+    {% capture email_body %}<p>En vare i bestillingen din er på vei. Spor forsendelsen din for å se leveringsstatusen.</p>{% endcapture %}
+  {% endif %}
+{% endif %}
+
+{% capture email_emphasis %}Beregnet leveringsdato: <strong>{{fulfillment.estimated_delivery_at | date: format: 'date'}}</strong>{% endcapture %}
+
+<!DOCTYPE html>
+<html lang="nb">
+  <head>
+  <title>{{ email_title }}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" type="text/css" href="/assets/notifications/styles.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Jost:wght@400;500&family=Playfair+Display:wght@400;500&display=swap');
+    
+    body, .body, .bodyTable, table.body, table.container { 
+      background-color: #EFECE8 !important; /* Premium warm beige based on the screenshot */
+      font-family: 'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+    }
+    
+    .button__cell { 
+      background-color: #3B3B3B !important; /* Charcoal black from button */
+      border-radius: 0px !important; /* Sharp corners */
+    }
+    
+    .button__text {
+      color: #FFFFFF !important;
+      font-family: 'Jost', sans-serif !important;
+      font-weight: 500 !important;
+      letter-spacing: 2px !important;
+      text-transform: uppercase !important;
+      font-size: 12px !important;
+      padding: 18px 30px !important;
+      display: inline-block !important;
+      text-decoration: none !important;
+    }
+    
+    a, a:hover, a:active, a:visited { color: #3B3B3B; text-decoration: none; border-bottom: 1px solid #3B3B3B; }
+    
+    /* Minimalist Overrides for Layout */
+    table, tr, td, .container, .order-list__item, .order-list__item__cell, .order-list__price-cell, .subtotal-line, .subtotal-table, .row.section, .row { 
+      border: none !important; border-bottom: none !important; border-top: none !important; 
+    }
+    
+    table.header.row, td.header__cell { 
+      background-color: transparent !important; 
+      padding-top: 50px !important; 
+      padding-bottom: 20px !important; 
+    }
+    
+    table.footer.row, td.footer__cell { 
+      background-color: transparent !important; 
+    }
+    
+    h2, h3, h4 { 
+      font-family: 'Playfair Display', Georgia, serif !important;
+      font-weight: 400 !important; 
+      color: #3B3B3B !important; 
+      letter-spacing: 0px !important;
+    }
+    
+    h2 { font-size: 32px !important; margin-bottom: 20px !important; text-align: center !important; }
+    h3 { font-size: 22px !important; margin-top: 40px !important; margin-bottom: 20px !important; }
+    h4 { font-size: 18px !important; margin-bottom: 15px !important; }
+    
+    p, span, td { 
+      color: #3B3B3B !important; 
+      font-size: 15px !important; 
+      line-height: 1.7 !important; 
+      font-weight: 400 !important;
+    }
+    
+    .shop-name__text a { 
+      font-family: 'Jost', sans-serif !important;
+      font-weight: 500; 
+      text-decoration: none !important;
+      border-bottom: none !important;
+      font-size: 22px; 
+      letter-spacing: 3px; 
+      text-transform: uppercase; 
+      color: #3B3B3B !important;
+    }
+    
+    /* Content Blocks - Transparent to blend perfectly with beige background */
+    .content__cell {
+      background-color: transparent !important;
+      padding: 0 40px 40px 40px !important;
+      border-radius: 0px !important;
+      box-shadow: none !important;
+    }
+    
+    .section__cell {
+      background-color: transparent !important;
+      padding: 0 40px 40px 40px !important;
+      border-radius: 0px !important;
+      box-shadow: none !important;
+      margin-top: 0px !important;
+    }
+    
+    /* Order List Refinements */
+    .order-list__item {
+      padding-top: 25px !important;
+      padding-bottom: 25px !important;
+      border-bottom: 1px solid rgba(59,59,59,0.1) !important;
+    }
+    
+    .order-list__item:last-child {
+      border-bottom: none !important;
+    }
+    
+    .order-list__product-image {
+      border-radius: 0px !important; /* Sharp corners on product image */
+    }
+    
+    .order-list__item-title {
+      font-weight: 500 !important;
+      color: #3B3B3B !important;
+    }
+    
+    .order-list__item-variant {
+      color: #7A7A7A !important;
+      font-size: 13px !important;
+      margin-top: 4px !important;
+      display: inline-block !important;
+    }
+    
+    .order-list__item-price {
+      font-weight: 500 !important;
+      color: #3B3B3B !important;
+    }
+    
+    /* Subtotals block */
+    .subtotal-line__title p, .subtotal-line__value p {
+      font-size: 13px !important;
+      color: #5A5A5A !important;
+      text-transform: uppercase !important;
+      letter-spacing: 1px !important;
+    }
+    
+    .subtotal-line__title--total p, .subtotal-line__value--total p {
+      font-size: 16px !important;
+      font-weight: 500 !important;
+      color: #3B3B3B !important;
+      text-transform: uppercase !important;
+      letter-spacing: 1px !important;
+    }
+    
+    .subtotal-table {
+      margin-top: 30px !important;
+      border-top: 1px solid rgba(59,59,59,0.1) !important;
+      padding-top: 30px !important;
+    }
+  </style>
+</head>
+
+  <body>
+
+    <table class="body">
+      <tr>
+        <td>
+          <table class="header row">
+  <tr>
+    <td class="header__cell">
+      <center>
+
+        <table class="container">
+          <tr>
+            <td>
+
+              <table class="row">
+                <tr>
+                  <td class="shop-name__cell">
+                    {%- if shop.email_logo_url %}
+                      <img src="{{shop.email_logo_url}}" alt="{{ shop.name }}" width="{{ shop.email_logo_width }}">
+                    {%- else %}
+                      <h1 class="shop-name__text">
+                        <a href="{{shop.url}}">{{ shop.name }}</a>
+                      </h1>
+                    {%- endif %}
+                  </td>
+
+                    <td>
+                      <table class="order-po-number__container">
+                        <tr>
+                          <td class="order-number__cell">
+                            <span class="order-number__text">
+                              Bestilling {{ order_name }}
+                            </span>
+                          </td>
+                        </tr>
+                        {%- if po_number %}
+                            <tr>
+                              <td class="po-number__cell">
+                                <span class="po-number__text">
+                                  PO-nummer {{ po_number }}
+                                </span>
+                              </td>
+                            </tr>
+                        {%- endif %}
+                      </table>
+                    </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+        </table>
+
+      </center>
+    </td>
+  </tr>
+</table>
+
+          <table class="row content">
+  <tr>
+    <td class="content__cell">
+      <center>
+        <table class="container">
+          <tr>
+            <td>
+              
+            <h2>{{ email_title }}</h2>
+            <p>{{ email_body }}</p>
+            {% if fulfillment.estimated_delivery_at %}
+              <p>{{ email_emphasis }}</p>
+            {% endif %}
+            {% if order_status_url %}
+              <table class="row actions">
+  <tr>
+    <td class="empty-line">&nbsp;</td>
+  </tr>
+  <tr>
+    <td class="actions__cell">
+      <table class="button main-action-cell">
+        <tr>
+          <td class="button__cell">
+            {% if fulfillment.tracking_urls.first %}
+              <a href="{{ fulfillment.tracking_urls.first }}" class="button__text">Spor din forsendelse her</a>
+            {% else %}
+              <a href="{{ order_status_url }}" class="button__text">Vis bestillingen din</a>
+            {% endif %}
+          </td>
+        </tr>
+      </table>
+        {% if shop.url %}
+    <table class="link secondary-action-cell">
+      <tr>
+        <td class="link__cell">eller <a href="{{ shop.url }}">Besøk butikken vår</a></td>
+      </tr>
+    </table>
+{% endif %}
+
+    </td>
+  </tr>
+</table>
+
+            {% else %}
+              {% if shop.url %}
+    <table class="row actions">
+      <tr>
+        <td class="actions__cell">
+          <table class="button main-action-cell">
+            <tr>
+              <td class="button__cell"><a href="{{ shop.url }}" class="button__text">Besøk butikken vår</a></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+{% endif %}
+
+            {% endif %}
+            {% if fulfillment.tracking_numbers.size > 0 %}
+  <p class="disclaimer__subtext">
+    <br/>
+    {% if fulfillment.tracking_numbers.size == 1 and fulfillment.tracking_company and fulfillment.tracking_url %}
+      {{ fulfillment.tracking_company }} sporingsnummer: <a href="{{ fulfillment.tracking_url }}">{{ fulfillment.tracking_numbers.first }}</a>
+    {% elsif fulfillment.tracking_numbers.size == 1 %}
+      Sporingsnummer: {{ fulfillment.tracking_numbers.first }}
+    {% else %}
+      {{ fulfillment.tracking_company }} sporingsnumre:<br />
+      {% for tracking_number in fulfillment.tracking_numbers %}
+        {% if fulfillment.tracking_urls[forloop.index0] %}
+          <a href="{{ fulfillment.tracking_urls[forloop.index0] }}">
+            {{ tracking_number }}
+          </a>
+        {% else %}
+            {{ tracking_number }}
+        {% endif %}
+        <br/>
+      {% endfor %}
+    {% endif %}
+  </p>
+{% endif %}
+
+
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+
+          <table class="row section">
+  <tr>
+    <td class="section__cell">
+      <center>
+        <table class="container">
+          <tr>
+            <td>
+              <h3>Varer i denne forsendelsen</h3>
+            </td>
+          </tr>
+        </table>
+        <table class="container">
+          <tr>
+            <td>
+              
+            
+  <table class="row">
+    {% for line in fulfillment.fulfillment_line_items %}
+      
+{% comment %} Skip child add-ons since they will be rendered under the parent line item {% endcomment %}
+{% unless line.line_item.nested_line_child? %}
+
+  {% assign is_parent = false %}
+  {% assign is_nested_line_parent = line.line_item.nested_line_parent? %}
+  {% if line.line_item.bundle_parent? or line.line_item.nested_line_parent? %}
+    {% assign is_parent = true %}
+  {% endif %}
+  {% if is_nested_line_parent %}
+    {% assign css_order_list_cell_nested_line_parent_class = 'order-list__parent-cell' %}
+    {% assign css_order_list_parent_image_cell_nested_line_parent_class = 'order-list__nested-parent-image-cell' %}
+  {% endif %}
+
+  <tr class="order-list__item">
+    <td class="order-list__item__cell {{ css_order_list_cell_nested_line_parent_class }}">
+      <table height="100%">
+        <td style="padding-bottom: 0px;">
+          <table height="100%">
+            <tr valign="top">
+              {% if false and is_parent %}
+                <td class="order-list__parent-image-cell {{ css_order_list_parent_image_cell_nested_line_parent_class }}">
+                  {% if line.line_item.image %}
+                    <img src="{{ line.line_item | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
+                  {% else %}
+                    <div class="order-list__no-image-cell">
+                      <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" class="order-list__no-product-image"/>
+                    </div>
+                  {% endif %}
+                </td>
+              {% else %}
+                <td class="order-list__image-cell">
+                  {% if line.line_item.image %}
+                    <img src="{{ line.line_item | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
+                  {% else %}
+                    <div class="order-list__no-image-cell">
+                      <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="60" height="60" class="order-list__no-product-image"/>
+                    </div>
+                  {% endif %}
+                </td>
+              {% endif %}
+            </tr>
+            {% if is_nested_line_parent %}
+              <tr height="100%">
+                <td style="padding: 0px;" height="100%">
+                  <table height="100%">
+                    <tr>
+                      <td height="100%" class="nested-line-item-spacer-cell">
+                        <div class="nested-line-item-spacer"></div>
+                      </td>
+                      <td height="100%" class="parent-vertical-line__cell">
+                        <div class="parent-vertical-line__content"></div>
+                      </td>
+                    </tr>
+                  </table>                        
+                </td>
+              </tr>
+            {% endif %}
+          </table>
+        </td>
+
+        <td class="order-list__product-description-cell">
+          {% if line.line_item.presentment_title %}
+            {% assign line_title = line.line_item.presentment_title %}
+          {% elsif line.line_item.title %}
+            {% assign line_title = line.line_item.title %}
+          {% else %}
+            {% assign line_title = line.line_item.product.title %}
+          {% endif %}
+          {% if line.quantity < line.line_item.quantity %}
+            {% capture line_display %}
+              {{ line.quantity }} av {{ line.line_item.quantity }}
+            {% endcapture %}
+          {% else %}
+            {% assign line_display = line.line_item.quantity %}
+          {% endif %}
+
+          <span class="order-list__item-title">{{ line_title }}&nbsp;&times;&nbsp;{{ line_display }}</span><br/>
+
+          {% if line.line_item.variant.title != 'Default Title' and is_parent == false %}
+            <span class="order-list__item-variant">{{ line.line_item.variant.title }}</span><br/>
+          {% elsif line.line_item.variant.title != 'Default Title' and line.line_item.nested_line_parent? %}
+            <span class="order-list__item-variant">{{ line.line_item.variant.title }}</span><br/>
+          {% elsif line.line_item.variant.title != 'Default Title' and line.line_item.bundle_parent? and false == false %}
+            <span class="order-list__item-variant">{{ line.line_item.variant.title }}</span><br/>
+          {% endif %}
+
+          {% if false %}
+            {% for child_line in line.line_item.bundle_components %}
+              
+{% if true %}
+  {% assign css_class = 'order-list__bundle-item' %}
+  {% assign css_image_class = 'order-list__image-cell' %}
+  {% assign css_description_class = 'order-list__product-description-cell' %}
+{% else %}
+  {% assign css_class = 'order-list__deliverable-item_abandoned' %}
+  {% assign css_image_class = 'order-list__image-cell--nested-line-item' %}
+  {% assign css_description_class = 'order-list__product-description-cell--nested-line-item' %}
+  {% if false %}
+    {% assign css_curved_line_cell_container_class = 'curved-line-cell-container__top-spacer-cell--show-border' %}
+    {% assign css_hide_vertical_line_class = 'vertical-line__content--hide' %}
+    {% assign css_curved_line_cell_container_cell__no_padding_class = 'curved-line-cell-container__cell--no-padding' %}
+  {% endif %}
+{% endif %}
+
+<table height="100%">
+  <tr class="order-list__item">
+    <td class="{{ css_class }}" height="100%">
+      <table height="100%">
+        <td class="{{ css_image_class }}">
+          {% if child_line.image %}
+            <img src="{{ child_line | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image small"/>
+          {% else %}
+            <div class="order-list__no-image-cell small">
+              <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="20" height="20" class="order-list__no-product-image small"/>
+            </div>
+          {% endif %}
+        </td>
+
+        <td class="{{ css_description_class }}">
+          {% if child_line.product.title %}
+            {% assign item_title = child_line.product.title %}
+          {% else %}
+            {% assign item_title = child_line.title %}
+          {% endif %}
+
+          {% assign item_display = child_line.quantity %}
+
+            <span class="order-list__item-title">{{ item_display }}&nbsp;&times;&nbsp;{{ item_title }}</span><br>
+
+          {% if child_line.variant.title != 'Default Title'%}
+            <span class="order-list__item-variant">{{ child_line.variant.title }}</span>
+          {% endif %}
+        </td>
+      </table>
+    </td>
+  </tr>
+</table>
+            {% endfor %}
+          {% else %}
+            {% for group in line.line_item.groups %}
+              {% if group.deliverable? %}
+                <span class="order-list__item-variant">For: {{ group.display_title }}</span><br/>
+              {% else %}
+                <span class="order-list__item-variant">En del av: {{ group.display_title }}</span><br/>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+
+
+          {% if line.line_item.selling_plan_allocation %}
+            <span class="order-list__item-variant">{{ line.line_item.selling_plan_allocation.selling_plan.name }}</span><br/>
+          {% endif %}
+
+          {% if line.line_item.refunded_quantity > 0 %}
+            <span class="order-list__item-refunded">Refundert</span>
+          {% endif %}
+
+          {% if line.line_item.discount_allocations %}
+            {% for discount_allocation in line.line_item.discount_allocations %}
+              {% if discount_allocation.discount_application.target_selection != 'all' %}
+              <p>
+                <span class="order-list__item-discount-allocation">
+                  <img src="{{ 'notifications/discounttag.png' | shopify_asset_url }}" width="18" height="18" class="discount-tag-icon" />
+                  <span>
+                    {{ discount_allocation.discount_application.title | upcase }}
+                    (-{{ discount_allocation.amount | money }})
+                  </span>
+                </span>
+              </p>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        </td>
+        {% if line.line_item.nested_line_parent? %}
+          {% for child_line in line.line_item.nested_lines %}
+            
+{% if false %}
+  {% assign css_class = 'order-list__bundle-item' %}
+  {% assign css_image_class = 'order-list__image-cell' %}
+  {% assign css_description_class = 'order-list__product-description-cell' %}
+{% else %}
+  {% assign css_class = 'order-list__deliverable-item_abandoned' %}
+  {% assign css_image_class = 'order-list__image-cell--nested-line-item' %}
+  {% assign css_description_class = 'order-list__product-description-cell--nested-line-item' %}
+  {% if forloop.last %}
+    {% assign css_curved_line_cell_container_class = 'curved-line-cell-container__top-spacer-cell--show-border' %}
+    {% assign css_hide_vertical_line_class = 'vertical-line__content--hide' %}
+    {% assign css_curved_line_cell_container_cell__no_padding_class = 'curved-line-cell-container__cell--no-padding' %}
+  {% endif %}
+{% endif %}
+
+<table height="100%">
+  <tr class="order-list__item">
+    <td class="{{ css_class }}" height="100%">
+      <table height="100%">
+          <td class="nested-line-item-spacer-cell"style="padding: 1px;">
+            <div class="nested-line-item-spacer"></div>
+          </td>
+          <td class="curved-line-cell-container" valign="top">
+            <div style="width: 0px;">
+              <table>
+                <tr>
+                  <td class="{{ css_curved_line_cell_container_cell__no_padding_class }}" style="mso-padding-right-alt: 10px;">
+                    <div class="curved-line-cell-container__top-spacer {{ css_curved_line_cell_container_class }}"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="curved-line-cell-container__curvedLine-cell">
+                    <div class="curved-line-cell-container__curvedLine-cell__curvedLine"></div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </td>
+          <td class="vertical-line" height="100%">
+            <div class="vertical-line__content {{ css_hide_vertical_line_class }}"></div>
+          </td>
+          <td class="nested-line-item-spacer-cell--right">
+            <div class="nested-line-item-spacer"></div>
+          </td>
+        <td class="{{ css_image_class }}">
+          {% if child_line.image %}
+            <img src="{{ child_line | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image small"/>
+          {% else %}
+            <div class="order-list__no-image-cell small">
+              <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="20" height="20" class="order-list__no-product-image small"/>
+            </div>
+          {% endif %}
+        </td>
+
+        <td class="{{ css_description_class }}">
+          {% if child_line.product.title %}
+            {% assign item_title = child_line.product.title %}
+          {% else %}
+            {% assign item_title = child_line.title %}
+          {% endif %}
+
+          {% assign item_display = child_line.quantity %}
+
+            <span class="order-list__item-title">{{ item_title }}&nbsp;&times;&nbsp;{{ item_display }}</span><br>
+
+          {% if child_line.variant.title != 'Default Title'%}
+            <span class="order-list__item-variant">{{ child_line.variant.title }}</span>
+          {% endif %}
+        </td>
+      </table>
+    </td>
+  </tr>
+</table>
+          {% endfor %}
+        {% endif %}
+      </table>
+    </td>
+  </tr>
+
+{% endunless %}
+
+    {% endfor %}
+  </table>
+
+
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+
+          <table class="row section">
+  <tr>
+    <td class="section__cell">
+      <center>
+        <table class="container">
+          <tr>
+            <td style="text-align: left;">
+              <h4>Nedenfor finner du nyttig informasjon knyttet til ditt kjøp:</h4>
+              <p>
+              <strong>Vilkår for kjøpet</strong><br>
+              Du kan lese våre salgsbetingelser her:<br>
+              <a href="https://cdn.shopify.com/s/files/1/0082/0228/9219/files/Salgsbetingelser_Smallmatters_AS.pdf?v=1779194940">Salgsbetingelser (PDF)</a>
+              </p>
+              
+              <p>
+              <strong>Angrerett</strong><br>
+              Du har 14 dagers angrerett fra den dagen du mottar varen.<br>
+              Dersom du ønsker å benytte angreretten, ber vi deg gi oss beskjed innen fristen.<br>
+              Du kan benytte vårt angrerettskjema her:<br>
+              <a href="https://cdn.shopify.com/s/files/1/0082/0228/9219/files/Angrerettskjema_Smallmatters_AS.pdf?v=1779191892">Angrerettskjema (PDF)</a><br>
+              Det er ikke et krav å bruke skjemaet – du kan også kontakte oss direkte på e-post.
+              </p>
+              
+              <p>
+              <strong>Personvern</strong><br>
+              Vi behandler dine opplysninger med respekt og i tråd med gjeldende regelverk.<br>
+              Les mer om hvordan vi ivaretar ditt personvern her:<br>
+              <a href="https://cdn.shopify.com/s/files/1/0082/0228/9219/files/Personvernerklaering_Smallmatters_AS.pdf?v=1779194927">Personvernerklæring (PDF)</a>
+              </p>
+              
+              <p class="disclaimer__subtext" style="margin-top: 20px;">Hvis du har noen spørsmål, kan du svare på denne e-posten eller kontakte oss på <a href="mailto:{{ shop.email }}">{{ shop.email }}</a></p>
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+
+          <table class="row footer">
+  <tr>
+    <td class="footer__cell" style="padding-bottom: 40px; padding-top: 40px;">
+      <center>
+        <table class="container">
+          <tr>
+            <td style="text-align: center;">
+              <p><strong>Lurer du på noe?</strong></p>
+              <p>
+                <a href="https://smallmatters.no/pages/business-policies">Salgsbetingelser</a>
+                &nbsp;|&nbsp;
+                <a href="https://smallmatters.no/pages/personvernerklaering">Personvernerklæring</a>
+                &nbsp;|&nbsp;
+                <a href="https://smallmatters.no/pages/bytte-retur-og-reklamasjon">Bytte, retur og reklamasjon</a>
+              </p>
+              <p style="margin-top:20px;">Følg oss på:</p>
+              <p>
+                <strong>Small Matters AS</strong><br>
+                Org.nr. 920 640 249<br>
+                E-post: post@smallmatters.no<br>
+                Holmenveien 20, 0374 Oslo
+              </p>
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+
+<img src="{{ 'notifications/spacer.png' | shopify_asset_url }}" class="spacer" height="1" />
+
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
