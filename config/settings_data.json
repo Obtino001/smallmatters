@@ -181,6 +181,7 @@
           "you_may_also_like_title": "DU VIL KANSKJE OGSÅ LIKE",
           "bundle_title": "SMALLMATTERS-PAKKE",
           "bundle_desc": "",
+          "show_discount_code": false,
           "discount_placeholder": "Skriv inn rabattkode",
           "discount_btn_text": "BRUK",
           "discount_applied_btn_text": "LAGT TIL",
