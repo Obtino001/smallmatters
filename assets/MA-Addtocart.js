@@ -36,18 +36,10 @@ class MaAddToCart extends HTMLElement {
           body: JSON.stringify(formData),
         });
         
-        let loadingCartBlock = document.querySelector('.WI_loadingCartItemBlock');
-        let emptyCart =  document.querySelector('.WI_cartDrawerin_cart_empty');
         let wicartdrawer = document.querySelector('wi-cartdrawer');
         
-        if (loadingCartBlock != null) {
-            loadingCartBlock.style.display = "block";
-        }
-        if (emptyCart != null) {
-            emptyCart.style.display = "none";
-        }
         if (typeof refreshedCartDrawer === 'function') {
-            refreshedCartDrawer();
+            refreshedCartDrawer({ mode: 'add' });
         }
         document.dispatchEvent(new Event('opencart'));
         // updateCart();

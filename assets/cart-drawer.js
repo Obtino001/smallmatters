@@ -18,9 +18,26 @@ class WIcartDrawer extends HTMLElement {
     }
 
     clearLoadingStates() {
-        this.querySelectorAll('.WI_cartLoadingin').forEach((el) => el.classList.remove('WI_cartLoadingActive'));
-        const block = this.querySelector('.WI_loadingCartItemBlock');
-        if (block) block.style.display = 'none';
+        this.querySelectorAll('.wi-cart-item-loader').forEach((el) => el.classList.add('hidden'));
+        this.querySelectorAll('.wi-cart-qty-loader').forEach((el) => el.classList.add('hidden'));
+        this.querySelectorAll('.WI_cartDrawer_item').forEach((el) => el.classList.remove('wi-cart-item--loading'));
+        this.setGlobalLoading(false);
+    }
+
+    setGlobalLoading(loading) {
+        const loader = this.querySelector('.wi-cart-global-loader');
+        if (!loader) return;
+        loader.classList.toggle('hidden', !loading);
+        this.classList.toggle('wi-cart-drawer--loading', loading);
+    }
+
+    setItemLoading(itemEl, loading) {
+        if (!itemEl) return;
+        const overlay = itemEl.querySelector('.wi-cart-item-loader');
+        const qtyLoader = itemEl.querySelector('.wi-cart-qty-loader');
+        itemEl.classList.toggle('wi-cart-item--loading', loading);
+        if (overlay) overlay.classList.toggle('hidden', !loading);
+        if (qtyLoader) qtyLoader.classList.toggle('hidden', !loading);
     }
 
     getItemKeys(container) {
@@ -81,11 +98,7 @@ class WIcartDrawer extends HTMLElement {
         }
         document.addEventListener('opencart', () => {
             this.openCart();
-            let loadingCartBlock = document.querySelector('.WI_loadingCartItemBlock');
-            let emptyCart = document.querySelector('.WI_cartDrawerin_cart_empty');
-
-            if (loadingCartBlock) loadingCartBlock.style.display = "block";
-            if (emptyCart) emptyCart.style.display = "none";
+            this.setGlobalLoading(true);
         });
     }
 
@@ -134,6 +147,7 @@ class WIcartDrawer extends HTMLElement {
     // =========================================================
     renderContents(parsedState) {
         this.openCart();
+        this.setGlobalLoading(true);
         const addedKey = parsedState?.items?.length
             ? parsedState.items[parsedState.items.length - 1].key
             : null;
@@ -157,9 +171,14 @@ class WIcartDrawer extends HTMLElement {
             if (mode === 'remove' && itemKey) {
                 const removingItem = this.findCartItem(itemKey);
                 if (removingItem) {
+                    this.setItemLoading(removingItem, true);
                     removingItem.classList.add('wi-cart-item--removing');
                     await this.wait(420);
                 }
+            } else if (itemKey) {
+                this.setItemLoading(this.findCartItem(itemKey), true);
+            } else if (mode === 'add' || mode === 'refresh') {
+                this.setGlobalLoading(true);
             }
 
             this.classList.add('wi-cart-updating');
@@ -340,7 +359,7 @@ class WIcartDrawer extends HTMLElement {
             let quantity = Number(rOOt.parentElement.parentElement.querySelector('input').value);
             let newQuantity = quantity + 1;
             const itemEl = rOOt.closest('.WI_cartDrawer_item');
-            itemEl?.querySelector('.WI_cartLoadingin')?.classList.add('WI_cartLoadingActive');
+            this.setItemLoading(itemEl, true);
             await fetch('/cart/update.js', {
                 method: 'post',
                 headers: {
@@ -364,7 +383,7 @@ class WIcartDrawer extends HTMLElement {
             let quantity = Number(rOOt.parentElement.parentElement.querySelector('input').value);
             let newQuantity = quantity - 1;
             const itemEl = rOOt.closest('.WI_cartDrawer_item');
-            itemEl?.querySelector('.WI_cartLoadingin')?.classList.add('WI_cartLoadingActive');
+            this.setItemLoading(itemEl, true);
 
             await fetch('/cart/update.js', {
                 method: 'post',
@@ -389,7 +408,7 @@ class WIcartDrawer extends HTMLElement {
             let keyID = rOOt.closest('[data-itemKey]').getAttribute('data-itemKey');
             let quantity = 0;
             const itemEl = rOOt.closest('.WI_cartDrawer_item');
-            itemEl?.querySelector('.WI_cartLoadingin')?.classList.add('WI_cartLoadingActive');
+            this.setItemLoading(itemEl, true);
             await fetch('/cart/update.js', {
                 method: 'post',
                 headers: {
@@ -456,14 +475,9 @@ class WIcartDrawer extends HTMLElement {
 
                 try {
                     const formData = new FormData(form);
-                    let loadingCartBlock = document.querySelector('.WI_loadingCartItemBlock');
-                    let emptyCart = document.querySelector('.WI_cartDrawerin_cart_empty');
 
-                    if (loadingCartBlock) loadingCartBlock.style.display = "block";
-                    if (emptyCart) emptyCart.style.display = "none";
-
-                    // Open the cart immediately
                     this.openCart();
+                    this.setGlobalLoading(true);
 
                     const response = await fetch('/cart/add.js', {
                         method: 'POST',
@@ -633,11 +647,7 @@ class WIcartDrawer extends HTMLElement {
             if (!idInput) throw new Error("No variant ID input found");
             const variantId = idInput.value;
 
-            let loadingCartBlock = this.querySelector('.WI_loadingCartItemBlock');
-            let emptyCart = this.querySelector('.WI_cartDrawerin_cart_empty');
-
-            if (loadingCartBlock) loadingCartBlock.style.display = "block";
-            if (emptyCart) emptyCart.style.display = "none";
+            this.setGlobalLoading(true);
 
             const response = await fetch('/cart/add.js', {
                 method: 'POST',

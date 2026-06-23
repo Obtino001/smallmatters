@@ -1,0 +1,15 @@
+{% comment %}
+  Circular cart loader SVG. Optional param: size (default 32)
+{% endcomment %}
+{%- assign spinner_size = size | default: 32 -%}
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  class="wi-cart-spinner"
+  width="{{ spinner_size }}"
+  height="{{ spinner_size }}"
+  viewBox="0 0 66 66"
+  aria-hidden="true"
+  focusable="false"
+>
+  <circle class="wi-cart-spinner__path" stroke-width="5" cx="33" cy="33" r="28" fill="none"/>
+</svg>
