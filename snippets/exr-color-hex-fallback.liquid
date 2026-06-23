@@ -1,0 +1,44 @@
+{% comment %}
+  Last-resort name → hex map when no product metafield match exists.
+  Param: color_name (downcased, stripped)
+  Outputs: hex string or empty.
+{% endcomment %}
+
+{%- liquid
+  assign exr_hex = ''
+  assign handle = color_name | downcase | strip | replace: ' ', '-' | replace: 'ø', 'o' | replace: 'å', 'a' | replace: 'æ', 'ae'
+-%}
+
+{%- case handle -%}
+  {%- when 'beige' -%}{%- assign exr_hex = '#C8B69E' -%}
+  {%- when 'mork-beige', 'mørk-beige' -%}{%- assign exr_hex = '#A8957A' -%}
+  {%- when 'bla', 'blå', 'blue' -%}{%- assign exr_hex = '#3B82F6' -%}
+  {%- when 'brun', 'brown' -%}{%- assign exr_hex = '#8B6914' -%}
+  {%- when 'gra', 'grå', 'grey', 'gray', 'mork-gra', 'mørk-grå' -%}{%- assign exr_hex = '#9CA3AF' -%}
+  {%- when 'gronn', 'grønn', 'grön', 'green' -%}{%- assign exr_hex = '#22C55E' -%}
+  {%- when 'gul', 'yellow' -%}{%- assign exr_hex = '#EAB308' -%}
+  {%- when 'hvit', 'hvitt', 'white', 'off-white', 'offwhite' -%}{%- assign exr_hex = '#F5F5F0' -%}
+  {%- when 'lilla', 'purple' -%}{%- assign exr_hex = '#A855F7' -%}
+  {%- when 'marinebla', 'marineblå', 'navy', 'dark-navy' -%}{%- assign exr_hex = '#1E3A5F' -%}
+  {%- when 'rosa', 'lyserosa' -%}{%- assign exr_hex = '#F9A8D4' -%}
+  {%- when 'rod', 'rød', 'red' -%}{%- assign exr_hex = '#EF4444' -%}
+  {%- when 'sort', 'svart', 'black' -%}{%- assign exr_hex = '#1A1A1A' -%}
+  {%- when 'denim', 'duebla', 'dueblå' -%}{%- assign exr_hex = '#6B8CAE' -%}
+  {%- when 'burgunder' -%}{%- assign exr_hex = '#800020' -%}
+  {%- when 'sand', 'lyssand' -%}{%- assign exr_hex = '#D2B48C' -%}
+  {%- when 'lysegra', 'lysegrå', 'blagra', 'blågrå' -%}{%- assign exr_hex = '#D1D5DB' -%}
+  {%- when 'lysegul' -%}{%- assign exr_hex = '#FDE68A' -%}
+  {%- when 'lysebla', 'lyseblå', 'lysbla', 'lysblå' -%}{%- assign exr_hex = '#93C5FD' -%}
+  {%- when 'mork-brun', 'mørk-brun' -%}{%- assign exr_hex = '#5C3317' -%}
+  {%- when 'mork-oliven', 'mørk-oliven', 'oliven', 'olive' -%}{%- assign exr_hex = '#556B2F' -%}
+  {%- when 'lys-oliven' -%}{%- assign exr_hex = '#9CAF6A' -%}
+  {%- when 'toast' -%}{%- assign exr_hex = '#C8B08E' -%}
+  {%- when 'pink' -%}{%- assign exr_hex = '#EC4899' -%}
+  {%- when 'orange' -%}{%- assign exr_hex = '#F97316' -%}
+{%- endcase -%}
+
+{%- if color_name contains '#' -%}
+  {%- assign exr_hex = color_name | strip -%}
+{%- endif -%}
+
+{{- exr_hex -}}

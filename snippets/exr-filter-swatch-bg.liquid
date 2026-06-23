@@ -1,0 +1,245 @@
+{% comment %}
+  Resolves filter swatch background CSS from product color metafields.
+  Params:
+    - color_label: filter value label (required)
+    - color_value: filter value.value (optional)
+    - collection: current collection (required)
+  Outputs: solid color or linear-gradient CSS string only.
+{% endcomment %}
+
+{%- liquid
+  assign exr_out = ''
+  assign val_down = color_label | downcase | strip
+  assign val_value_down = color_value | default: color_label | downcase | strip
+  assign val_down_check = val_down
+  if val_down == 'oliven'
+    assign val_down_check = 'olive'
+  endif
+
+  assign swatch_parts = color_label | split: '/'
+-%}
+
+{%- if swatch_parts.size > 1 -%}
+  {%- assign c1 = blank -%}
+  {%- assign c2 = blank -%}
+  {%- assign c3 = blank -%}
+
+  {%- for part in swatch_parts -%}
+    {%- assign part_down = part | downcase | strip -%}
+    {%- assign part_hex = '' -%}
+
+    {%- for prod in collection.products -%}
+      {%- if part_hex != '' -%}{%- break -%}{%- endif -%}
+
+      {%- assign main_meta = prod.metafields.custom.variant_color.value -%}
+      {%- assign sec_meta = prod.metafields.custom.variant_secondary_color.value -%}
+      {%- assign third_meta = prod.metafields.custom.variant_third_color.value -%}
+
+      {%- if main_meta != blank -%}
+        {%- assign meta_name = main_meta.name | default: '' | downcase | strip -%}
+        {%- if meta_name == part_down or part_down contains meta_name or meta_name contains part_down -%}
+          {%- assign part_hex = main_meta.color | default: main_meta.value | default: main_meta | strip -%}
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- if part_hex == '' and sec_meta != blank -%}
+        {%- assign meta_name = sec_meta.name | default: '' | downcase | strip -%}
+        {%- if meta_name == part_down or part_down contains meta_name or meta_name contains part_down -%}
+          {%- assign part_hex = sec_meta.color | default: sec_meta.value | default: sec_meta | strip -%}
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- if part_hex == '' and third_meta != blank -%}
+        {%- assign meta_name = third_meta.name | default: '' | downcase | strip -%}
+        {%- if meta_name == part_down or part_down contains meta_name or meta_name contains part_down -%}
+          {%- assign part_hex = third_meta.color | default: third_meta.value | default: third_meta | strip -%}
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- if part_hex == '' -%}
+        {%- assign siblings = prod.metafields.custom.products_color.value -%}
+        {%- if siblings != blank -%}
+          {%- for sibling in siblings -%}
+            {%- if part_hex != '' -%}{%- break -%}{%- endif -%}
+            {%- assign main_meta = sibling.metafields.custom.variant_color.value -%}
+            {%- assign sec_meta = sibling.metafields.custom.variant_secondary_color.value -%}
+            {%- assign third_meta = sibling.metafields.custom.variant_third_color.value -%}
+
+            {%- if main_meta != blank -%}
+              {%- assign meta_name = main_meta.name | default: '' | downcase | strip -%}
+              {%- if meta_name == part_down or part_down contains meta_name or meta_name contains part_down -%}
+                {%- assign part_hex = main_meta.color | default: main_meta.value | default: main_meta | strip -%}
+              {%- endif -%}
+            {%- endif -%}
+
+            {%- if part_hex == '' and sec_meta != blank -%}
+              {%- assign meta_name = sec_meta.name | default: '' | downcase | strip -%}
+              {%- if meta_name == part_down or part_down contains meta_name or meta_name contains part_down -%}
+                {%- assign part_hex = sec_meta.color | default: sec_meta.value | default: sec_meta | strip -%}
+              {%- endif -%}
+            {%- endif -%}
+
+            {%- if part_hex == '' and third_meta != blank -%}
+              {%- assign meta_name = third_meta.name | default: '' | downcase | strip -%}
+              {%- if meta_name == part_down or part_down contains meta_name or meta_name contains part_down -%}
+                {%- assign part_hex = third_meta.color | default: third_meta.value | default: third_meta | strip -%}
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- if part_hex == '' -%}
+      {%- capture part_hex -%}{%- render 'exr-color-hex-fallback', color_name: part_down -%}{%- endcapture -%}
+      {%- assign part_hex = part_hex | strip -%}
+    {%- endif -%}
+
+    {%- unless part_hex contains '#' -%}
+      {%- assign part_hex = '#D1D5DB' -%}
+    {%- endunless -%}
+
+    {%- if forloop.first -%}
+      {%- assign c1 = part_hex -%}
+    {%- elsif forloop.index == 2 -%}
+      {%- assign c2 = part_hex -%}
+    {%- elsif forloop.index == 3 -%}
+      {%- assign c3 = part_hex -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- if c1 != blank and c2 != blank and c3 != blank -%}
+    {%- assign exr_out = 'linear-gradient(90deg, ' | append: c1 | append: ' 50%, transparent 50%), linear-gradient(180deg, ' | append: c2 | append: ' 50%, ' | append: c3 | append: ' 50%)' -%}
+  {%- elsif c1 != blank and c2 != blank -%}
+    {%- assign exr_out = 'linear-gradient(90deg, ' | append: c1 | append: ' 50%, ' | append: c2 | append: ' 50%)' -%}
+  {%- elsif c1 != blank -%}
+    {%- assign exr_out = c1 -%}
+  {%- endif -%}
+
+{%- else -%}
+  {%- assign match_prod = blank -%}
+
+  {%- for prod in collection.products -%}
+    {%- if match_prod != blank -%}{%- break -%}{%- endif -%}
+
+    {%- assign title_down = prod.title | downcase -%}
+    {%- if title_down contains val_down or title_down contains val_value_down or title_down contains val_down_check -%}
+      {%- assign match_prod = prod -%}
+    {%- endif -%}
+
+    {%- if match_prod == blank -%}
+      {%- assign main_meta = prod.metafields.custom.variant_color.value -%}
+      {%- assign sec_meta = prod.metafields.custom.variant_secondary_color.value -%}
+      {%- assign third_meta = prod.metafields.custom.variant_third_color.value -%}
+
+      {%- if main_meta != blank -%}
+        {%- assign meta_name = main_meta.name | default: '' | downcase | strip -%}
+        {%- if meta_name != blank -%}
+          {%- if val_down == meta_name or val_down contains meta_name or meta_name contains val_down or val_down_check == meta_name or val_down_check contains meta_name or meta_name contains val_down_check -%}
+            {%- assign match_prod = prod -%}
+          {%- endif -%}
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- if match_prod == blank and sec_meta != blank -%}
+        {%- assign meta_name = sec_meta.name | default: '' | downcase | strip -%}
+        {%- if meta_name != blank -%}
+          {%- if val_down == meta_name or val_down contains meta_name or meta_name contains val_down or val_down_check == meta_name or val_down_check contains meta_name or meta_name contains val_down_check -%}
+            {%- assign match_prod = prod -%}
+          {%- endif -%}
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- if match_prod == blank and third_meta != blank -%}
+        {%- assign meta_name = third_meta.name | default: '' | downcase | strip -%}
+        {%- if meta_name != blank -%}
+          {%- if val_down == meta_name or val_down contains meta_name or meta_name contains val_down or val_down_check == meta_name or val_down_check contains meta_name or meta_name contains val_down_check -%}
+            {%- assign match_prod = prod -%}
+          {%- endif -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- if match_prod == blank -%}
+      {%- assign siblings = prod.metafields.custom.products_color.value -%}
+      {%- if siblings != blank -%}
+        {%- for sibling in siblings -%}
+          {%- if match_prod != blank -%}{%- break -%}{%- endif -%}
+
+          {%- assign title_down = sibling.title | downcase -%}
+          {%- if title_down contains val_down or title_down contains val_value_down or title_down contains val_down_check -%}
+            {%- assign match_prod = sibling -%}
+          {%- endif -%}
+
+          {%- if match_prod == blank -%}
+            {%- assign main_meta = sibling.metafields.custom.variant_color.value -%}
+            {%- assign sec_meta = sibling.metafields.custom.variant_secondary_color.value -%}
+            {%- assign third_meta = sibling.metafields.custom.variant_third_color.value -%}
+
+            {%- if main_meta != blank -%}
+              {%- assign meta_name = main_meta.name | default: '' | downcase | strip -%}
+              {%- if meta_name != blank -%}
+                {%- if val_down == meta_name or val_down contains meta_name or meta_name contains val_down or val_down_check == meta_name or val_down_check contains meta_name or meta_name contains val_down_check -%}
+                  {%- assign match_prod = sibling -%}
+                {%- endif -%}
+              {%- endif -%}
+            {%- endif -%}
+
+            {%- if match_prod == blank and sec_meta != blank -%}
+              {%- assign meta_name = sec_meta.name | default: '' | downcase | strip -%}
+              {%- if meta_name != blank -%}
+                {%- if val_down == meta_name or val_down contains meta_name or meta_name contains val_down or val_down_check == meta_name or val_down_check contains meta_name or meta_name contains val_down_check -%}
+                  {%- assign match_prod = sibling -%}
+                {%- endif -%}
+              {%- endif -%}
+            {%- endif -%}
+
+            {%- if match_prod == blank and third_meta != blank -%}
+              {%- assign meta_name = third_meta.name | default: '' | downcase | strip -%}
+              {%- if meta_name != blank -%}
+                {%- if val_down == meta_name or val_down contains meta_name or meta_name contains val_down or val_down_check == meta_name or val_down_check contains meta_name or meta_name contains val_down_check -%}
+                  {%- assign match_prod = sibling -%}
+                {%- endif -%}
+              {%- endif -%}
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- if match_prod != blank -%}
+    {%- assign main_meta = match_prod.metafields.custom.variant_color.value -%}
+    {%- assign sec_meta = match_prod.metafields.custom.variant_secondary_color.value -%}
+    {%- assign third_meta = match_prod.metafields.custom.variant_third_color.value -%}
+
+    {%- assign main_color = main_meta.color | default: main_meta.value | default: main_meta | strip -%}
+    {%- assign sec_color = sec_meta.color | default: sec_meta.value | default: sec_meta | strip -%}
+    {%- assign third_color = third_meta.color | default: third_meta.value | default: third_meta | strip -%}
+
+    {%- if main_color != blank -%}
+      {%- if sec_color != blank and third_color != blank -%}
+        {%- assign exr_out = 'linear-gradient(90deg, ' | append: main_color | append: ' 50%, transparent 50%), linear-gradient(180deg, ' | append: sec_color | append: ' 50%, ' | append: third_color | append: ' 50%)' -%}
+      {%- elsif sec_color != blank -%}
+        {%- assign exr_out = 'linear-gradient(90deg, ' | append: main_color | append: ' 50%, ' | append: sec_color | append: ' 50%)' -%}
+      {%- else -%}
+        {%- assign exr_out = main_color -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endif -%}
+
+  {%- if exr_out == '' -%}
+    {%- if val_down contains '#' -%}
+      {%- assign exr_out = val_down -%}
+    {%- else -%}
+      {%- capture exr_out -%}{%- render 'exr-color-hex-fallback', color_name: val_down -%}{%- endcapture -%}
+      {%- assign exr_out = exr_out | strip -%}
+    {%- endif -%}
+  {%- endif -%}
+
+  {%- unless exr_out contains '#' -%}
+    {%- assign exr_out = '#D1D5DB' -%}
+  {%- endunless -%}
+{%- endif -%}
+
+{{- exr_out -}}
