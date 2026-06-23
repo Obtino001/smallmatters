@@ -10,6 +10,53 @@ class WIcartDrawer extends HTMLElement {
         this.addEventListener('input', this.handleCartInputs.bind(this));
         this.addEventListener('submit', this.handleCartSubmits.bind(this));
         this.isProcessing = false;
+        this._updateQueue = Promise.resolve();
+    }
+
+    wait(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    clearLoadingStates() {
+        this.querySelectorAll('.WI_cartLoadingin').forEach((el) => el.classList.remove('WI_cartLoadingActive'));
+        const block = this.querySelector('.WI_loadingCartItemBlock');
+        if (block) block.style.display = 'none';
+    }
+
+    getItemKeys(container) {
+        if (!container) return [];
+        return [...container.querySelectorAll('.WI_cartDrawer_item')]
+            .map((el) => el.getAttribute('data-itemKey'))
+            .filter(Boolean);
+    }
+
+    findCartItem(key) {
+        if (!key) return null;
+        return this.querySelector(`.WI_cartDrawer_item[data-itemKey="${CSS.escape(key)}"]`);
+    }
+
+    pulseElement(el, className) {
+        if (!el) return;
+        el.classList.remove(className);
+        void el.offsetWidth;
+        el.classList.add(className);
+        el.addEventListener('animationend', () => el.classList.remove(className), { once: true });
+    }
+
+    animateNewItems(container, addedKeys) {
+        addedKeys.forEach((key, index) => {
+            const el = container.querySelector(`.WI_cartDrawer_item[data-itemKey="${CSS.escape(key)}"]`);
+            if (!el) return;
+            el.classList.add('wi-cart-item--entering');
+            el.style.transitionDelay = `${Math.min(index * 0.06, 0.24)}s`;
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => el.classList.add('wi-cart-item--entered'));
+            });
+            setTimeout(() => {
+                el.classList.remove('wi-cart-item--entering', 'wi-cart-item--entered');
+                el.style.transitionDelay = '';
+            }, 700);
+        });
     }
 
     connectedCallback() {
@@ -86,61 +133,101 @@ class WIcartDrawer extends HTMLElement {
     // ✅ ADD THIS METHOD HERE TO FIX THE ERROR
     // =========================================================
     renderContents(parsedState) {
-        console.log("Product added via product-form.js");
-        // Open the drawer
         this.openCart();
-        
-        // Trigger your existing update logic
-        this.updateCart();
+        const addedKey = parsedState?.items?.length
+            ? parsedState.items[parsedState.items.length - 1].key
+            : null;
+        this.updateCart({ mode: 'add', itemKey: addedKey });
     }
     // =========================================================
 
-    // ----------- NEW SEAMLESS UPDATE FUNCTION -----------
-    async updateCart() {
+    updateCart(options = {}) {
+        this._updateQueue = this._updateQueue.then(() => this._performCartUpdate(options));
+        return this._updateQueue;
+    }
+
+    async _performCartUpdate(options = {}) {
+        const { mode = 'refresh', itemKey = null } = options;
+
         try {
-            // 1. Fetch JSON with both sections (Drawer + Bubble)
-            let res = await fetch('/?sections=cart-drawer,cart-icon-bubble');
-            let data = await res.json();
+            const currentCart = this.querySelector('.WI_cartDrawerin_cart');
+            const oldKeys = this.getItemKeys(currentCart);
+            const hadEmptyState = !!currentCart?.querySelector('.WI_cartDrawerin_cart_empty');
 
-            // 2. Parse the HTML from the JSON response
-            const parsedHTML = new DOMParser().parseFromString(data['cart-drawer'], 'text/html');
-
-            // 3. Update the Cart Items Container
-            // We look for your specific class inside the fetched HTML
-            let newCartItems = parsedHTML.querySelector('.WI_cartDrawerin_cart');
-            let currentCartItems = this.querySelector('.WI_cartDrawerin_cart');
-
-            if (newCartItems && currentCartItems) {
-                currentCartItems.innerHTML = newCartItems.innerHTML;
+            if (mode === 'remove' && itemKey) {
+                const removingItem = this.findCartItem(itemKey);
+                if (removingItem) {
+                    removingItem.classList.add('wi-cart-item--removing');
+                    await this.wait(420);
+                }
             }
 
-            // 4. Update the Upsell Container (if it exists in the response)
-            let newUpsell = parsedHTML.querySelector('.WI_cartDrawerin_upsell');
-            let currentUpsell = this.querySelector('.WI_cartDrawerin_upsell');
+            this.classList.add('wi-cart-updating');
+
+            const res = await fetch('/?sections=cart-drawer,cart-icon-bubble');
+            const data = await res.json();
+            const parsedHTML = new DOMParser().parseFromString(data['cart-drawer'], 'text/html');
+            const newCartItems = parsedHTML.querySelector('.WI_cartDrawerin_cart');
+
+            if (newCartItems && currentCart) {
+                const newKeys = this.getItemKeys(newCartItems);
+                const addedKeys = newKeys.filter((key) => !oldKeys.includes(key));
+                const hasEmptyState = !!newCartItems.querySelector('.WI_cartDrawerin_cart_empty');
+
+                currentCart.innerHTML = newCartItems.innerHTML;
+
+                if (hadEmptyState && !hasEmptyState) {
+                    const body = currentCart.querySelector('.WI_cartDrawerin_cart_body');
+                    if (body) {
+                        body.classList.add('wi-cart-body--fade-in');
+                        body.addEventListener('animationend', () => body.classList.remove('wi-cart-body--fade-in'), { once: true });
+                    }
+                }
+
+                if (addedKeys.length) {
+                    this.animateNewItems(currentCart, addedKeys);
+                }
+
+                if (itemKey && (mode === 'update' || mode === 'add')) {
+                    const updatedItem = this.findCartItem(itemKey);
+                    if (updatedItem && !addedKeys.includes(itemKey)) {
+                        this.pulseElement(updatedItem, 'wi-cart-item--updating');
+                    }
+                }
+
+                const countEl = currentCart.querySelector('.WI_cartDrawer_count');
+                if (countEl && newKeys.length !== oldKeys.length) {
+                    this.pulseElement(countEl, 'wi-cart-count--bump');
+                }
+
+                const total = currentCart.querySelector('.WI_cartDrawer_total_price');
+                if (total) {
+                    this.pulseElement(total, 'wi-cart-total--pulse');
+                }
+            }
+
+            const newUpsell = parsedHTML.querySelector('.WI_cartDrawerin_upsell');
+            const currentUpsell = this.querySelector('.WI_cartDrawerin_upsell');
             if (newUpsell && currentUpsell) {
                 currentUpsell.innerHTML = newUpsell.innerHTML;
             }
-            
-            // Re-bind the option click events if complete the look is present
+
             this.loadRecommendations();
 
-            // 5. Update the Cart Icon Bubble (using the other section data)
             const cartBubble = document.querySelector('#cart-icon-bubble');
-            if (cartBubble) {
+            if (cartBubble && data['cart-icon-bubble']) {
                 cartBubble.innerHTML = data['cart-icon-bubble'];
             }
 
-            // 6. Re-run calculations
             this.totalSaving();
-            
             this.cartTermsCondition();
-
         } catch (err) {
-            console.error("WIcartDrawer Update Error:", err);
+            console.error('WIcartDrawer Update Error:', err);
+        } finally {
+            this.classList.remove('wi-cart-updating');
+            this.clearLoadingStates();
         }
-        // this.freeShipping();
     }
-    // ----------------------------------------------------
 
     loadRecommendations() {
         const dataEl = this.querySelector('#cart-drawer-data');
@@ -252,7 +339,8 @@ class WIcartDrawer extends HTMLElement {
             let keyID = rOOt.closest('[data-itemKey]').getAttribute('data-itemKey');
             let quantity = Number(rOOt.parentElement.parentElement.querySelector('input').value);
             let newQuantity = quantity + 1;
-            this.querySelector('.WI_cartLoadingin').classList.add('WI_cartLoadingActive');
+            const itemEl = rOOt.closest('.WI_cartDrawer_item');
+            itemEl?.querySelector('.WI_cartLoadingin')?.classList.add('WI_cartLoadingActive');
             await fetch('/cart/update.js', {
                 method: 'post',
                 headers: {
@@ -265,7 +353,7 @@ class WIcartDrawer extends HTMLElement {
                     }
                 })
             });
-            this.updateCart();
+            await this.updateCart({ mode: 'update', itemKey: keyID });
         }
     }
 
@@ -275,7 +363,8 @@ class WIcartDrawer extends HTMLElement {
             let keyID = rOOt.closest('[data-itemKey]').getAttribute('data-itemKey');
             let quantity = Number(rOOt.parentElement.parentElement.querySelector('input').value);
             let newQuantity = quantity - 1;
-            this.querySelector('.WI_cartLoadingin').classList.add('WI_cartLoadingActive');
+            const itemEl = rOOt.closest('.WI_cartDrawer_item');
+            itemEl?.querySelector('.WI_cartLoadingin')?.classList.add('WI_cartLoadingActive');
 
             await fetch('/cart/update.js', {
                 method: 'post',
@@ -289,7 +378,8 @@ class WIcartDrawer extends HTMLElement {
                     }
                 })
             });
-            this.updateCart();
+            const updateMode = newQuantity === 0 ? 'remove' : 'update';
+            await this.updateCart({ mode: updateMode, itemKey: keyID });
         }
     }
 
@@ -298,7 +388,8 @@ class WIcartDrawer extends HTMLElement {
             let rOOt = event.target;
             let keyID = rOOt.closest('[data-itemKey]').getAttribute('data-itemKey');
             let quantity = 0;
-            this.querySelector('.WI_cartLoadingin').classList.add('WI_cartLoadingActive');
+            const itemEl = rOOt.closest('.WI_cartDrawer_item');
+            itemEl?.querySelector('.WI_cartLoadingin')?.classList.add('WI_cartLoadingActive');
             await fetch('/cart/update.js', {
                 method: 'post',
                 headers: {
@@ -311,7 +402,7 @@ class WIcartDrawer extends HTMLElement {
                     }
                 })
             });
-            this.updateCart();
+            await this.updateCart({ mode: 'remove', itemKey: keyID });
         }
     }
 
@@ -383,7 +474,7 @@ class WIcartDrawer extends HTMLElement {
                         // REMOVED MODAL/BACKDROP CODE HERE AS REQUESTED
 
                         // Trigger the seamless update
-                        await this.updateCart();
+                        await this.updateCart({ mode: 'add' });
                         this.isProcessing = false;
                     } else {
                         console.error('Failed to add to cart');
@@ -562,7 +653,7 @@ class WIcartDrawer extends HTMLElement {
             });
 
             if (response.ok) {
-                await this.updateCart();
+                await this.updateCart({ mode: 'add' });
             } else {
                 console.error('Failed to add to cart:', await response.text());
             }
