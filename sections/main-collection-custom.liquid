@@ -180,7 +180,41 @@
               "
             >
               {% assign skip_card_product_styles = false %}
+              {%- liquid
+                assign exr_active_sizes = ''
+                for filter in collection.filters
+                  assign filter_label_down = filter.label | downcase
+                  if filter_label_down contains 'størrelse' or filter_label_down contains 'storrelse' or filter_label_down contains 'size'
+                    for value in filter.active_values
+                      if exr_active_sizes == ''
+                        assign exr_active_sizes = value.label
+                      else
+                        assign exr_active_sizes = exr_active_sizes | append: '|' | append: value.label
+                      endif
+                    endfor
+                  endif
+                endfor
+              -%}
               {%- for product in collection.products -%}
+                {%- liquid
+                  assign exr_show_card = true
+                  if exr_active_sizes != ''
+                    assign exr_show_card = false
+                    assign exr_size_list = exr_active_sizes | split: '|'
+                    for variant in product.variants
+                      if variant.available
+                        for exr_size in exr_size_list
+                          if variant.option1 == exr_size or variant.option2 == exr_size or variant.option3 == exr_size
+                            assign exr_show_card = true
+                          endif
+                        endfor
+                      endif
+                    endfor
+                  endif
+                -%}
+                {%- unless exr_show_card -%}
+                  {%- continue -%}
+                {%- endunless -%}
                 {% assign lazy_load = false %}
                 {%- if forloop.index > 2 -%}
                   {%- assign lazy_load = true -%}

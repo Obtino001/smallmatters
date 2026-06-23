@@ -9,7 +9,7 @@
   {% if has_pending_payment %}
     Takk for bestillingen
   {% else %}
-    Tusen takk for din bestilling!
+    Takk for din bestilling!
   {% endif %}
 {% endcapture %}
 {% capture email_body %}
@@ -20,28 +20,29 @@
       Betalingen behandles. Du får en e-postmelding når bestillingen er bekreftet.
     {% endif %}
   {% else %}
-<p style="margin:0 0 15px 0;">Hei {% if customer.first_name %}{{ customer.first_name }}{% else %}kjære kunde{% endif %},</p>
-<p style="margin:0 0 15px 0;">Tusen takk for din bestilling! Vi setter stor pris på at du velger Smallmatters, og vi er allerede i gang med å gjøre bestillingen din klar for deg.</p>
+<p style="margin:0 0 10px 0; line-height:1.5;">Hei, og tusen takk for din bestilling. Vi setter stor pris på at du velger Smallmatters, og vi er allerede i gang med å gjøre bestillingen din klar for deg.</p>
 
 {% if requires_shipping %}
-  {% if delivery_method == 'pick-up' or order.shipping_methods.first.title contains 'Hente' %}
-    <p style="margin:0 0 15px 0;"><strong>Henting i butikk:</strong><br>Du vil motta en ny e-post fra oss så snart ordren din er klar for henting.</p>
+  {% if has_split_cart %}
+    <p style="margin:0 0 10px 0; line-height:1.5;"><strong>Levering og Henting i butikk:</strong><br>Deler av din bestilling vil bli sendt, og du vil motta en e-post med sporingsinformasjon. Resten kan hentes i butikk, og du får en egen e-post når dette er klart for henting.</p>
+  {% elsif delivery_method == 'pick-up' or order.shipping_methods.first.title contains 'Hente' %}
+    <p style="margin:0 0 10px 0; line-height:1.5;"><strong>Henting i butikk:</strong><br>Du vil motta en ny e-post fra oss så snart ordren din er klar for henting.</p>
   {% else %}
-    <p style="margin:0 0 15px 0;"><strong>Levering:</strong><br>Du vil motta en ny e-post med sporingsinformasjon så snart pakken din er sendt.</p>
+    <p style="margin:0 0 10px 0; line-height:1.5;"><strong>Levering:</strong><br>Du vil motta en ny e-post med sporingsinformasjon så snart pakken din er sendt.</p>
   {% endif %}
 {% endif %}
 
-<h3>En investering i kvalitet og komfort</h3>
-<p style="margin:0 0 15px 0;">Når du handler hos oss, velger du plagg som er skapt for å vare. Hos Smallmatters brenner vi for rene, naturlige materialer som myk ull og eksklusiv kasjmir – designet for å gi deg varme og tidløs eleganse gjennom mange sesonger.</p>
-<p style="margin:0 0 15px 0;">Takk for at du deler vår visjon om en bevisst garderobe bygget på kvalitet, snarere enn flyktige trender. Vi håper plaggene vil gi deg mye glede i tiden som kommer.</p>
+<h3 style="margin:15px 0 10px 0; line-height:1.4;">En investering i kvalitet og komfort</h3>
+<p style="margin:0 0 10px 0; line-height:1.5;">Når du handler hos oss, velger du plagg som er skapt for å vare. Hos Smallmatters brenner vi for rene, naturlige materialer som myk ull og eksklusiv kasjmir – designet for å gi deg varme og tidløs eleganse gjennom mange sesonger.</p>
+<p style="margin:0 0 10px 0; line-height:1.5;">Takk for at du deler vår visjon om en bevisst garderobe bygget på kvalitet, snarere enn flyktige trender. Vi håper plaggene vil gi deg mye glede i tiden som kommer.</p>
 
-<h3>Velkommen til vår verden</h3>
-<p style="margin:0 0 15px 0;">Vi elsker å møte kundene våre! Ønsker du å kjenne på materialene våre, prøve ditt neste favorittplagg, eller bare slå av en hyggelig prat, er du alltid hjertelig velkommen innom butikken vår.</p>
-<p style="margin:0 0 15px 0;">Du finner oss i <strong>Holmenveien 20, Oslo</strong>. Åpningstider: tir 11-16 og tor 11-18, eller etter avtale.</p>
+<h3 style="margin:15px 0 10px 0; line-height:1.4;">Velkommen til vår verden</h3>
+<p style="margin:0 0 10px 0; line-height:1.5;">Vi elsker å møte kundene våre! Ønsker du å kjenne på materialene våre, prøve ditt neste favorittplagg, eller bare slå av en hyggelig prat, er du alltid hjertelig velkommen innom butikken vår.</p>
+<p style="margin:0 0 10px 0; line-height:1.5;">Du finner oss i <strong>Holmenveien 20, Oslo</strong>. Åpningstider: tir 11-16 og tor 11-18, eller etter avtale.</p>
 
-<p style="margin:0 0 15px 0;">Skulle du ha noen spørsmål om bestillingen din, er det bare å svare på denne e-posten – vi er her for å hjelpe deg.</p>
+<p style="margin:0 0 10px 0; line-height:1.5;">Vi håper du blir fornøyd med produktene dine. Skulle du ha noen spørsmål om bestillingen din, er du alltid velkommen til å svare på denne e-posten. Eller komme innom butikken vår i Holmenveien 20, Oslo. Vi setter stor pris på å møte kundene våre, enten det er for en hyggelig prat eller for å hjelpe deg med spørsmål du har.</p>
 
-<p style="margin:30px 0 0 0;">
+<p style="margin:20px 0 0 0; line-height:1.5;">
 Varm hilsen,<br>
 <strong>Team Smallmatters</strong>
 </p>
@@ -93,7 +94,7 @@ Varm hilsen,<br>
     }
     
     .button__cell { 
-      background-color: #3B3B3B !important; /* Charcoal black from button */
+      background-color: #B4A996 !important; /* Dark sand */
       border-radius: 0px !important; /* Sharp corners */
     }
     
@@ -103,8 +104,8 @@ Varm hilsen,<br>
       font-weight: 500 !important;
       letter-spacing: 2px !important;
       text-transform: uppercase !important;
-      font-size: 12px !important;
-      padding: 18px 30px !important;
+      font-size: 14px !important;
+      padding: 22px 40px !important;
       display: inline-block !important;
       text-decoration: none !important;
     }
@@ -123,7 +124,7 @@ Varm hilsen,<br>
     }
     
     table.footer.row, td.footer__cell { 
-      background-color: transparent !important; 
+      background-color: #EFECE8 !important; 
     }
     
     h2, h3, h4 { 
@@ -133,15 +134,17 @@ Varm hilsen,<br>
       letter-spacing: 0px !important;
     }
     
-    h2 { font-size: 32px !important; margin-bottom: 20px !important; text-align: center !important; }
-    h3 { font-size: 22px !important; margin-top: 40px !important; margin-bottom: 20px !important; }
+    h2 { font-size: 22px !important; margin-bottom: 15px !important; text-align: left !important; }
+    h3 { font-size: 22px !important; margin-top: 20px !important; margin-bottom: 15px !important; }
     
     p, span, td { 
       color: #3B3B3B !important; 
       font-size: 15px !important; 
-      line-height: 1.7 !important; 
+      line-height: 1.5 !important; 
       font-weight: 400 !important;
     }
+
+    p { margin-top: 0; margin-bottom: 10px; }
     
     .shop-name__text a { 
       font-family: 'Jost', sans-serif !important;
@@ -157,14 +160,14 @@ Varm hilsen,<br>
     /* Content Blocks - Transparent to blend perfectly with beige background */
     .content__cell {
       background-color: transparent !important;
-      padding: 0 40px 40px 40px !important;
+      padding: 0 40px 20px 40px !important;
       border-radius: 0px !important;
       box-shadow: none !important;
     }
     
     .section__cell {
       background-color: transparent !important;
-      padding: 0 40px 40px 40px !important;
+      padding: 0 40px 20px 40px !important;
       border-radius: 0px !important;
       box-shadow: none !important;
       margin-top: 0px !important;
@@ -241,7 +244,7 @@ Varm hilsen,<br>
 
               <table class="row">
                 <tr>
-                  <td class="shop-name__cell">
+                  <td class="shop-name__cell" style="text-align: left; width: 100%; ">
                     {%- if shop.email_logo_url %}
                       <img src="{{shop.email_logo_url}}" alt="{{ shop.name }}" width="{{ shop.email_logo_width }}">
                     {%- else %}
@@ -250,19 +253,20 @@ Varm hilsen,<br>
                       </h1>
                     {%- endif %}
                   </td>
-
-                    <td>
-                      <table class="order-po-number__container">
+                </tr>
+                <tr>
+                  <td style="text-align: left; padding-top: 10px;">
+                      <table class="order-po-number__container" style="margin: 0; text-align: left !important;">
                         <tr>
-                          <td class="order-number__cell">
-                            <span class="order-number__text">
+                          <td class="order-number__cell" style="text-align: left !important;">
+                            <span class="order-number__text" style="display: block; text-align: left !important;">
                               Bestilling {{ order_name }}
                             </span>
                           </td>
                         </tr>
                         {%- if po_number %}
                             <tr>
-                              <td class="po-number__cell">
+                              <td class="po-number__cell" style="text-align: left;">
                                 <span class="po-number__text">
                                   PO-nummer {{ po_number }}
                                 </span>
@@ -270,7 +274,7 @@ Varm hilsen,<br>
                             </tr>
                         {%- endif %}
                       </table>
-                    </td>
+                  </td>
                 </tr>
               </table>
 
@@ -319,18 +323,17 @@ Varm hilsen,<br>
   {% endif %}
 
             {% if order_status_url %}
-              <table class="row actions">
+              <table class="row actions" style="margin-top:30px;">
   <tr>
-    <td class="empty-line">&nbsp;</td>
-  </tr>
-  <tr>
-    <td class="actions__cell">
-      <table class="button main-action-cell">
+    <td class="actions__cell" align="center" style="text-align:center;">
+      <table border="0" cellspacing="0" cellpadding="0" role="presentation" align="center" style="margin:0 auto;">
         <tr>
-          <td class="button__cell"><a href="{{ order_status_url }}" class="button__text">Vis bestillingen din</a></td>
+          <td align="center" bgcolor="#B4A996" style="background-color:#B4A996; mso-padding-alt:22px 48px;">
+            <a href="{{ order_status_url }}" target="_blank" style="display:inline-block; padding:22px 48px; min-width:220px; font-family:'Jost',Helvetica,Arial,sans-serif; font-size:14px; font-weight:500; color:#FFFFFF !important; text-decoration:none; letter-spacing:2px; text-transform:uppercase; border:none; mso-line-height-rule:exactly; line-height:14px; text-align:center;">Vis bestillingen din</a>
+          </td>
         </tr>
       </table>
-      </td>
+    </td>
   </tr>
 </table>
 
@@ -338,12 +341,14 @@ Varm hilsen,<br>
               {% if shop.url %}
     <table class="row actions">
       <tr>
-        <td class="actions__cell">
-          <table class="button main-action-cell">
-            <tr>
-              <td class="button__cell"><a href="{{ shop.url }}" class="button__text">Besøk butikken vår</a></td>
-            </tr>
-          </table>
+        <td class="actions__cell" align="center" style="text-align:center;">
+      <table border="0" cellspacing="0" cellpadding="0" role="presentation" align="center" style="margin:0 auto;">
+        <tr>
+          <td align="center" bgcolor="#B4A996" style="background-color:#B4A996; mso-padding-alt:22px 48px;">
+            <a href="{{ shop.url }}" target="_blank" style="display:inline-block; padding:22px 48px; min-width:220px; font-family:'Jost',Helvetica,Arial,sans-serif; font-size:14px; font-weight:500; color:#FFFFFF !important; text-decoration:none; letter-spacing:2px; text-transform:uppercase; border:none; mso-line-height-rule:exactly; line-height:14px; text-align:center;">Besøk butikken vår</a>
+          </td>
+        </tr>
+      </table>
         </td>
       </tr>
     </table>
@@ -1034,8 +1039,8 @@ Varm hilsen,<br>
 {% for delivery_agreement in delivery_agreements %}
   {% if delivery_agreement.line_items != blank %}
     {% if delivery_agreements.size > 1 %}
-      <h4 class="order-list__delivery-method-type">
-        {{ delivery_agreement.delivery_method_name }}  varer
+      <h4 class="order-list__delivery-method-type" style="margin-top: 30px; margin-bottom: 10px; font-style: normal; font-weight: 500; font-size: 18px; border-bottom: 1px solid #ccc; padding-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
+        {{ delivery_agreement.delivery_method_name }} varer
       </h4>
     {% endif %}
 
@@ -3640,48 +3645,6 @@ Varm hilsen,<br>
   {% else %}
     {{ shipping_method.title }}
   {% endif %}
-</p><p style="margin:0; line-height:1.4;">&nbsp;</p>
-
-<p style="margin:0 0 10px 0; line-height:1.4;">
-Nedenfor finner du nyttig informasjon knyttet til ditt kjøp:
-</p>
-
-<p style="margin:0 0 10px 0; line-height:1.4;">
-<strong>Vilkår for kjøpet</strong><br>
-Du kan lese våre salgsbetingelser her:<br>
-<a href="https://cdn.shopify.com/s/files/1/0082/0228/9219/files/Salgsbetingelser_Smallmatters_AS.pdf?v=1779194940">
-Salgsbetingelser (PDF)
-</a>
-</p>
-
-<p style="margin:0 0 10px 0; line-height:1.4;">
-<strong>Angrerett</strong><br>
-Du har 14 dagers angrerett fra den dagen du mottar varen.<br>
-Dersom du ønsker å benytte angreretten, ber vi deg gi oss beskjed innen fristen.
-</p>
-
-<p style="margin:0 0 10px 0; line-height:1.4;">
-Du kan benytte vårt angrerettskjema her:<br>
-<a href="https://cdn.shopify.com/s/files/1/0082/0228/9219/files/Angrerettskjema_Smallmatters_AS.pdf?v=1779191892">
-Angrerettskjema (PDF)
-</a>
-</p>
-
-<p style="margin:0 0 10px 0; line-height:1.4;">
-Det er ikke et krav å bruke skjemaet – du kan også kontakte oss direkte på e-post.
-</p>
-
-<p style="margin:0 0 10px 0; line-height:1.4;">
-<strong>Personvern</strong><br>
-Vi behandler dine opplysninger med respekt og i tråd med gjeldende regelverk.<br>
-Les mer om hvordan vi ivaretar ditt personvern her:<br>
-<a href="https://cdn.shopify.com/s/files/1/0082/0228/9219/files/Personvernerklaering_Smallmatters_AS.pdf?v=1779194927">
-Personvernerklæring (PDF)
-</a>
-</p>
-
-<p style="margin:0; line-height:1.4;">
-Vi anbefaler at du tar vare på denne e-posten for fremtidig referanse.
 </p>
                     </td>
                   {% endif %}
@@ -3699,18 +3662,27 @@ Vi anbefaler at du tar vare på denne e-posten for fremtidig referanse.
 
           <table class="row footer">
   <tr>
-    <td class="footer__cell" style="padding-bottom: 20px;">
+    <td class="footer__cell" style="padding: 40px 20px; background-color: #EFECE8;">
       <center>
         <table class="container">
           <tr>
-            <td style="text-align: center; color: #333333;">
-              <p>Lurer du på noe?</p>
-              <p><a href="https://smallmatters.no/pages/business-policies" tabindex="-1" style="color: #333333;"><span style="color:rgb(51, 51, 51);"><span style="font-size: 14px"><span style="font-family: Helvetica, Arial, sans-serif">Salgsbetingelser</span></span></span></a><span style="font-size: 14px"><span style="font-family: Helvetica, Arial, sans-serif"> &nbsp; &nbsp;&nbsp;|&nbsp; &nbsp; &nbsp;</span></span><a href="https://smallmatters.no/pages/personvernerklaering" tabindex="-1" style="color: #333333;"><span style="color:rgb(51, 51, 51);"><span style="font-size: 14px"><span style="font-family: Helvetica, Arial, sans-serif">Personvernerklæring</span></span></span></a><span style="font-size: 14px"><span style="font-family: Helvetica, Arial, sans-serif"> &nbsp; &nbsp;&nbsp;|&nbsp; &nbsp; &nbsp;</span></span><a href="https://smallmatters.no/pages/bytte-retur-og-reklamasjon" tabindex="-1" style="color: #333333;"><span style="color:rgb(51, 51, 51);"><span style="font-size: 14px"><span style="font-family: Helvetica, Arial, sans-serif">Bytte, retur og reklamasjon</span></span></span></a><span style="font-size: 14px"><span style="font-family: Helvetica, Arial, sans-serif"> </span></span></p>
-              <p>Følg oss på:</p>
-              <p>Small Matters AS</p>
-              <p>Org.nr. 920 640 249</p>
-              <p>E-post: post@smallmatters.no</p>
-              <p>Holmenveien 20, 0374 Oslo</p>
+            <td style="text-align: center;">
+              <p style="margin: 0 0 12px 0; line-height: 1.5; font-size: 15px;">Hvis du har noen spørsmål, kan du svare på denne e-posten eller kontakte oss på <a href="mailto:post@smallmatters.no" style="color: #3B3B3B; text-decoration: none; border-bottom: none;">post@smallmatters.no</a></p>
+              <p style="margin: 0 0 10px 0; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; font-size: 13px; color: #3B3B3B;">Følg oss på:</p>
+              <table border="0" cellspacing="0" cellpadding="0" role="presentation" style="margin: 0 auto 16px auto;">
+                <tr>
+                  <td style="padding: 0 8px;"><a href="https://www.instagram.com/smallmatters_oslo/" target="_blank" style="border-bottom: none;"><img src="https://img.icons8.com/ios-glyphs/30/3B3B3B/instagram-new.png" width="28" height="28" alt="Instagram" style="display: block; border: 0;"></a></td>
+                  <td style="padding: 0 8px;"><a href="https://www.linkedin.com/company/smallmatters-oslo" target="_blank" style="border-bottom: none;"><img src="https://img.icons8.com/ios-glyphs/30/3B3B3B/linkedin.png" width="28" height="28" alt="LinkedIn" style="display: block; border: 0;"></a></td>
+                  <td style="padding: 0 8px;"><a href="https://www.facebook.com/smallmattersoslo" target="_blank" style="border-bottom: none;"><img src="https://img.icons8.com/ios-glyphs/30/3B3B3B/facebook-new.png" width="28" height="28" alt="Facebook" style="display: block; border: 0;"></a></td>
+                  <td style="padding: 0 8px;"><a href="https://www.tiktok.com/@smallmatters_oslo" target="_blank" style="border-bottom: none;"><img src="https://img.icons8.com/ios-glyphs/30/3B3B3B/tiktok.png" width="28" height="28" alt="TikTok" style="display: block; border: 0;"></a></td>
+                </tr>
+              </table>
+              <p style="margin: 0; line-height: 1.5;">
+                <strong>&copy; 2018 - {{ 'now' | date: '%Y' }} Smallmatters AS</strong><br>
+                Org.nr. 920 640 249<br>
+                E-post: <a href="mailto:post@smallmatters.no" style="color: #3B3B3B; text-decoration: none; border-bottom: none;">post@smallmatters.no</a><br>
+                Holmenveien 20, 0374 Oslo
+              </p>
             </td>
           </tr>
         </table>
