@@ -5,6 +5,7 @@
     - color_value: filter value.value (optional)
     - collection: current collection (required)
   Outputs: solid color or linear-gradient CSS string only.
+  Param single_color_only: if true, never output multi-color gradients.
 {% endcomment %}
 
 {%- liquid
@@ -17,9 +18,29 @@
   endif
 
   assign swatch_parts = color_label | split: '/'
+  if single_color_only
+    assign swatch_parts = color_label | split: '||'
+  endif
 -%}
 
-{%- if swatch_parts.size > 1 -%}
+{%- comment -%} Category metafield: single matching color only {%- endcomment -%}
+{%- if exr_out == '' -%}
+  {%- for prod in collection.products -%}
+    {%- assign cat_colors = prod.metafields.shopify['color-pattern'].value -%}
+    {%- if cat_colors == blank -%}{%- continue -%}{%- endif -%}
+    {%- for cat_color in cat_colors -%}
+      {%- assign cat_label = cat_color.label | default: cat_color.name | downcase | strip -%}
+      {%- if val_down == cat_label or val_down contains cat_label or cat_label contains val_down -%}
+        {%- assign exr_out = cat_color.color | default: cat_color.colour | default: cat_color.hex | default: cat_color.value | strip -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if exr_out != '' -%}{%- break -%}{%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- if exr_out == '' -%}
+{%- if swatch_parts.size > 1 and single_color_only != true -%}
   {%- assign c1 = blank -%}
   {%- assign c2 = blank -%}
   {%- assign c3 = blank -%}
@@ -218,7 +239,9 @@
     {%- assign third_color = third_meta.color | default: third_meta.value | default: third_meta | strip -%}
 
     {%- if main_color != blank -%}
-      {%- if sec_color != blank and third_color != blank -%}
+      {%- if single_color_only -%}
+        {%- assign exr_out = main_color -%}
+      {%- elsif sec_color != blank and third_color != blank -%}
         {%- assign exr_out = 'linear-gradient(90deg, ' | append: main_color | append: ' 50%, transparent 50%), linear-gradient(180deg, ' | append: sec_color | append: ' 50%, ' | append: third_color | append: ' 50%)' -%}
       {%- elsif sec_color != blank -%}
         {%- assign exr_out = 'linear-gradient(90deg, ' | append: main_color | append: ' 50%, ' | append: sec_color | append: ' 50%)' -%}
@@ -240,6 +263,7 @@
   {%- unless exr_out contains '#' -%}
     {%- assign exr_out = '#D1D5DB' -%}
   {%- endunless -%}
+{%- endif -%}
 {%- endif -%}
 
 {{- exr_out -}}

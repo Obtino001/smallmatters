@@ -95,16 +95,7 @@
                     {%- comment -%} ── COLOR SWATCHES ── {%- endcomment -%}
                     <ul class="exr-swatches">
                       {%- for value in filter.values -%}
-                        {%- capture swatch_color_css -%}
-                          {%- render 'exr-filter-swatch-bg',
-                            color_label: value.label,
-                            color_value: value.value,
-                            collection: collection
-                          -%}
-                        {%- endcapture -%}
-                        {%- assign swatch_color_css = swatch_color_css | strip -%}
-
-                        <li class="exr-swatch{% if value.count == 0 and value.active == false %} exr-swatch--disabled{% endif %}">
+                        <li class="exr-swatch{% if value.count == 0 and value.active == false %} exr-swatch--disabled{% endif %}{% assign val_l = value.label | downcase %}{% if val_l == 'multicolor' or val_l contains 'multi' %} exr-swatch--multi{% endif %}">
                           <input
                             class="exr-swatch__input"
                             type="checkbox"
@@ -118,7 +109,11 @@
                             <span class="exr-swatch__check">
                               <svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </span>
-                            <span class="exr-swatch__color" style="background: {{ swatch_color_css }};"></span>
+                            {% render 'exr-filter-swatch-colors',
+                              color_label: value.label,
+                              color_value: value.value,
+                              collection: collection
+                            %}
                             <span class="exr-swatch__name">{{ value.label }}</span>
                           </label>
                         </li>

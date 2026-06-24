@@ -1,0 +1,118 @@
+{% comment %}
+  Renders filter swatch HTML from Shopify category metafield (color-pattern) first.
+  Params: color_label, color_value (optional), collection
+  - Single color filter → one solid swatch for that category color
+  - Multicolor filter → all category colors on matching product as separate chips
+  Falls back to exr-filter-swatch-bg for legacy variant metafields.
+{% endcomment %}
+
+{%- liquid
+  assign val_down = color_label | downcase | strip
+  assign val_value_down = color_value | default: color_label | downcase | strip
+  assign show_all_category = false
+  if val_down == 'multicolor' or val_down == 'flerfarge' or val_down contains 'multi-color' or val_down contains 'multi color'
+    assign show_all_category = true
+  endif
+
+  assign match_prod = blank
+  assign category_colors = blank
+  assign matched_hex = ''
+-%}
+
+{%- comment -%} ── Find product + category colors ── {%- endcomment -%}
+{%- for prod in collection.products -%}
+  {%- assign cat_colors = prod.metafields.shopify['color-pattern'].value -%}
+  {%- if cat_colors == blank -%}
+    {%- continue -%}
+  {%- endif -%}
+
+  {%- if show_all_category -%}
+    {%- if cat_colors.size > 1 -%}
+      {%- assign match_prod = prod -%}
+      {%- assign category_colors = cat_colors -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- else -%}
+    {%- for cat_color in cat_colors -%}
+      {%- assign cat_label = cat_color.label | default: cat_color.name | downcase | strip -%}
+      {%- if cat_label == blank -%}
+        {%- continue -%}
+      {%- endif -%}
+      {%- if val_down == cat_label or val_down contains cat_label or cat_label contains val_down or val_value_down == cat_label or val_value_down contains cat_label -%}
+        {%- assign match_prod = prod -%}
+        {%- assign category_colors = cat_colors -%}
+        {%- assign matched_hex = cat_color.color | default: cat_color.colour | default: cat_color.hex | default: cat_color.value | strip -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if match_prod != blank -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- comment -%} ── Check color siblings if not found ── {%- endcomment -%}
+{%- if match_prod == blank and show_all_category == false -%}
+  {%- for prod in collection.products -%}
+    {%- assign siblings = prod.metafields.custom.products_color.value -%}
+    {%- if siblings == blank -%}
+      {%- continue -%}
+    {%- endif -%}
+    {%- for sibling in siblings -%}
+      {%- assign cat_colors = sibling.metafields.shopify['color-pattern'].value -%}
+      {%- if cat_colors == blank -%}
+        {%- continue -%}
+      {%- endif -%}
+      {%- for cat_color in cat_colors -%}
+        {%- assign cat_label = cat_color.label | default: cat_color.name | downcase | strip -%}
+        {%- if cat_label == blank -%}
+          {%- continue -%}
+        {%- endif -%}
+        {%- if val_down == cat_label or val_down contains cat_label or cat_label contains val_down -%}
+          {%- assign match_prod = sibling -%}
+          {%- assign matched_hex = cat_color.color | default: cat_color.colour | default: cat_color.hex | default: cat_color.value | strip -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- if match_prod != blank -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if match_prod != blank -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- if show_all_category and category_colors != blank and category_colors.size > 1 -%}
+  <span class="exr-swatch__colors exr-swatch__colors--multi" aria-hidden="true">
+    {%- for cat_color in category_colors -%}
+      {%- assign chip_hex = cat_color.color | default: cat_color.colour | default: cat_color.hex | default: cat_color.value | strip -%}
+      {%- if chip_hex == '' -%}
+        {%- capture chip_hex -%}{%- render 'exr-color-hex-fallback', color_name: cat_color.label -%}{%- endcapture -%}
+        {%- assign chip_hex = chip_hex | strip -%}
+      {%- endif -%}
+      {%- unless chip_hex contains '#' -%}
+        {%- assign chip_hex = '#D1D5DB' -%}
+      {%- endunless -%}
+      <span class="exr-swatch__color" style="background-color: {{ chip_hex }};" title="{{ cat_color.label | escape }}"></span>
+    {%- endfor -%}
+  </span>
+
+{%- elsif matched_hex != '' -%}
+  {%- unless matched_hex contains '#' -%}
+    {%- capture matched_hex -%}{%- render 'exr-color-hex-fallback', color_name: val_down -%}{%- endcapture -%}
+    {%- assign matched_hex = matched_hex | strip -%}
+  {%- endunless -%}
+  {%- unless matched_hex contains '#' -%}
+    {%- assign matched_hex = '#D1D5DB' -%}
+  {%- endunless -%}
+  <span class="exr-swatch__color" style="background-color: {{ matched_hex }};" aria-hidden="true"></span>
+
+{%- else -%}
+  {%- capture swatch_css -%}
+    {%- render 'exr-filter-swatch-bg', color_label: color_label, color_value: color_value, collection: collection, single_color_only: true -%}
+  {%- endcapture -%}
+  {%- assign swatch_css = swatch_css | strip -%}
+  <span class="exr-swatch__color" style="background: {{ swatch_css }};" aria-hidden="true"></span>
+{%- endif -%}
