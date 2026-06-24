@@ -18,6 +18,9 @@
  *  - Browser back/forward support
  */
 if (!customElements.get('exercer-filters')) {
+  const EXR_IN_STOCK_PARAM = 'filter.v.availability';
+  const EXR_IN_STOCK_VALUE = '1';
+
   class ExercerFilters extends HTMLElement {
     constructor() {
       super();
@@ -44,8 +47,15 @@ if (!customElements.get('exercer-filters')) {
       this.bindSort();
       this.bindAccordions();
       this.bindInfiniteScroll();
+      this.lockInStockFilters();
 
       window.addEventListener('popstate', this.onPopStateBound);
+
+      const urlWithStock = this.ensureInStockFilter(window.location.href);
+      if (urlWithStock !== window.location.href) {
+        history.replaceState({}, '', urlWithStock);
+        this.fetchAndRender(urlWithStock);
+      }
     }
 
     disconnectedCallback() {
@@ -113,11 +123,33 @@ if (!customElements.get('exercer-filters')) {
       });
     }
 
+    ensureInStockFilter(url) {
+      const parsed = new URL(url, window.location.origin);
+      if (!parsed.searchParams.has(EXR_IN_STOCK_PARAM)) {
+        parsed.searchParams.set(EXR_IN_STOCK_PARAM, EXR_IN_STOCK_VALUE);
+      }
+      return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+    }
+
+    lockInStockFilters() {
+      this.querySelectorAll('[data-exr-in-stock-locked]').forEach((input) => {
+        input.checked = true;
+        input.addEventListener('change', () => {
+          input.checked = true;
+        });
+      });
+    }
+
     /* ---- Form (checkbox / price changes) ---- */
     bindForm() {
       if (!this.form) return;
 
       this.form.addEventListener('change', (e) => {
+        if (e.target.matches('[data-exr-in-stock-locked]')) {
+          e.target.checked = true;
+          return;
+        }
+
         // Debounce for rapid clicking
         clearTimeout(this.debounceTimer);
         this.debounceTimer = setTimeout(() => {
@@ -184,6 +216,8 @@ if (!customElements.get('exercer-filters')) {
         }
       }
 
+      params.set(EXR_IN_STOCK_PARAM, EXR_IN_STOCK_VALUE);
+
       // Grab sort_by if present
       const sortSelect = this.querySelector('[data-exr-sort]');
       if (sortSelect && sortSelect.value) {
@@ -196,7 +230,7 @@ if (!customElements.get('exercer-filters')) {
 
     /* ---- Submit filters ---- */
     submitFilters() {
-      const url = this.buildURL();
+      const url = this.ensureInStockFilter(this.buildURL());
       this.fetchAndRender(url);
     }
 
@@ -204,6 +238,8 @@ if (!customElements.get('exercer-filters')) {
     async fetchAndRender(url) {
       if (this.isLoading) return;
       this.isLoading = true;
+
+      url = this.ensureInStockFilter(url);
 
       // Show loading
       this.setLoading(true);
@@ -377,6 +413,7 @@ if (!customElements.get('exercer-filters')) {
       this.form = this.querySelector('[data-exr-form]');
       this.bindForm();
       this.bindAccordions();
+      this.lockInStockFilters();
     }
 
     updateProductCount(doc) {
