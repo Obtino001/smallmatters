@@ -612,3 +612,7 @@ exercer-filters {
   overflow: hidden;
   transition: max-height 0.35s ease;
 }
+
+.exr-drawer__footer .button--secondary{
+    color: black;
+}
