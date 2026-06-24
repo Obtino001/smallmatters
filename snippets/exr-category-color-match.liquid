@@ -1,0 +1,113 @@
+{% comment %}
+  Returns "1" when a category color label matches a storefront filter label.
+  Params: filter_label, category_label
+{% endcomment %}
+
+{%- liquid
+  assign exr_match = ''
+  assign filter_down = filter_label | downcase | strip
+  assign label_down = category_label | downcase | strip
+
+  if filter_down != blank and label_down != blank
+    if filter_down == label_down
+      assign exr_match = '1'
+    elsif filter_down.size >= 3
+      if label_down contains filter_down or filter_down contains label_down
+        assign exr_match = '1'
+      endif
+    endif
+  endif
+-%}
+
+{%- if exr_match == '' -%}
+  {%- case filter_down -%}
+    {%- when 'red' -%}
+      {%- if label_down == 'rød' or label_down == 'rod' or label_down == 'red' or label_down == 'burgunder' or label_down == 'burgundy' -%}
+        {%- assign exr_match = '1' -%}
+      {%- elsif label_down contains 'gammel r' or label_down contains 'gammel rød' or label_down contains 'gammel rod' or label_down contains 'gammel rosa' -%}
+        {%- assign exr_match = '1' -%}
+      {%- elsif label_down contains 'old rose' or label_down contains 'old rosa' or label_down contains 'wine' or label_down contains 'vinrød' -%}
+        {%- assign exr_match = '1' -%}
+      {%- endif -%}
+
+    {%- when 'pink' -%}
+      {%- if label_down == 'pink' or label_down == 'rosa' or label_down == 'lyserosa' or label_down == 'light pink' or label_down == 'dark pink' -%}
+        {%- assign exr_match = '1' -%}
+      {%- elsif label_down contains 'rosa' or label_down contains 'pink' -%}
+        {%- assign exr_match = '1' -%}
+      {%- endif -%}
+
+    {%- when 'blue' -%}
+      {%- if label_down == 'blue' or label_down == 'blå' or label_down == 'bla' or label_down == 'navy' or label_down == 'marineblå' or label_down == 'marinebla' -%}
+        {%- assign exr_match = '1' -%}
+      {%- elsif label_down contains 'blå' or label_down contains 'bla' or label_down contains 'blue' or label_down contains 'navy' or label_down contains 'dowblue' -%}
+        {%- assign exr_match = '1' -%}
+      {%- endif -%}
+
+    {%- when 'white' -%}
+      {%- if label_down == 'white' or label_down == 'hvit' or label_down == 'hvitt' or label_down == 'off white' or label_down == 'off-white' or label_down == 'offwhite' -%}
+        {%- assign exr_match = '1' -%}
+      {%- elsif label_down contains 'off white' or label_down contains 'off-white' -%}
+        {%- assign exr_match = '1' -%}
+      {%- endif -%}
+
+    {%- when 'green' -%}
+      {%- if label_down == 'green' or label_down == 'grønn' or label_down == 'gronn' or label_down == 'oliven' or label_down == 'olive' -%}
+        {%- assign exr_match = '1' -%}
+      {%- elsif label_down contains 'grønn' or label_down contains 'gronn' or label_down contains 'green' or label_down contains 'oliven' -%}
+        {%- assign exr_match = '1' -%}
+      {%- endif -%}
+
+    {%- when 'yellow' -%}
+      {%- if label_down == 'yellow' or label_down == 'gul' or label_down == 'lysegul' -%}
+        {%- assign exr_match = '1' -%}
+      {%- elsif label_down contains 'gul' or label_down contains 'yellow' -%}
+        {%- assign exr_match = '1' -%}
+      {%- endif -%}
+
+    {%- when 'brown' -%}
+      {%- if label_down == 'brown' or label_down == 'brun' or label_down == 'dark brown' or label_down == 'mørk brun' -%}
+        {%- assign exr_match = '1' -%}
+      {%- elsif label_down contains 'brun' or label_down contains 'brown' or label_down contains 'toast' -%}
+        {%- assign exr_match = '1' -%}
+      {%- endif -%}
+
+    {%- when 'beige' -%}
+      {%- if label_down == 'beige' or label_down == 'sand' or label_down == 'lyssand' or label_down == 'toast' or label_down == 'mørk beige' -%}
+        {%- assign exr_match = '1' -%}
+      {%- elsif label_down contains 'beige' or label_down contains 'sand' -%}
+        {%- assign exr_match = '1' -%}
+      {%- endif -%}
+
+    {%- when 'grey', 'gray' -%}
+      {%- if label_down == 'grey' or label_down == 'gray' or label_down == 'grå' or label_down == 'gra' or label_down == 'lysegrå' or label_down == 'lysegra' -%}
+        {%- assign exr_match = '1' -%}
+      {%- elsif label_down contains 'grå' or label_down contains 'gra' or label_down contains 'grey' or label_down contains 'gray' -%}
+        {%- assign exr_match = '1' -%}
+      {%- endif -%}
+
+    {%- when 'purple' -%}
+      {%- if label_down == 'purple' or label_down == 'lilla' or label_down == 'lavendel' or label_down == 'mørk lavendel' -%}
+        {%- assign exr_match = '1' -%}
+      {%- elsif label_down contains 'lilla' or label_down contains 'lavendel' or label_down contains 'purple' -%}
+        {%- assign exr_match = '1' -%}
+      {%- endif -%}
+
+    {%- when 'navy' -%}
+      {%- if label_down contains 'navy' or label_down contains 'marine' or label_down contains 'dark navy' -%}
+        {%- assign exr_match = '1' -%}
+      {%- endif -%}
+
+    {%- when 'orange' -%}
+      {%- if label_down == 'orange' or label_down contains 'orange' -%}
+        {%- assign exr_match = '1' -%}
+      {%- endif -%}
+
+    {%- when 'black' -%}
+      {%- if label_down == 'black' or label_down == 'sort' or label_down == 'svart' -%}
+        {%- assign exr_match = '1' -%}
+      {%- endif -%}
+  {%- endcase -%}
+{%- endif -%}
+
+{{- exr_match -}}

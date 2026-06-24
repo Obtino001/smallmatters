@@ -1,0 +1,17 @@
+{% comment %}
+  Extracts hex from a Shopify category color metaobject (color-pattern entry).
+  Param: cat_color
+  Outputs: hex string or empty.
+{% endcomment %}
+
+{%- liquid
+  assign exr_hex = ''
+  if cat_color != blank
+    assign exr_hex = cat_color.color | default: cat_color.colour | default: cat_color.hex | strip
+    if exr_hex == blank and cat_color.color.value != blank
+      assign exr_hex = cat_color.color.value | strip
+    endif
+  endif
+-%}
+
+{{- exr_hex -}}
