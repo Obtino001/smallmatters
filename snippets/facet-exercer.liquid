@@ -112,7 +112,8 @@
                             {% render 'exr-filter-swatch-colors',
                               color_label: value.label,
                               color_value: value.value,
-                              collection: collection
+                              collection: collection,
+                              shopify_swatch: value.swatch
                             %}
                             <span class="exr-swatch__name">{{ value.label }}</span>
                           </label>

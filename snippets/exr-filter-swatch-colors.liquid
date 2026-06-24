@@ -1,137 +1,160 @@
 {% comment %}
-  Renders filter swatch HTML from Shopify category metafield (color-pattern) first.
-  Params: color_label, color_value (optional), collection
+  Renders filter swatch HTML for collection color filters.
+  Params:
+    - color_label (required)
+    - color_value (optional)
+    - collection (required)
+    - shopify_swatch (optional) – value.swatch from Shopify filter API
+  Priority:
+    1. Shopify native swatch (stable when other filters are active)
+    2. Category metafield match on products
+    3. Name → hex fallback map (never uses wrong variant main color)
 {% endcomment %}
 
-{%- liquid
-  assign val_down = color_label | downcase | strip
-  assign val_value_down = color_value | default: color_label | downcase | strip
-  assign show_all_category = false
-  if val_down == 'multicolor' or val_down == 'flerfarge' or val_down contains 'multi-color' or val_down contains 'multi color'
-    assign show_all_category = true
-  endif
-
-  assign match_prod = blank
-  assign category_colors = blank
-  assign matched_hex = ''
-  assign matched_cat_label = ''
--%}
-
-{%- comment -%} Pass 1: exact label match {%- endcomment -%}
-{%- unless show_all_category -%}
-  {%- for prod in collection.products -%}
-    {%- assign cat_colors = prod.metafields.shopify['color-pattern'].value -%}
-    {%- if cat_colors == blank -%}{%- continue -%}{%- endif -%}
-
-    {%- for cat_color in cat_colors -%}
-      {%- assign cat_label = cat_color.label | default: cat_color.name | strip -%}
-      {%- assign cat_label_down = cat_label | downcase -%}
-      {%- if cat_label_down == blank -%}{%- continue -%}{%- endif -%}
-
-      {%- if val_down == cat_label_down or val_value_down == cat_label_down or val_down contains cat_label_down or cat_label_down contains val_down -%}
-        {%- capture matched_hex -%}{%- render 'exr-category-color-hex', cat_color: cat_color -%}{%- endcapture -%}
-        {%- assign matched_hex = matched_hex | strip -%}
-        {%- assign matched_cat_label = cat_label -%}
-        {%- assign match_prod = prod -%}
-        {%- break -%}
-      {%- endif -%}
-    {%- endfor -%}
-
-    {%- if match_prod != blank -%}{%- break -%}{%- endif -%}
-  {%- endfor -%}
-{%- endunless -%}
-
-{%- comment -%} Pass 2: taxonomy parent match (e.g. filter "Red" → product color "Gammel r") {%- endcomment -%}
-{%- if match_prod == blank and show_all_category == false -%}
-  {%- for prod in collection.products -%}
-    {%- assign cat_colors = prod.metafields.shopify['color-pattern'].value -%}
-    {%- if cat_colors == blank -%}{%- continue -%}{%- endif -%}
-
-    {%- for cat_color in cat_colors -%}
-      {%- assign cat_label = cat_color.label | default: cat_color.name | strip -%}
-      {%- capture taxonomy_hit -%}{%- render 'exr-category-color-match', filter_label: color_label, category_label: cat_label -%}{%- endcapture -%}
-      {%- assign taxonomy_hit = taxonomy_hit | strip -%}
-      {%- if taxonomy_hit == '1' -%}
-        {%- capture matched_hex -%}{%- render 'exr-category-color-hex', cat_color: cat_color -%}{%- endcapture -%}
-        {%- assign matched_hex = matched_hex | strip -%}
-        {%- assign matched_cat_label = cat_label -%}
-        {%- assign match_prod = prod -%}
-        {%- break -%}
-      {%- endif -%}
-    {%- endfor -%}
-
-    {%- if match_prod != blank -%}{%- break -%}{%- endif -%}
-  {%- endfor -%}
+{%- if shopify_swatch != blank -%}
+  {%- if shopify_swatch.color -%}
+    <span class="exr-swatch__color" style="background-color: rgb({{ shopify_swatch.color.rgb }});" title="{{ color_label | escape }}" aria-hidden="true"></span>
+  {%- elsif shopify_swatch.image -%}
+    <span
+      class="exr-swatch__color exr-swatch__color--image"
+      style="background-image: url({{ shopify_swatch.image | image_url: width: 80 }}); background-size: cover; background-position: center;"
+      title="{{ color_label | escape }}"
+      aria-hidden="true"
+    ></span>
+  {%- endif -%}
 {%- endif -%}
 
-{%- comment -%} Pass 3: color siblings {%- endcomment -%}
-{%- if match_prod == blank and show_all_category == false -%}
-  {%- for prod in collection.products -%}
-    {%- assign siblings = prod.metafields.custom.products_color.value -%}
-    {%- if siblings == blank -%}{%- continue -%}{%- endif -%}
-    {%- for sibling in siblings -%}
-      {%- assign cat_colors = sibling.metafields.shopify['color-pattern'].value -%}
+{%- unless shopify_swatch.color or shopify_swatch.image -%}
+  {%- liquid
+    assign val_down = color_label | downcase | strip
+    assign val_value_down = color_value | default: color_label | downcase | strip
+    assign show_all_category = false
+    if val_down == 'multicolor' or val_down == 'flerfarge' or val_down contains 'multi-color' or val_down contains 'multi color'
+      assign show_all_category = true
+    endif
+
+    assign match_prod = blank
+    assign category_colors = blank
+    assign matched_hex = ''
+    assign matched_cat_label = ''
+  -%}
+
+  {%- comment -%} Pass 1: exact category label match {%- endcomment -%}
+  {%- unless show_all_category -%}
+    {%- for prod in collection.products -%}
+      {%- assign cat_colors = prod.metafields.shopify['color-pattern'].value -%}
       {%- if cat_colors == blank -%}{%- continue -%}{%- endif -%}
+
       {%- for cat_color in cat_colors -%}
         {%- assign cat_label = cat_color.label | default: cat_color.name | strip -%}
         {%- assign cat_label_down = cat_label | downcase -%}
-        {%- capture taxonomy_hit -%}{%- render 'exr-category-color-match', filter_label: color_label, category_label: cat_label -%}{%- endcapture -%}
-        {%- assign taxonomy_hit = taxonomy_hit | strip -%}
-        {%- if val_down == cat_label_down or taxonomy_hit == '1' -%}
+        {%- if cat_label_down == blank -%}{%- continue -%}{%- endif -%}
+
+        {%- if val_down == cat_label_down or val_value_down == cat_label_down or val_down contains cat_label_down or cat_label_down contains val_down -%}
           {%- capture matched_hex -%}{%- render 'exr-category-color-hex', cat_color: cat_color -%}{%- endcapture -%}
           {%- assign matched_hex = matched_hex | strip -%}
           {%- assign matched_cat_label = cat_label -%}
-          {%- assign match_prod = sibling -%}
+          {%- assign match_prod = prod -%}
           {%- break -%}
         {%- endif -%}
       {%- endfor -%}
+
       {%- if match_prod != blank -%}{%- break -%}{%- endif -%}
     {%- endfor -%}
-    {%- if match_prod != blank -%}{%- break -%}{%- endif -%}
-  {%- endfor -%}
-{%- endif -%}
+  {%- endunless -%}
 
-{%- comment -%} Multicolor: all category colors {%- endcomment -%}
-{%- if show_all_category -%}
-  {%- for prod in collection.products -%}
-    {%- assign cat_colors = prod.metafields.shopify['color-pattern'].value -%}
-    {%- if cat_colors != blank and cat_colors.size > 1 -%}
-      {%- assign category_colors = cat_colors -%}
-      {%- break -%}
-    {%- endif -%}
-  {%- endfor -%}
-{%- endif -%}
+  {%- comment -%} Pass 2: taxonomy parent match (e.g. Red → Gammel r) {%- endcomment -%}
+  {%- if match_prod == blank and show_all_category == false -%}
+    {%- for prod in collection.products -%}
+      {%- assign cat_colors = prod.metafields.shopify['color-pattern'].value -%}
+      {%- if cat_colors == blank -%}{%- continue -%}{%- endif -%}
 
-{%- if show_all_category and category_colors != blank and category_colors.size > 1 -%}
-  <span class="exr-swatch__colors exr-swatch__colors--multi" aria-hidden="true">
-    {%- for cat_color in category_colors -%}
-      {%- capture chip_hex -%}{%- render 'exr-category-color-hex', cat_color: cat_color -%}{%- endcapture -%}
-      {%- assign chip_hex = chip_hex | strip -%}
-      {%- if chip_hex == '' -%}
-        {%- capture chip_hex -%}{%- render 'exr-color-hex-fallback', color_name: cat_color.label -%}{%- endcapture -%}
-        {%- assign chip_hex = chip_hex | strip -%}
-      {%- endif -%}
-      {%- unless chip_hex contains '#' -%}
-        {%- assign chip_hex = '#D1D5DB' -%}
-      {%- endunless -%}
-      <span class="exr-swatch__color" style="background-color: {{ chip_hex }};" title="{{ cat_color.label | escape }}"></span>
+      {%- for cat_color in cat_colors -%}
+        {%- assign cat_label = cat_color.label | default: cat_color.name | strip -%}
+        {%- capture taxonomy_hit -%}{%- render 'exr-category-color-match', filter_label: color_label, category_label: cat_label -%}{%- endcapture -%}
+        {%- assign taxonomy_hit = taxonomy_hit | strip -%}
+        {%- if taxonomy_hit == '1' -%}
+          {%- capture matched_hex -%}{%- render 'exr-category-color-hex', cat_color: cat_color -%}{%- endcapture -%}
+          {%- assign matched_hex = matched_hex | strip -%}
+          {%- assign matched_cat_label = cat_label -%}
+          {%- assign match_prod = prod -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- if match_prod != blank -%}{%- break -%}{%- endif -%}
     {%- endfor -%}
-  </span>
+  {%- endif -%}
 
-{%- elsif matched_hex != '' -%}
-  {%- unless matched_hex contains '#' -%}
-    {%- capture matched_hex -%}{%- render 'exr-color-hex-fallback', color_name: matched_cat_label -%}{%- endcapture -%}
-    {%- assign matched_hex = matched_hex | strip -%}
-  {%- endunless -%}
-  {%- unless matched_hex contains '#' -%}
-    {%- assign matched_hex = '#D1D5DB' -%}
-  {%- endunless -%}
-  <span class="exr-swatch__color" style="background-color: {{ matched_hex }};" title="{{ matched_cat_label | escape }}" aria-hidden="true"></span>
+  {%- comment -%} Pass 3: color siblings {%- endcomment -%}
+  {%- if match_prod == blank and show_all_category == false -%}
+    {%- for prod in collection.products -%}
+      {%- assign siblings = prod.metafields.custom.products_color.value -%}
+      {%- if siblings == blank -%}{%- continue -%}{%- endif -%}
+      {%- for sibling in siblings -%}
+        {%- assign cat_colors = sibling.metafields.shopify['color-pattern'].value -%}
+        {%- if cat_colors == blank -%}{%- continue -%}{%- endif -%}
+        {%- for cat_color in cat_colors -%}
+          {%- assign cat_label = cat_color.label | default: cat_color.name | strip -%}
+          {%- assign cat_label_down = cat_label | downcase -%}
+          {%- capture taxonomy_hit -%}{%- render 'exr-category-color-match', filter_label: color_label, category_label: cat_label -%}{%- endcapture -%}
+          {%- assign taxonomy_hit = taxonomy_hit | strip -%}
+          {%- if val_down == cat_label_down or taxonomy_hit == '1' -%}
+            {%- capture matched_hex -%}{%- render 'exr-category-color-hex', cat_color: cat_color -%}{%- endcapture -%}
+            {%- assign matched_hex = matched_hex | strip -%}
+            {%- assign matched_cat_label = cat_label -%}
+            {%- assign match_prod = sibling -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if match_prod != blank -%}{%- break -%}{%- endif -%}
+      {%- endfor -%}
+      {%- if match_prod != blank -%}{%- break -%}{%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
 
-{%- else -%}
-  {%- capture swatch_css -%}
-    {%- render 'exr-filter-swatch-bg', color_label: color_label, color_value: color_value, collection: collection, single_color_only: true -%}
-  {%- endcapture -%}
-  {%- assign swatch_css = swatch_css | strip -%}
-  <span class="exr-swatch__color" style="background: {{ swatch_css }};" aria-hidden="true"></span>
-{%- endif -%}
+  {%- if show_all_category -%}
+    {%- for prod in collection.products -%}
+      {%- assign cat_colors = prod.metafields.shopify['color-pattern'].value -%}
+      {%- if cat_colors != blank and cat_colors.size > 1 -%}
+        {%- assign category_colors = cat_colors -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+
+  {%- if show_all_category and category_colors != blank and category_colors.size > 1 -%}
+    <span class="exr-swatch__colors exr-swatch__colors--multi" aria-hidden="true">
+      {%- for cat_color in category_colors -%}
+        {%- capture chip_hex -%}{%- render 'exr-category-color-hex', cat_color: cat_color -%}{%- endcapture -%}
+        {%- assign chip_hex = chip_hex | strip -%}
+        {%- if chip_hex == '' -%}
+          {%- capture chip_hex -%}{%- render 'exr-color-hex-fallback', color_name: cat_color.label -%}{%- endcapture -%}
+          {%- assign chip_hex = chip_hex | strip -%}
+        {%- endif -%}
+        {%- unless chip_hex contains '#' -%}
+          {%- assign chip_hex = '#D1D5DB' -%}
+        {%- endunless -%}
+        <span class="exr-swatch__color" style="background-color: {{ chip_hex }};" title="{{ cat_color.label | escape }}"></span>
+      {%- endfor -%}
+    </span>
+
+  {%- elsif matched_hex != '' -%}
+    {%- unless matched_hex contains '#' -%}
+      {%- capture matched_hex -%}{%- render 'exr-color-hex-fallback', color_name: matched_cat_label -%}{%- endcapture -%}
+      {%- assign matched_hex = matched_hex | strip -%}
+    {%- endunless -%}
+    {%- unless matched_hex contains '#' -%}
+      {%- assign matched_hex = '#D1D5DB' -%}
+    {%- endunless -%}
+    <span class="exr-swatch__color" style="background-color: {{ matched_hex }};" title="{{ matched_cat_label | escape }}" aria-hidden="true"></span>
+
+  {%- else -%}
+    {%- capture fallback_hex -%}{%- render 'exr-color-hex-fallback', color_name: color_label -%}{%- endcapture -%}
+    {%- assign fallback_hex = fallback_hex | strip -%}
+    {%- unless fallback_hex contains '#' -%}
+      {%- assign fallback_hex = '#D1D5DB' -%}
+    {%- endunless -%}
+    <span class="exr-swatch__color" style="background-color: {{ fallback_hex }};" title="{{ color_label | escape }}" aria-hidden="true"></span>
+  {%- endif -%}
+{%- endunless -%}
