@@ -251,13 +251,15 @@ exercer-filters {
   align-items: center;
   gap: 6px;
   padding: 4px 0;
+  min-height: 44px;
 }
 
 .exr-swatch__input {
   position: absolute;
   opacity: 0;
-  width: 0;
-  height: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
   pointer-events: none;
 }
 
@@ -270,6 +272,11 @@ exercer-filters {
   color: var(--exr-text);
   user-select: none;
   -webkit-user-select: none;
+  flex: 1;
+  min-height: 44px;
+  padding: 6px 0;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 /* Checkbox visual */

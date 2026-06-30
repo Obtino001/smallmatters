@@ -169,9 +169,6 @@ if (!customElements.get('exercer-filters')) {
         clearTimeout(this.debounceTimer);
         this.debounceTimer = setTimeout(() => {
           this.submitFilters();
-          if (window.innerWidth < 990) {
-            this.closeDrawer();
-          }
         }, 500);
       });
 
@@ -181,18 +178,12 @@ if (!customElements.get('exercer-filters')) {
           if (e.key === 'Enter') {
             e.preventDefault();
             this.submitFilters();
-            if (window.innerWidth < 990) {
-              this.closeDrawer();
-            }
           }
         });
         input.addEventListener('blur', () => {
           clearTimeout(this.debounceTimer);
           this.debounceTimer = setTimeout(() => {
             this.submitFilters();
-            if (window.innerWidth < 990) {
-              this.closeDrawer();
-            }
           }, 400);
         });
       });
