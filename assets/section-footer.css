@@ -351,9 +351,8 @@
     font-weight: 500;
     font-style: 55 Roman;
     font-size: 14px;
-    leading-trim: NONE;
     line-height: 100%;
-    letter-spacing: 0%;
+    letter-spacing: 1px;
     text-decoration: none;
 }
 
