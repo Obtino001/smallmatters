@@ -68,6 +68,16 @@ body.home-filter-open .home-filter-fab {
   pointer-events: none;
 }
 
+.home-filter-category--child {
+  padding-left: 12px;
+  font-size: 13px;
+}
+
+.home-filter-categories-group .exr-group__body {
+  max-height: 220px;
+  overflow-y: auto;
+}
+
 .home-filter-drawer .exr-drawer__body {
   padding-bottom: 8px;
 }

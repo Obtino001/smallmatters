@@ -6,6 +6,9 @@
 {%- liquid
   assign home_filter_col = filter_collection | default: section.settings.filter_collection
   if home_filter_col == blank
+    assign home_filter_col = collections.all
+  endif
+  if home_filter_col == blank
     for block in section.blocks
       if block.settings.collection != blank
         assign home_filter_col = block.settings.collection
@@ -63,36 +66,17 @@
       {%- paginate home_filter_col.products by 1 -%}
         {%- assign collection = home_filter_col -%}
 
-        {%- if section.blocks.size > 0 or section.settings.category_menu != blank -%}
-          <details class="exr-group home-filter-categories-group" open>
-            <summary class="exr-group__trigger">
-              <span>{{ section.settings.home_filter_categories_label | default: 'KATEGORI' | escape }}</span>
-              <span class="exr-group__arrow">
-                <svg width="12" height="7" viewBox="0 0 12 7" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-            </summary>
-            <div class="exr-group__body">
-              <ul class="home-filter-categories">
-                {%- for block in section.blocks -%}
-                  {%- if block.settings.collection != blank -%}
-                    <li>
-                      <a class="home-filter-category" href="{{ block.settings.collection.url }}">
-                        {{ block.settings.tab_label | default: block.settings.collection.title }}
-                      </a>
-                    </li>
-                  {%- endif -%}
-                {%- endfor -%}
-                {%- if section.settings.category_menu != blank -%}
-                  {%- for link in section.settings.category_menu.links -%}
-                    <li>
-                      <a class="home-filter-category" href="{{ link.url }}">{{ link.title }}</a>
-                    </li>
-                  {%- endfor -%}
-                {%- endif -%}
-              </ul>
-            </div>
-          </details>
-        {%- endif -%}
+        <details class="exr-group home-filter-categories-group" open>
+          <summary class="exr-group__trigger">
+            <span>{{ section.settings.home_filter_categories_label | default: 'KATEGORI' | escape }}</span>
+            <span class="exr-group__arrow">
+              <svg width="12" height="7" viewBox="0 0 12 7" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </summary>
+          <div class="exr-group__body">
+            {% render 'home-filter-categories', section: section, stock_param: false %}
+          </div>
+        </details>
 
         <form
           id="home-filter-form-{{ section.id }}"
