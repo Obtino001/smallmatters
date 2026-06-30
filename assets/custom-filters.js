@@ -131,6 +131,21 @@ if (!customElements.get('exercer-filters')) {
       return `${parsed.pathname}${parsed.search}${parsed.hash}`;
     }
 
+    get sectionId() {
+      return this.dataset.exrSectionId || '';
+    }
+
+    resolveFetchURL(url) {
+      const parsed = new URL(url, window.location.origin);
+      const params = parsed.searchParams.toString();
+
+      if (this.sectionId) {
+        return `${parsed.pathname}?section_id=${encodeURIComponent(this.sectionId)}${params ? `&${params}` : ''}`;
+      }
+
+      return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+    }
+
     lockInStockFilters() {
       this.querySelectorAll('[data-exr-in-stock-locked]').forEach((input) => {
         input.checked = true;
@@ -157,7 +172,7 @@ if (!customElements.get('exercer-filters')) {
           if (window.innerWidth < 990) {
             this.closeDrawer();
           }
-        }, 350);
+        }, 500);
       });
 
       // Price range inputs – submit on Enter or blur
@@ -240,6 +255,7 @@ if (!customElements.get('exercer-filters')) {
       this.isLoading = true;
 
       url = this.ensureInStockFilter(url);
+      const fetchUrl = this.resolveFetchURL(url);
 
       // Show loading
       this.setLoading(true);
@@ -248,7 +264,7 @@ if (!customElements.get('exercer-filters')) {
       history.pushState({}, '', url);
 
       try {
-        const response = await fetch(url, {
+        const response = await fetch(fetchUrl, {
           headers: { 'X-Requested-With': 'XMLHttpRequest' }
         });
         const html = await response.text();
@@ -330,9 +346,10 @@ if (!customElements.get('exercer-filters')) {
       const baseObj = new URL(this.buildURL(), window.location.origin);
       baseObj.searchParams.set('page', nextPage);
       const url = baseObj.toString();
+      const fetchUrl = this.resolveFetchURL(url);
 
       try {
-        const response = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+        const response = await fetch(fetchUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
         const html = await response.text();
         const doc = new DOMParser().parseFromString(html, 'text/html');
 

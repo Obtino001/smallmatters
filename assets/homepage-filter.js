@@ -36,6 +36,23 @@ if (!customElements.get('home-filter-widget')) {
         if (e.key === 'Escape') this.close();
       };
       document.addEventListener('keydown', this.onKeydownBound);
+
+      this.schedulePrefetch();
+    }
+
+    schedulePrefetch() {
+      if (!this.fetchUrl || this.filtersLoaded) return;
+
+      const prefetch = () => {
+        if (this.filtersLoaded || this.filtersLoading) return;
+        this.loadFilters();
+      };
+
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(prefetch, { timeout: 4000 });
+      } else {
+        setTimeout(prefetch, 2500);
+      }
     }
 
     disconnectedCallback() {
@@ -108,7 +125,9 @@ if (!customElements.get('home-filter-widget')) {
       this.overlay?.classList.add('is-visible');
       document.body.classList.add('home-filter-open');
       document.body.style.overflow = 'hidden';
-      this.loadFilters();
+      if (!this.filtersLoaded) {
+        this.loadFilters();
+      }
     }
 
     close() {

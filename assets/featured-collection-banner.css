@@ -20,6 +20,8 @@ h2.title {
 .featured-collection-swiper .swiper-slide {
   height: auto;
   box-sizing: border-box;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 420px;
 }
 .featured-collection-swiper:not(.swiper-initialized)
   .featured-collection-swiper-button-next,

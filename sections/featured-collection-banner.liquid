@@ -1,5 +1,9 @@
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-rating.css' | asset_url | stylesheet_tag }}
+{{ 'component-volume-pricing.css' | asset_url | stylesheet_tag }}
+{{ 'quick-order-list.css' | asset_url | stylesheet_tag }}
+{{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
 {{ 'featured-collection-banner.css' | asset_url | stylesheet_tag }}
 
 {% unless section.settings.quick_add == 'none' %}
@@ -186,13 +190,25 @@
                   <div class="swiper-wrapper">
                     {% for product in current_collection.products limit: section.settings.products_to_show %}
                       <div class="swiper-slide featured-collection-slide">
+                        {%- liquid
+                          assign card_lazy = true
+                          if forloop.index <= 2
+                            assign card_lazy = false
+                          endif
+                          assign card_skip_styles = false
+                          unless forloop.first
+                            assign card_skip_styles = true
+                          endunless
+                        -%}
                         {% render 'card-product-color-swatches',
                           show_swatches: true,
-                          swatch_limit: 3,
+                          swatch_limit: 2,
+                          card_image_limit: 2,
                           card_product: product,
                           media_aspect_ratio: section.settings.image_ratio,
                           image_shape: section.settings.image_shape,
-                          lazy_load: false,
+                          lazy_load: card_lazy,
+                          skip_styles: card_skip_styles,
                           show_secondary_image: section.settings.show_secondary_image,
                           show_vendor: section.settings.show_vendor,
                           show_rating: section.settings.show_rating,
@@ -240,44 +256,54 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const tabButtons = document.querySelectorAll('.tab-button');
-    const tabPanels = document.querySelectorAll('.tab-content-panel');
+    const tabButtons = document.querySelectorAll('#shopify-section-{{ section.id }} .tab-button');
+    const tabPanels = document.querySelectorAll('#shopify-section-{{ section.id }} .tab-content-panel');
+    const swipers = {};
+
+    function initSwiper(blockId) {
+      if (swipers[blockId]) return swipers[blockId];
+      const containerSelector = '.swiper-' + blockId;
+      const swiperElement = document.querySelector(containerSelector);
+      if (!swiperElement || typeof Swiper === 'undefined') return null;
+
+      swipers[blockId] = new Swiper(containerSelector, {
+        slidesPerView: 1.7,
+        spaceBetween: 10,
+        loop: false,
+        watchOverflow: true,
+        preloadImages: false,
+        lazy: { loadPrevNext: true, loadPrevNextAmount: 1 },
+        navigation: {
+          nextEl: '.next-' + blockId,
+          prevEl: '.prev-' + blockId,
+        },
+        breakpoints: {
+          480: { slidesPerView: 1.8, spaceBetween: 10 },
+          1024: { slidesPerView: 2, spaceBetween: 10 },
+          1224: { slidesPerView: 2.8, spaceBetween: 10 },
+          1624: { slidesPerView: 3.8, spaceBetween: 10 },
+        }
+      });
+      return swipers[blockId];
+    }
+
     tabButtons.forEach(button => {
       button.addEventListener('click', () => {
         tabButtons.forEach(btn => btn.classList.remove('active'));
         tabPanels.forEach(panel => panel.classList.remove('active'));
         button.classList.add('active');
         const targetId = button.getAttribute('data-tab-target');
-        document.getElementById(targetId).classList.add('active');
+        const panel = document.getElementById(targetId);
+        if (panel) panel.classList.add('active');
+        const blockId = targetId.replace('tab-{{ section.id }}-', '');
+        requestAnimationFrame(() => initSwiper(blockId));
       });
     });
 
     {% for block in section.blocks %}
-      (function() {
-        var containerSelector = '.swiper-{{ block.id }}';
-        var swiperElement = document.querySelector(containerSelector);
-
-        if (!swiperElement || typeof Swiper === 'undefined') return;
-        new Swiper(containerSelector, {
-          slidesPerView: 1.7,
-          spaceBetween: 10,
-          loop: false,
-          observer: true,
-          observeParents: true,
-
-          navigation: {
-            nextEl: '.next-{{ block.id }}',
-            prevEl: '.prev-{{ block.id }}',
-          },
-
-          breakpoints: {
-                480: { slidesPerView: 1.8, spaceBetween: 10 },
-                1024: { slidesPerView: 2, spaceBetween: 10 },
-                1224: { slidesPerView: 2.8, spaceBetween: 10 },
-                1624: { slidesPerView: 3.8, spaceBetween: 10 },
-          }
-        });
-      })();
+      {% if forloop.first %}
+        initSwiper('{{ block.id }}');
+      {% endif %}
     {% endfor %}
   });
 </script>

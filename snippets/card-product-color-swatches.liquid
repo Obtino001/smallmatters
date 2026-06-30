@@ -53,7 +53,7 @@
 
 
 
-  <div class="card-wrapper product-card-wrapper underline-links-hover" id="wi-card-{{ section.id }}-{{ card_product.id }}">
+  <div class="card-wrapper product-card-wrapper underline-links-hover" id="wi-card-{{ section.id }}-{{ card_product.id }}" style="content-visibility: auto; contain-intrinsic-size: auto 420px;">
     <card-product
       class="
         card card--{{ settings.card_style }}
@@ -75,9 +75,15 @@
         <div class="WI_productCard_img_in">
           <a href="{{ card_product.url }}" class="product-link"></a>
           
-          {% assign image_limit = 4 %}
+          {% assign image_limit = card_image_limit | default: 4 %}
           {% assign image_count = card_product.images.size %}
           {% if image_count > image_limit %}{% assign image_count = image_limit %}{% endif %}
+          {%- liquid
+            assign card_img_loading = 'lazy'
+            if lazy_load == false
+              assign card_img_loading = 'eager'
+            endif
+          -%}
 
           <div class="WI_productCard_img_B_CSS">
           {%- for image in card_product.images limit: image_limit -%}
@@ -92,10 +98,36 @@
 <div class="WI_slider_track">
   {%- for image in card_product.images limit: image_limit -%}
     <div class="WI_slider_item {% if forloop.first %}hover-active{% endif %}">
-      <img src="{{ image | image_url: width: 533 }}" alt="{{ image.alt | escape }}" loading="lazy" class="img-main" width="533" height="{{ 533 | divided_by: image.aspect_ratio | ceil }}">
+      <img
+        src="{{ image | image_url: width: 400 }}"
+        srcset="
+          {{ image | image_url: width: 200 }} 200w,
+          {{ image | image_url: width: 400 }} 400w,
+          {{ image | image_url: width: 533 }} 533w
+        "
+        sizes="(min-width: 990px) 25vw, 50vw"
+        alt="{{ image.alt | escape }}"
+        loading="{{ card_img_loading }}"
+        {% if lazy_load == false and forloop.first %}fetchpriority="high"{% endif %}
+        class="img-main"
+        width="400"
+        height="{{ 400 | divided_by: image.aspect_ratio | ceil }}"
+      >
       
-      {% if forloop.first and card_product.images[1] != blank %}
-        <img src="{{ card_product.images[1] | image_url: width: 533 }}" alt="" loading="lazy" class="img-secondary" width="533" height="{{ 533 | divided_by: card_product.images[1].aspect_ratio | ceil }}">
+      {% if forloop.first and show_secondary_image and card_product.images[1] != blank %}
+        <img
+          src="{{ card_product.images[1] | image_url: width: 400 }}"
+          srcset="
+            {{ card_product.images[1] | image_url: width: 200 }} 200w,
+            {{ card_product.images[1] | image_url: width: 400 }} 400w
+          "
+          sizes="(min-width: 990px) 25vw, 50vw"
+          alt=""
+          loading="lazy"
+          class="img-secondary"
+          width="400"
+          height="{{ 400 | divided_by: card_product.images[1].aspect_ratio | ceil }}"
+        >
       {% endif %}
     </div>
   {%- endfor -%}

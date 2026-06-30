@@ -1,15 +1,14 @@
 {% comment %}
-  ============================================================================
-  EXERCER FILTERS – 100% Custom Filter Snippet
-  Uses: custom-exercer.css, custom-filters.js
-  No Dawn dependency.
-  ============================================================================
+  EXERCER FILTERS – custom-exercer.css, custom-filters.js
+  Params: skip_assets, ajax_section_id
 {% endcomment %}
 
-{{ 'custom-exercer.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'custom-filters.js' | asset_url }}" defer="defer"></script>
+{%- unless skip_assets -%}
+  {{ 'custom-exercer.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'custom-filters.js' | asset_url }}" defer="defer"></script>
+{%- endunless -%}
 
-<exercer-filters>
+<exercer-filters{% if ajax_section_id != blank %} data-exr-section-id="{{ ajax_section_id }}"{% endif %}>
 
   {%- comment -%} ── Toolbar above the grid ── {%- endcomment -%}
   <div class="exr-toolbar">

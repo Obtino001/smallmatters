@@ -1,6 +1,10 @@
 {{ 'template-collection.css' | asset_url | stylesheet_tag }}
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-rating.css' | asset_url | stylesheet_tag }}
+{{ 'component-volume-pricing.css' | asset_url | stylesheet_tag }}
+{{ 'quick-order-list.css' | asset_url | stylesheet_tag }}
+{{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
 
 {% if section.settings.image_shape == 'blob' %}
   {{ 'mask-blobs.css' | asset_url | stylesheet_tag }}
@@ -20,6 +24,11 @@
   <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'price-per-item.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'quick-order-list.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
+  {{ 'custom-exercer.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'custom-filters.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}
 
 {%- style -%}
@@ -64,7 +73,9 @@
           {% render 'facet-exercer',
             enable_filtering: section.settings.enable_filtering,
             enable_sorting: section.settings.enable_sorting,
-            filter_type: section.settings.filter_type
+            filter_type: section.settings.filter_type,
+            ajax_section_id: section.id,
+            skip_assets: true
           %}
         </aside>
   </div>
@@ -128,21 +139,7 @@
     {%- endif -%}
 
     <div class="{% if section.settings.filter_type == 'vertical' %} facets-vertical padding-with {% endif %}">
-      {%- comment -%} Custom exercer filter assets are loaded inside the snippet {%- endcomment -%}
-      {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
-        <aside
-          aria-labelledby="verticalTitle"
-          class="facets-wrapper large-up-hide-none {% unless section.settings.enable_filtering %} facets-wrapper--no-filters{% endunless %}{% if section.settings.filter_type != 'vertical' %} padding-with{% endif %}"
-          id="main-collection-filters"
-          data-id="{{ section.id }}"
-        >
-          {% render 'facet-exercer',
-            enable_filtering: section.settings.enable_filtering,
-            enable_sorting: section.settings.enable_sorting,
-            filter_type: section.settings.filter_type
-          %}
-        </aside>
-      {%- endif -%}
+      {%- comment -%} Filter UI is rendered once above in collection-category-tabs-mob {%- endcomment -%}
 
       <div
         class="product-grid-container{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
@@ -220,19 +217,21 @@
                   {%- assign lazy_load = true -%}
                 {%- endif -%}
                 <li
-                  class="grid__item  collection-grid-item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                  class="grid__item collection-grid-item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                  style="content-visibility: auto; contain-intrinsic-size: auto 480px;{% if settings.animations_reveal_on_scroll %} --animation-order: {{ forloop.index }};{% endif %}"
                   {% if settings.animations_reveal_on_scroll %}
                     data-cascade
-                    style="--animation-order: {{ forloop.index }};"
                   {% endif %}
                 >
                  {% render 'card-product-color-swatches',
                     show_swatches: true,
                     swatch_limit: 3,
+                    card_image_limit: 2,
                     card_product: product,
                     media_aspect_ratio: section.settings.image_ratio,
                     image_shape: section.settings.image_shape,
-                    lazy_load: false,
+                    lazy_load: lazy_load,
+                    skip_styles: skip_card_product_styles,
                     show_secondary_image: section.settings.show_secondary_image,
                     show_vendor: section.settings.show_vendor,
                     show_rating: section.settings.show_rating,
@@ -240,8 +239,8 @@
                     quick_add: section.settings.quick_add
                   %}
                 </li>
+                {% assign skip_card_product_styles = true %}
                 {% assign index = forloop.index %}
-                {%- assign skip_card_product_styles = true -%}
                 {% for block in section.blocks %}
                   {% if block.settings.insert_after == index %}
                     {% case block.type %}

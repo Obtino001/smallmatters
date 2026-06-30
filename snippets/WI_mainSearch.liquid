@@ -436,28 +436,32 @@ predictive-search .logo {
           </div>
         </div>
 
-        <div class="WI_searchUpsell_proResult">
-          {%- liquid
-            if true
-              assign product_limit = 20
-            else
-              assign product_limit = section.settings.grid | times: section.settings.rows
-            endif
-          -%}
-          {%- assign serProducts = settings.searchPro -%}
+        <div class="WI_searchUpsell_proResult" data-search-upsell hidden>
+          {%- assign product_limit = 4 -%}
           <div class="collection-listing" data-cc-animate="cc-fade-in-up">
-            <div class="product-list product-list--per-row-{{ section.settings.grid }} product-list--image-shape-{{ settings.prod_thumb_shape }} carousel">
-              {% for product in serProducts %}
+            <div class="product-list product-list--per-row-4 product-list--image-shape-{{ settings.prod_thumb_shape }} carousel">
+              {% for product in settings.searchPro limit: product_limit %}
               <div class="WI_searchUpsell_products">
+                {%- liquid
+                  assign search_card_lazy = true
+                  if forloop.first
+                    assign search_card_lazy = false
+                  endif
+                  assign search_skip_styles = false
+                  unless forloop.first
+                    assign search_skip_styles = true
+                  endunless
+                -%}
                 {% render 'card-product',
                     card_product: product,
                     media_aspect_ratio: 'square',
                     image_shape: 'default',
-                    show_secondary_image: true,
+                    show_secondary_image: false,
                     show_vendor: false,
                     show_rating: false,
-                    lazy_load: false,
-                    quick_add:  false,
+                    lazy_load: search_card_lazy,
+                    skip_styles: search_skip_styles,
+                    quick_add: false,
                     section_id: section.id
                   %}
               </div>
@@ -473,11 +477,19 @@ predictive-search .logo {
 </predictive-search>
 
 
-<script src="{{ 'WI_predictiveSearch.js' | asset_url }}" ></script>
+<script src="{{ 'WI_predictiveSearch.js' | asset_url }}" defer></script>
 <script>
   let mainSerch = document.querySelector('predictive-search');
+  const searchUpsell = document.querySelector('[data-search-upsell]');
   
+  function revealSearchUpsell() {
+    if (searchUpsell && searchUpsell.hasAttribute('hidden')) {
+      searchUpsell.removeAttribute('hidden');
+    }
+  }
+
   function openSearch() {
+    revealSearchUpsell();
     mainSerch.style.display = "flex";
     document.body.classList.add('search-open');
       setTimeout(()=>{
