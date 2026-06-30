@@ -18,9 +18,6 @@
  *  - Browser back/forward support
  */
 if (!customElements.get('exercer-filters')) {
-  const EXR_IN_STOCK_PARAM = 'filter.v.availability';
-  const EXR_IN_STOCK_VALUE = '1';
-
   class ExercerFilters extends HTMLElement {
     constructor() {
       super();
@@ -47,21 +44,8 @@ if (!customElements.get('exercer-filters')) {
       this.bindSort();
       this.bindAccordions();
       this.bindInfiniteScroll();
-      this.lockInStockFilters();
 
       window.addEventListener('popstate', this.onPopStateBound);
-
-      const urlWithStock = this.ensureInStockFilter(window.location.href);
-      const shouldFetch =
-        urlWithStock !== window.location.href ||
-        (this.dataset.exrFetchBase && window.location.search.length > 0);
-
-      if (shouldFetch) {
-        if (urlWithStock !== window.location.href) {
-          history.replaceState({}, '', urlWithStock);
-        }
-        this.fetchAndRender(urlWithStock);
-      }
     }
 
     disconnectedCallback() {
@@ -129,61 +113,11 @@ if (!customElements.get('exercer-filters')) {
       });
     }
 
-    get historyBase() {
-      return this.dataset.exrHistoryBase || window.location.pathname;
-    }
-
-    get fetchBase() {
-      return this.dataset.exrFetchBase || '';
-    }
-
-    get sectionId() {
-      return this.dataset.exrSectionId || '';
-    }
-
-    ensureInStockFilter(url) {
-      const parsed = new URL(url, window.location.origin);
-      if (!parsed.searchParams.has(EXR_IN_STOCK_PARAM)) {
-        parsed.searchParams.set(EXR_IN_STOCK_PARAM, EXR_IN_STOCK_VALUE);
-      }
-      const base = this.historyBase;
-      return `${base}${parsed.search}${parsed.hash}`;
-    }
-
-    resolveFetchURL(url) {
-      const parsed = new URL(url, window.location.origin);
-
-      if (this.fetchBase && this.sectionId) {
-        const params = parsed.searchParams.toString();
-        return `${this.fetchBase}?section_id=${encodeURIComponent(this.sectionId)}${params ? `&${params}` : ''}`;
-      }
-
-      if (this.fetchBase) {
-        return `${this.fetchBase}${parsed.search}${parsed.hash}`;
-      }
-
-      return `${parsed.pathname}${parsed.search}${parsed.hash}`;
-    }
-
-    lockInStockFilters() {
-      this.querySelectorAll('[data-exr-in-stock-locked]').forEach((input) => {
-        input.checked = true;
-        input.addEventListener('change', () => {
-          input.checked = true;
-        });
-      });
-    }
-
     /* ---- Form (checkbox / price changes) ---- */
     bindForm() {
       if (!this.form) return;
 
       this.form.addEventListener('change', (e) => {
-        if (e.target.matches('[data-exr-in-stock-locked]')) {
-          e.target.checked = true;
-          return;
-        }
-
         // Debounce for rapid clicking
         clearTimeout(this.debounceTimer);
         this.debounceTimer = setTimeout(() => {
@@ -250,8 +184,6 @@ if (!customElements.get('exercer-filters')) {
         }
       }
 
-      params.set(EXR_IN_STOCK_PARAM, EXR_IN_STOCK_VALUE);
-
       // Grab sort_by if present
       const sortSelect = this.querySelector('[data-exr-sort]');
       if (sortSelect && sortSelect.value) {
@@ -259,12 +191,12 @@ if (!customElements.get('exercer-filters')) {
       }
 
       const queryString = params.toString();
-      return `${this.historyBase}${queryString ? '?' + queryString : ''}`;
+      return `${window.location.pathname}${queryString ? '?' + queryString : ''}`;
     }
 
     /* ---- Submit filters ---- */
     submitFilters() {
-      const url = this.ensureInStockFilter(this.buildURL());
+      const url = this.buildURL();
       this.fetchAndRender(url);
     }
 
@@ -273,9 +205,6 @@ if (!customElements.get('exercer-filters')) {
       if (this.isLoading) return;
       this.isLoading = true;
 
-      url = this.ensureInStockFilter(url);
-      const fetchUrl = this.resolveFetchURL(url);
-
       // Show loading
       this.setLoading(true);
 
@@ -283,7 +212,7 @@ if (!customElements.get('exercer-filters')) {
       history.pushState({}, '', url);
 
       try {
-        const response = await fetch(fetchUrl, {
+        const response = await fetch(url, {
           headers: { 'X-Requested-With': 'XMLHttpRequest' }
         });
         const html = await response.text();
@@ -365,10 +294,9 @@ if (!customElements.get('exercer-filters')) {
       const baseObj = new URL(this.buildURL(), window.location.origin);
       baseObj.searchParams.set('page', nextPage);
       const url = baseObj.toString();
-      const fetchUrl = this.resolveFetchURL(url);
 
       try {
-        const response = await fetch(fetchUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+        const response = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
         const html = await response.text();
         const doc = new DOMParser().parseFromString(html, 'text/html');
 
@@ -449,7 +377,6 @@ if (!customElements.get('exercer-filters')) {
       this.form = this.querySelector('[data-exr-form]');
       this.bindForm();
       this.bindAccordions();
-      this.lockInStockFilters();
     }
 
     updateProductCount(doc) {

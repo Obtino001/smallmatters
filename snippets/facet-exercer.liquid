@@ -3,27 +3,13 @@
   EXERCER FILTERS – 100% Custom Filter Snippet
   Uses: custom-exercer.css, custom-filters.js
   No Dawn dependency.
-
-  Optional params (homepage / non-collection URLs):
-    - filter_collection: collection object for filters when not on collection template
-    - exr_fetch_base: collection URL path for AJAX filter requests
-    - exr_section_id: Shopify section_id for section rendering API
-    - exr_history_base: browser history path (e.g. homepage /)
   ============================================================================
 {% endcomment %}
-
-{%- if filter_collection != blank -%}
-  {%- assign collection = filter_collection -%}
-{%- endif -%}
 
 {{ 'custom-exercer.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'custom-filters.js' | asset_url }}" defer="defer"></script>
 
-<exercer-filters
-  {% if exr_fetch_base != blank %}data-exr-fetch-base="{{ exr_fetch_base }}"{% endif %}
-  {% if exr_section_id != blank %}data-exr-section-id="{{ exr_section_id }}"{% endif %}
-  {% if exr_history_base != blank %}data-exr-history-base="{{ exr_history_base }}"{% endif %}
->
+<exercer-filters>
 
   {%- comment -%} ── Toolbar above the grid ── {%- endcomment -%}
   <div class="exr-toolbar">
@@ -97,7 +83,7 @@
 
               {%- case filter.type -%}
 
-                {%- when 'boolean', 'list' -%}
+                {%- when 'list' -%}
                   {%- comment -%} Detect if this is a color filter {%- endcomment -%}
                   {%- assign is_color = false -%}
                   {%- assign label_lower = filter.label | downcase -%}
@@ -126,8 +112,7 @@
                             {% render 'exr-filter-swatch-colors',
                               color_label: value.label,
                               color_value: value.value,
-                              collection: collection,
-                              shopify_swatch: value.swatch
+                              collection: collection
                             %}
                             <span class="exr-swatch__name">{{ value.label }}</span>
                           </label>
@@ -137,15 +122,8 @@
 
                   {%- else -%}
                     {%- comment -%} ── PILL BUTTONS (Product Type, Size, Activity, etc.) ── {%- endcomment -%}
-                    {%- assign is_availability_filter = false -%}
-                    {%- if filter.param_name contains 'availability' -%}
-                      {%- assign is_availability_filter = true -%}
-                    {%- endif -%}
                     <ul class="exr-pills">
                       {%- for value in filter.values -%}
-                        {%- if is_availability_filter and value.value != '1' -%}
-                          {%- continue -%}
-                        {%- endif -%}
                         <li class="exr-pill{% if value.count == 0 and value.active == false %} exr-pill--disabled{% endif %}">
                           <input
                             class="exr-pill__input"
@@ -153,8 +131,7 @@
                             name="{{ value.param_name }}"
                             value="{{ value.value }}"
                             id="exr-{{ filter.label | handleize }}-{{ forloop.index }}"
-                            {% if value.active %}checked{% elsif is_availability_filter and value.value == '1' %}checked{% endif %}
-                            {% if is_availability_filter and value.value == '1' %}data-exr-in-stock-locked{% endif %}
+                            {% if value.active %}checked{% endif %}
                             {% if value.count == 0 and value.active == false %}disabled{% endif %}
                           >
                           <label class="exr-pill__label" for="exr-{{ filter.label | handleize }}-{{ forloop.index }}">
@@ -247,9 +224,6 @@
     <div class="exr-active-tags" data-exr-active-tags>
       {%- for filter in collection.filters -%}
         {%- for value in filter.active_values -%}
-          {%- if filter.param_name contains 'availability' and value.value == '1' -%}
-            {%- continue -%}
-          {%- endif -%}
           <a class="exr-active-tag" href="{{ value.url_to_remove }}" data-exr-remove="{{ value.url_to_remove }}">
             <small>{{ value.label }}</small>
             <span class="exr-active-tag__x">
