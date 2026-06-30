@@ -36,8 +36,7 @@ home-filter-widget {
   min-height: 48px;
   padding: 12px 28px;
   border: none;
-  border-radius: 999px;
-  background: #121212;
+  background: #3c3c3c;
   color: #fff;
   font-family: Lato, sans-serif;
   font-size: 13px;
@@ -45,13 +44,11 @@ home-filter-widget {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .home-filter-fab:hover {
   transform: translateX(-50%) translateY(-2px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
 }
 
 .home-filter-fab__icon {
