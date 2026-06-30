@@ -1,0 +1,156 @@
+{%- comment -%}
+  Filter field groups for facet-exercer / homepage filter drawer.
+  Requires `collection` in scope.
+{%- endcomment -%}
+
+{%- for filter in collection.filters -%}
+  <details class="exr-group" data-exr-group open>
+    <summary class="exr-group__trigger" data-exr-trigger>
+      <span>{{ filter.label | escape | upcase }}</span>
+      <span class="exr-group__arrow">
+        <svg width="12" height="7" viewBox="0 0 12 7" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </summary>
+
+    <div class="exr-group__body">
+
+      {%- case filter.type -%}
+
+        {%- when 'boolean', 'list' -%}
+          {%- assign is_color = false -%}
+          {%- assign label_lower = filter.label | downcase -%}
+          {%- if label_lower contains 'color' or label_lower contains 'colour' or label_lower contains 'farge' -%}
+            {%- assign is_color = true -%}
+          {%- endif -%}
+
+          {%- if is_color -%}
+            <ul class="exr-swatches">
+              {%- for value in filter.values -%}
+                <li class="exr-swatch{% if value.count == 0 and value.active == false %} exr-swatch--disabled{% endif %}{% assign val_l = value.label | downcase %}{% if val_l == 'multicolor' or val_l contains 'multi' %} exr-swatch--multi{% endif %}">
+                  <input
+                    class="exr-swatch__input"
+                    type="checkbox"
+                    name="{{ value.param_name }}"
+                    value="{{ value.value }}"
+                    id="exr-{{ filter.label | handleize }}-{{ forloop.index }}"
+                    {% if value.active %}checked{% endif %}
+                    {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                  >
+                  <label class="exr-swatch__label" for="exr-{{ filter.label | handleize }}-{{ forloop.index }}">
+                    <span class="exr-swatch__check">
+                      <svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                    {% render 'exr-filter-swatch-colors',
+                      color_label: value.label,
+                      color_value: value.value,
+                      collection: collection,
+                      shopify_swatch: value.swatch
+                    %}
+                    <span class="exr-swatch__name">{{ value.label }}</span>
+                  </label>
+                </li>
+              {%- endfor -%}
+            </ul>
+
+          {%- else -%}
+            {%- assign is_availability_filter = false -%}
+            {%- if filter.param_name contains 'availability' -%}
+              {%- assign is_availability_filter = true -%}
+            {%- endif -%}
+            <ul class="exr-pills">
+              {%- for value in filter.values -%}
+                {%- if is_availability_filter and value.value != '1' -%}
+                  {%- continue -%}
+                {%- endif -%}
+                <li class="exr-pill{% if value.count == 0 and value.active == false %} exr-pill--disabled{% endif %}">
+                  <input
+                    class="exr-pill__input"
+                    type="checkbox"
+                    name="{{ value.param_name }}"
+                    value="{{ value.value }}"
+                    id="exr-{{ filter.label | handleize }}-{{ forloop.index }}"
+                    {% if value.active %}checked{% elsif is_availability_filter and value.value == '1' %}checked{% endif %}
+                    {% if is_availability_filter and value.value == '1' %}data-exr-in-stock-locked{% endif %}
+                    {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                  >
+                  <label class="exr-pill__label" for="exr-{{ filter.label | handleize }}-{{ forloop.index }}">
+                    {{ value.label }}
+                  </label>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+
+        {%- when 'price_range' -%}
+          {%- liquid
+            assign currency_divisor = 100.0
+            assign currency_divisor_int = 100
+            if cart.currency.iso_code == 'JPY' or cart.currency.iso_code == 'KRW'
+              assign currency_divisor = 1.0
+              assign currency_divisor_int = 1
+            endif
+
+            assign min_val = ''
+            if filter.min_value.value
+              assign min_val_mod = filter.min_value.value | modulo: currency_divisor_int
+              if min_val_mod == 0
+                assign min_val = filter.min_value.value | divided_by: currency_divisor_int
+              else
+                assign min_val = filter.min_value.value | divided_by: currency_divisor
+              endif
+            endif
+
+            assign max_val = ''
+            if filter.max_value.value
+              assign max_val_mod = filter.max_value.value | modulo: currency_divisor_int
+              if max_val_mod == 0
+                assign max_val = filter.max_value.value | divided_by: currency_divisor_int
+              else
+                assign max_val = filter.max_value.value | divided_by: currency_divisor
+              endif
+            endif
+
+            assign range_max_mod = filter.range_max | modulo: currency_divisor_int
+            if range_max_mod == 0
+              assign range_max_val = filter.range_max | divided_by: currency_divisor_int
+            else
+              assign range_max_val = filter.range_max | divided_by: currency_divisor
+            endif
+          -%}
+          <div class="exr-price">
+            <div class="exr-price__fields">
+              <div class="exr-price__field">
+                <span class="exr-price__currency">{{ cart.currency.symbol }}</span>
+                <input
+                  class="exr-price__input"
+                  data-exr-price-input
+                  type="number"
+                  name="{{ filter.min_value.param_name }}"
+                  value="{{ min_val }}"
+                  min="0"
+                  max="{{ range_max_val }}"
+                  placeholder="0"
+                >
+              </div>
+              <span class="exr-price__sep"></span>
+              <div class="exr-price__field">
+                <span class="exr-price__currency">{{ cart.currency.symbol }}</span>
+                <input
+                  class="exr-price__input"
+                  data-exr-price-input
+                  type="number"
+                  name="{{ filter.max_value.param_name }}"
+                  value="{{ max_val }}"
+                  min="0"
+                  max="{{ range_max_val }}"
+                  placeholder="{{ range_max_val }}"
+                >
+              </div>
+            </div>
+          </div>
+
+      {%- endcase -%}
+
+    </div>
+  </details>
+{%- endfor -%}

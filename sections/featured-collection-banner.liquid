@@ -236,6 +236,8 @@
   </div>
 </div>
 
+{% render 'homepage-filter-drawer', section: section %}
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const tabButtons = document.querySelectorAll('.tab-button');
@@ -363,6 +365,65 @@
       "type": "url",
       "id": "banner_link",
       "label": "Banner Image Link"
+    },
+    {
+      "type": "header",
+      "content": "Homepage Filter"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_home_filter",
+      "label": "Show fixed filter button",
+      "default": true,
+      "info": "Fixed FILTER button at bottom of screen. Opens drawer with categories and filters, then redirects to the collection page on apply."
+    },
+    {
+      "type": "collection",
+      "id": "filter_collection",
+      "label": "Filter collection",
+      "info": "Collection used for filters when applying. Defaults to the first tab collection if empty."
+    },
+    {
+      "type": "link_list",
+      "id": "category_menu",
+      "label": "Extra category menu",
+      "info": "Optional menu for additional categories in the filter drawer."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_home_filter_sorting",
+      "label": "Show sort in filter drawer",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "home_filter_label",
+      "label": "Filter button text",
+      "default": "Filter"
+    },
+    {
+      "type": "text",
+      "id": "home_filter_drawer_title",
+      "label": "Drawer title",
+      "default": "Filter"
+    },
+    {
+      "type": "text",
+      "id": "home_filter_categories_label",
+      "label": "Categories heading",
+      "default": "Kategori"
+    },
+    {
+      "type": "text",
+      "id": "home_filter_apply_label",
+      "label": "Apply button text",
+      "default": "Apply Filter"
+    },
+    {
+      "type": "text",
+      "id": "home_filter_view_all_label",
+      "label": "View all link text",
+      "default": "View all products"
     },
     {
       "type": "header",
