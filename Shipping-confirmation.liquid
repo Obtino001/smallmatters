@@ -79,6 +79,20 @@
       padding-top: 50px !important; 
       padding-bottom: 20px !important; 
     }
+
+    .shop-name__cell,
+    .order-po-number__container,
+    .order-number__cell,
+    .order-number__text,
+    .po-number__cell {
+      text-align: center !important;
+    }
+
+    .shop-name__cell img {
+      display: block !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
     
     table.footer.row, td.footer__cell { 
       background-color: #EFECE8 !important; 
@@ -125,10 +139,36 @@
     
     .section__cell {
       background-color: transparent !important;
-      padding: 0 40px 20px 40px !important;
+      padding: 0 40px 12px 40px !important;
       border-radius: 0px !important;
       box-shadow: none !important;
       margin-top: 0px !important;
+    }
+
+    .section__cell h3 {
+      margin: 0 0 14px 0 !important;
+    }
+
+    .customer-info__item {
+      padding: 0 20px 16px 0 !important;
+      vertical-align: top !important;
+    }
+
+    .customer-info__item h4 {
+      margin: 0 0 6px 0 !important;
+      font-size: 15px !important;
+      font-weight: 500 !important;
+      line-height: 1.4 !important;
+    }
+
+    .customer-info__item p,
+    .customer-info__item-content {
+      margin: 0 !important;
+      line-height: 1.5 !important;
+    }
+
+    table.footer.row td.footer__cell {
+      padding: 20px 20px 32px !important;
     }
     
     /* Order List Refinements */
@@ -203,9 +243,9 @@
 
               <table class="row">
                 <tr>
-                  <td class="shop-name__cell" style="text-align: left; width: 100%; ">
+                  <td class="shop-name__cell" align="center" style="text-align: center; width: 100%;">
                     {%- if shop.email_logo_url %}
-                      <img src="{{shop.email_logo_url}}" alt="{{ shop.name }}" width="{{ shop.email_logo_width }}">
+                      <img src="{{shop.email_logo_url}}" alt="{{ shop.name }}" width="{{ shop.email_logo_width }}" style="display: block; margin: 0 auto;">
                     {%- else %}
                       <h1 class="shop-name__text">
                         <a href="{{shop.url}}">{{ shop.name }}</a>
@@ -214,18 +254,18 @@
                   </td>
                 </tr>
                 <tr>
-                  <td style="text-align: left; padding-top: 10px;">
-                      <table class="order-po-number__container" style="margin: 0; text-align: left !important;">
+                  <td align="center" style="text-align: center; padding-top: 10px;">
+                      <table class="order-po-number__container" align="center" style="margin: 0 auto; text-align: center;">
                         <tr>
-                          <td class="order-number__cell" style="text-align: left !important;">
-                            <span class="order-number__text" style="display: block; text-align: left !important;">
+                          <td class="order-number__cell" align="center" style="text-align: center;">
+                            <span class="order-number__text" style="display: block; text-align: center;">
                               Bestilling {{ order_name }}
                             </span>
                           </td>
                         </tr>
                         {%- if po_number %}
                             <tr>
-                              <td class="po-number__cell" style="text-align: left;">
+                              <td class="po-number__cell" align="center" style="text-align: center;">
                                 <span class="po-number__text">
                                   PO-nummer {{ po_number }}
                                 </span>
@@ -627,12 +667,11 @@
 
           <table class="row footer">
   <tr>
-    <td class="footer__cell" style="padding: 40px 20px; background-color: #EFECE8;">
+    <td class="footer__cell" style="padding: 20px 20px 32px; background-color: #EFECE8;">
       <center>
         <table class="container">
           <tr>
             <td style="text-align: center;">
-              <p style="margin: 0 0 12px 0; line-height: 1.5; font-size: 15px;">Hvis du har noen spørsmål, kan du svare på denne e-posten eller kontakte oss på <a href="mailto:post@smallmatters.no" style="color: #3B3B3B; text-decoration: none; border-bottom: none;">post@smallmatters.no</a></p>
               <p style="margin: 0 0 10px 0; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; font-size: 13px; color: #3B3B3B;">Følg oss på:</p>
               <table border="0" cellspacing="0" cellpadding="0" role="presentation" style="margin: 0 auto 16px auto;">
                 <tr>
@@ -643,7 +682,7 @@
                 </tr>
               </table>
               <p style="margin: 0; line-height: 1.5;">
-                <strong>&copy; 2018 - {{ 'now' | date: '%Y' }} Smallmatters AS</strong><br>
+                <strong>&copy; 2018 Smallmatters AS</strong><br>
                 Org.nr. 920 640 249<br>
                 E-post: <a href="mailto:post@smallmatters.no" style="color: #3B3B3B; text-decoration: none; border-bottom: none;">post@smallmatters.no</a><br>
                 Holmenveien 20, 0374 Oslo

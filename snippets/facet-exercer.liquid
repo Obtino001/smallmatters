@@ -3,13 +3,27 @@
   EXERCER FILTERS – 100% Custom Filter Snippet
   Uses: custom-exercer.css, custom-filters.js
   No Dawn dependency.
+
+  Optional params (homepage / non-collection URLs):
+    - filter_collection: collection object for filters when not on collection template
+    - exr_fetch_base: collection URL path for AJAX filter requests
+    - exr_section_id: Shopify section_id for section rendering API
+    - exr_history_base: browser history path (e.g. homepage /)
   ============================================================================
 {% endcomment %}
+
+{%- if filter_collection != blank -%}
+  {%- assign collection = filter_collection -%}
+{%- endif -%}
 
 {{ 'custom-exercer.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'custom-filters.js' | asset_url }}" defer="defer"></script>
 
-<exercer-filters>
+<exercer-filters
+  {% if exr_fetch_base != blank %}data-exr-fetch-base="{{ exr_fetch_base }}"{% endif %}
+  {% if exr_section_id != blank %}data-exr-section-id="{{ exr_section_id }}"{% endif %}
+  {% if exr_history_base != blank %}data-exr-history-base="{{ exr_history_base }}"{% endif %}
+>
 
   {%- comment -%} ── Toolbar above the grid ── {%- endcomment -%}
   <div class="exr-toolbar">

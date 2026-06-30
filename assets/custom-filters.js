@@ -52,8 +52,14 @@ if (!customElements.get('exercer-filters')) {
       window.addEventListener('popstate', this.onPopStateBound);
 
       const urlWithStock = this.ensureInStockFilter(window.location.href);
-      if (urlWithStock !== window.location.href) {
-        history.replaceState({}, '', urlWithStock);
+      const shouldFetch =
+        urlWithStock !== window.location.href ||
+        (this.dataset.exrFetchBase && window.location.search.length > 0);
+
+      if (shouldFetch) {
+        if (urlWithStock !== window.location.href) {
+          history.replaceState({}, '', urlWithStock);
+        }
         this.fetchAndRender(urlWithStock);
       }
     }
@@ -123,11 +129,39 @@ if (!customElements.get('exercer-filters')) {
       });
     }
 
+    get historyBase() {
+      return this.dataset.exrHistoryBase || window.location.pathname;
+    }
+
+    get fetchBase() {
+      return this.dataset.exrFetchBase || '';
+    }
+
+    get sectionId() {
+      return this.dataset.exrSectionId || '';
+    }
+
     ensureInStockFilter(url) {
       const parsed = new URL(url, window.location.origin);
       if (!parsed.searchParams.has(EXR_IN_STOCK_PARAM)) {
         parsed.searchParams.set(EXR_IN_STOCK_PARAM, EXR_IN_STOCK_VALUE);
       }
+      const base = this.historyBase;
+      return `${base}${parsed.search}${parsed.hash}`;
+    }
+
+    resolveFetchURL(url) {
+      const parsed = new URL(url, window.location.origin);
+
+      if (this.fetchBase && this.sectionId) {
+        const params = parsed.searchParams.toString();
+        return `${this.fetchBase}?section_id=${encodeURIComponent(this.sectionId)}${params ? `&${params}` : ''}`;
+      }
+
+      if (this.fetchBase) {
+        return `${this.fetchBase}${parsed.search}${parsed.hash}`;
+      }
+
       return `${parsed.pathname}${parsed.search}${parsed.hash}`;
     }
 
@@ -225,7 +259,7 @@ if (!customElements.get('exercer-filters')) {
       }
 
       const queryString = params.toString();
-      return `${window.location.pathname}${queryString ? '?' + queryString : ''}`;
+      return `${this.historyBase}${queryString ? '?' + queryString : ''}`;
     }
 
     /* ---- Submit filters ---- */
@@ -240,6 +274,7 @@ if (!customElements.get('exercer-filters')) {
       this.isLoading = true;
 
       url = this.ensureInStockFilter(url);
+      const fetchUrl = this.resolveFetchURL(url);
 
       // Show loading
       this.setLoading(true);
@@ -248,7 +283,7 @@ if (!customElements.get('exercer-filters')) {
       history.pushState({}, '', url);
 
       try {
-        const response = await fetch(url, {
+        const response = await fetch(fetchUrl, {
           headers: { 'X-Requested-With': 'XMLHttpRequest' }
         });
         const html = await response.text();
@@ -330,9 +365,10 @@ if (!customElements.get('exercer-filters')) {
       const baseObj = new URL(this.buildURL(), window.location.origin);
       baseObj.searchParams.set('page', nextPage);
       const url = baseObj.toString();
+      const fetchUrl = this.resolveFetchURL(url);
 
       try {
-        const response = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+        const response = await fetch(fetchUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
         const html = await response.text();
         const doc = new DOMParser().parseFromString(html, 'text/html');
 

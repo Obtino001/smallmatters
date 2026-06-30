@@ -1,3 +1,29 @@
+.featured-collection-banner__section--filtered {
+  width: 100% !important;
+  max-width: none !important;
+  flex: 1;
+}
+
+.featured-collection-banner__section--filtered .featured-collection-banner__filters {
+  padding: 0 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.featured-collection-banner__section--filtered #ProductGridContainer {
+  padding: 0 1.5rem;
+}
+
+.featured-collection-banner__section--filtered #product-grid {
+  margin: 0;
+}
+
+@media screen and (min-width: 990px) {
+  .featured-collection-banner__section--filtered .featured-collection-banner__filters,
+  .featured-collection-banner__section--filtered #ProductGridContainer {
+    padding: 0 3rem;
+  }
+}
+
 .featured-collection-banner__head,
 h2.title {
   font-family: Lora;

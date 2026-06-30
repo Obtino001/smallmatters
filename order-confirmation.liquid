@@ -122,6 +122,20 @@ Varm hilsen,<br>
       padding-top: 50px !important; 
       padding-bottom: 20px !important; 
     }
+
+    .shop-name__cell,
+    .order-po-number__container,
+    .order-number__cell,
+    .order-number__text,
+    .po-number__cell {
+      text-align: center !important;
+    }
+
+    .shop-name__cell img {
+      display: block !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
     
     table.footer.row, td.footer__cell { 
       background-color: #EFECE8 !important; 
@@ -167,10 +181,36 @@ Varm hilsen,<br>
     
     .section__cell {
       background-color: transparent !important;
-      padding: 0 40px 20px 40px !important;
+      padding: 0 40px 12px 40px !important;
       border-radius: 0px !important;
       box-shadow: none !important;
       margin-top: 0px !important;
+    }
+
+    .section__cell h3 {
+      margin: 0 0 14px 0 !important;
+    }
+
+    .customer-info__item {
+      padding: 0 20px 16px 0 !important;
+      vertical-align: top !important;
+    }
+
+    .customer-info__item h4 {
+      margin: 0 0 6px 0 !important;
+      font-size: 15px !important;
+      font-weight: 500 !important;
+      line-height: 1.4 !important;
+    }
+
+    .customer-info__item p,
+    .customer-info__item-content {
+      margin: 0 !important;
+      line-height: 1.5 !important;
+    }
+
+    table.footer.row td.footer__cell {
+      padding: 20px 20px 32px !important;
     }
     
     /* Order List Refinements */
@@ -244,9 +284,9 @@ Varm hilsen,<br>
 
               <table class="row">
                 <tr>
-                  <td class="shop-name__cell" style="text-align: left; width: 100%; ">
+                  <td class="shop-name__cell" align="center" style="text-align: center; width: 100%;">
                     {%- if shop.email_logo_url %}
-                      <img src="{{shop.email_logo_url}}" alt="{{ shop.name }}" width="{{ shop.email_logo_width }}">
+                      <img src="{{shop.email_logo_url}}" alt="{{ shop.name }}" width="{{ shop.email_logo_width }}" style="display: block; margin: 0 auto;">
                     {%- else %}
                       <h1 class="shop-name__text">
                         <a href="{{shop.url}}">{{ shop.name }}</a>
@@ -255,18 +295,18 @@ Varm hilsen,<br>
                   </td>
                 </tr>
                 <tr>
-                  <td style="text-align: left; padding-top: 10px;">
-                      <table class="order-po-number__container" style="margin: 0; text-align: left !important;">
+                  <td align="center" style="text-align: center; padding-top: 10px;">
+                      <table class="order-po-number__container" align="center" style="margin: 0 auto; text-align: center;">
                         <tr>
-                          <td class="order-number__cell" style="text-align: left !important;">
-                            <span class="order-number__text" style="display: block; text-align: left !important;">
+                          <td class="order-number__cell" align="center" style="text-align: center;">
+                            <span class="order-number__text" style="display: block; text-align: center;">
                               Bestilling {{ order_name }}
                             </span>
                           </td>
                         </tr>
                         {%- if po_number %}
                             <tr>
-                              <td class="po-number__cell" style="text-align: left;">
+                              <td class="po-number__cell" align="center" style="text-align: center;">
                                 <span class="po-number__text">
                                   PO-nummer {{ po_number }}
                                 </span>
@@ -3599,36 +3639,50 @@ Varm hilsen,<br>
                           {{ payment_terms.translated_name }}: Forfaller {{ due_date | date: format: 'date' }}<br>
                         {% endif %}
                       {% endif %}
-                      {% if transactions.size > 0 %}
-                        {% for transaction in transactions %}
-                          {% if transaction.status == "success" or transaction.status == "pending" %}
-                            {% if transaction.kind == "capture" or transaction.kind == "sale" %}
-                              {% if transaction.payment_details.gift_card_last_four_digits %}
-                                <img src="{{ transaction.payment_details.payment_icon_source | payment_type_img_url }}" class="customer-info__item-credit" height="24">
-                                slutter på {{ transaction.payment_details.gift_card_last_four_digits }}<br>
-                              {% elsif transaction.payment_details.type == "shop_pay_installments" and transaction.payment_details.credit_card_company == "unknown" %}
-                                <img src="{{ 'notifications/shop-pay.svg' | shopify_asset_url  }}" class="customer-info__item-shop-pay">
-                                <br>
-                                <span>Betalt med Avdrag via Shop Pay</span><br>
-                              {% elsif transaction.payment_details.type == "card" %}
-                                <img src="{{ transaction.payment_details.credit_card_company | payment_icon_png_url  }}" class="customer-info__item-credit" height="24" alt="{{ transaction.payment_details.credit_card_company }}">
-                                <span>slutter med {{ transaction.payment_details.credit_card_last_four_digits }}</span><br>
-                              {% elsif transaction.gateway_display_name == "Gift card" %}
-                                <img src="{{ transaction.gateway_icon_source | payment_type_img_url }}" class="customer-info__item-credit" height="24">
-                                slutter med {{ transaction.payment_details.gift_card.last_four_characters | upcase }}<br>
-                                  &emsp;&emsp;&emsp;&nbsp;Gavekortsaldo - <b>{{ transaction.payment_details.gift_card.balance |  money }}</b>
-                              {% elsif transaction.payment_details.local_payment? %}
-                                <img src="{{ transaction.payment_details.payment_icon_source | payment_type_img_url }}" class="customer-info__item-credit" height="24">
-                                <span>{{ transaction.payment_details.payment_method_display_name }}</span><br>
-                              {% elsif transaction.gateway_display_name != "Shop Cash" and transaction.gateway != "shop_offer" %}
-                                {{ transaction.gateway_display_name }}<br>
-                              {% endif %}
-                            {% elsif transaction.kind == "authorization" and transaction.gateway_display_name == "Shop Cash" %}
+                      {% assign exr_payment_rendered = false %}
+                      {% for transaction in transactions %}
+                        {% if transaction.status == "success" or transaction.status == "pending" %}
+                          {% if transaction.kind == "capture" or transaction.kind == "sale" or transaction.kind == "authorization" %}
+                            {% if transaction.payment_details.gift_card_last_four_digits %}
+                              {% assign exr_payment_rendered = true %}
+                              <img src="{{ transaction.payment_details.payment_icon_source | payment_type_img_url }}" class="customer-info__item-credit" height="24" alt="">
+                              slutter på {{ transaction.payment_details.gift_card_last_four_digits }}<br>
+                            {% elsif transaction.payment_details.type == "shop_pay_installments" and transaction.payment_details.credit_card_company == "unknown" %}
+                              {% assign exr_payment_rendered = true %}
+                              <img src="{{ 'notifications/shop-pay.svg' | shopify_asset_url }}" class="customer-info__item-shop-pay" alt="Shop Pay">
+                              <br>
+                              <span>Betalt med Avdrag via Shop Pay</span><br>
+                            {% elsif transaction.payment_details.credit_card_company %}
+                              {% assign exr_payment_rendered = true %}
+                              <img src="{{ transaction.payment_details.credit_card_company | payment_icon_png_url }}" class="customer-info__item-credit" height="24" alt="{{ transaction.payment_details.credit_card_company }}">
+                              <span>slutter med {{ transaction.payment_details.credit_card_last_four_digits }}</span><br>
+                            {% elsif transaction.gateway_display_name == "Gift card" %}
+                              {% assign exr_payment_rendered = true %}
+                              <img src="{{ transaction.gateway_icon_source | payment_type_img_url }}" class="customer-info__item-credit" height="24" alt="">
+                              slutter med {{ transaction.payment_details.gift_card.last_four_characters | upcase }}<br>
+                              &emsp;&emsp;&emsp;&nbsp;Gavekortsaldo - <b>{{ transaction.payment_details.gift_card.balance | money }}</b><br>
+                            {% elsif transaction.payment_details.local_payment? %}
+                              {% assign exr_payment_rendered = true %}
+                              <img src="{{ transaction.payment_details.payment_icon_source | payment_type_img_url }}" class="customer-info__item-credit" height="24" alt="">
+                              <span>{{ transaction.payment_details.payment_method_display_name }}</span><br>
+                            {% elsif transaction.gateway_display_name == "Shop Cash" %}
+                              {% assign exr_payment_rendered = true %}
                               <span>Shop Cash</span><br>
+                            {% elsif transaction.gateway_display_name != blank and transaction.gateway != "shop_offer" %}
+                              {% assign exr_payment_rendered = true %}
+                              {{ transaction.gateway_display_name }}<br>
                             {% endif %}
                           {% endif %}
-                        {% endfor %}
-                      {% endif %}
+                        {% endif %}
+                      {% endfor %}
+                      {% unless exr_payment_rendered %}
+                        {% assign exr_gateway_names = transactions | map: 'gateway_display_name' | uniq | join: ', ' %}
+                        {% if exr_gateway_names != blank %}
+                          {{ exr_gateway_names }}
+                        {% elsif financial_status %}
+                          {{ financial_status_label }}
+                        {% endif %}
+                      {% endunless %}
                     </p>
                   </td>
                 {% endif %}
@@ -3637,15 +3691,14 @@ Varm hilsen,<br>
                 {% if requires_shipping and shipping_address %}
                   {% if shipping_method %}
                     <td class="customer-info__item">
-                      <h4 style="margin:0 0 4px 0; line-height:1.4;">Fraktmetode</h4>
-
-<p style="margin:0 0 10px 0; line-height:1.4;">
+                      <h4>Fraktmetode</h4>
+                      <p>
   {% if delivery_promise_branded_shipping_line %}
     {{ delivery_promise_branded_shipping_line }}
   {% else %}
     {{ shipping_method.title }}
   {% endif %}
-</p>
+                      </p>
                     </td>
                   {% endif %}
                 {% endif %}
@@ -3658,16 +3711,15 @@ Varm hilsen,<br>
       </center>
     </td>
   </tr>
-
+</table>
 
           <table class="row footer">
   <tr>
-    <td class="footer__cell" style="padding: 40px 20px; background-color: #EFECE8;">
+    <td class="footer__cell" style="padding: 20px 20px 32px; background-color: #EFECE8;">
       <center>
         <table class="container">
           <tr>
             <td style="text-align: center;">
-              <p style="margin: 0 0 12px 0; line-height: 1.5; font-size: 15px;">Hvis du har noen spørsmål, kan du svare på denne e-posten eller kontakte oss på <a href="mailto:post@smallmatters.no" style="color: #3B3B3B; text-decoration: none; border-bottom: none;">post@smallmatters.no</a></p>
               <p style="margin: 0 0 10px 0; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; font-size: 13px; color: #3B3B3B;">Følg oss på:</p>
               <table border="0" cellspacing="0" cellpadding="0" role="presentation" style="margin: 0 auto 16px auto;">
                 <tr>
@@ -3678,7 +3730,7 @@ Varm hilsen,<br>
                 </tr>
               </table>
               <p style="margin: 0; line-height: 1.5;">
-                <strong>&copy; 2018 - {{ 'now' | date: '%Y' }} Smallmatters AS</strong><br>
+                <strong>&copy; 2018 Smallmatters AS</strong><br>
                 Org.nr. 920 640 249<br>
                 E-post: <a href="mailto:post@smallmatters.no" style="color: #3B3B3B; text-decoration: none; border-bottom: none;">post@smallmatters.no</a><br>
                 Holmenveien 20, 0374 Oslo

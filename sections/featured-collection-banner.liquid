@@ -26,6 +26,22 @@
       assign show_banner_content = true
     endif
   endif
+
+  assign exr_enable_filtering = section.settings.enable_filtering
+  assign exr_filter_collection = section.settings.filter_collection
+  if exr_filter_collection == blank
+    for block in section.blocks
+      if block.settings.collection != blank
+        assign exr_filter_collection = block.settings.collection
+        break
+      endif
+    endfor
+  endif
+  assign exr_ajax_section_id = section.settings.filter_ajax_section_id | default: 'template--collection__main_collection_custom_RXJTTP'
+  assign exr_show_tabs = true
+  if exr_enable_filtering and exr_filter_collection != blank
+    assign exr_show_tabs = false
+  endif
 -%}
 
 {%- style -%}
@@ -76,7 +92,7 @@
           {{ section.settings.title }}
         </h2>
       {%- endif -%}
-      {% if section.blocks.size > 0 %}
+      {% if section.blocks.size > 0 and exr_show_tabs %}
         <div class="collection-tabs-wrapper">
           {% for block in section.blocks %}
             <button class="tab-button {% if forloop.first %}active{% endif %}" data-tab-target="tab-{{ section.id }}-{{ block.id }}">
@@ -176,7 +192,63 @@
 </style>
         </div>
       {% endif %}
-      <div class="featured-collection-banner__section">
+      <div class="featured-collection-banner__section{% if exr_enable_filtering and exr_filter_collection != blank %} featured-collection-banner__section--filtered{% endif %}">
+        {% if exr_enable_filtering and exr_filter_collection != blank %}
+          {{ 'template-collection.css' | asset_url | stylesheet_tag }}
+          <aside
+            class="facets-wrapper featured-collection-banner__filters"
+            id="main-collection-filters"
+            data-id="{{ section.id }}"
+          >
+            {% render 'facet-exercer',
+              enable_filtering: true,
+              enable_sorting: section.settings.enable_sorting,
+              filter_collection: exr_filter_collection,
+              exr_fetch_base: exr_filter_collection.url,
+              exr_section_id: exr_ajax_section_id,
+              exr_history_base: request.path
+            %}
+          </aside>
+          <div
+            class="product-grid-container"
+            id="ProductGridContainer"
+          >
+            <div class="collection">
+              <ul
+                id="product-grid"
+                class="grid product-grid grid--2-col-tablet-down grid--{{ section.settings.columns_desktop | default: 4 }}-col-desktop"
+              >
+                {%- for product in exr_filter_collection.products limit: section.settings.products_to_show -%}
+                  <li class="grid__item collection-grid-item">
+                    {% render 'card-product-color-swatches',
+                      show_swatches: true,
+                      swatch_limit: 3,
+                      card_product: product,
+                      media_aspect_ratio: section.settings.image_ratio,
+                      image_shape: section.settings.image_shape,
+                      lazy_load: true,
+                      show_secondary_image: section.settings.show_secondary_image,
+                      show_vendor: section.settings.show_vendor,
+                      show_rating: section.settings.show_rating,
+                      section_id: section.id,
+                      quick_add: section.settings.quick_add
+                    %}
+                  </li>
+                {%- endfor -%}
+              </ul>
+              {%- if exr_filter_collection.products.size > section.settings.products_to_show -%}
+                <div class="featured-collection-banner__view-all">
+                  <a href="{{ exr_filter_collection.url }}" class="featured-collection-banner__view-all-btn">
+                    {{ section.settings.view_all_text | default: 'View All Products' }}
+                    <svg width="18" height="10" viewBox="0 0 18 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M13 1L17 5M17 5L13 9M17 5H1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </a>
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+        {% else %}
         {% for block in section.blocks %}
           {% assign current_collection = block.settings.collection %}
           <div id="tab-{{ section.id }}-{{ block.id }}" class="tab-content-panel {% if forloop.first %}active{% endif %}">
@@ -231,6 +303,7 @@
             {% endif %}
           </div>
         {% endfor %}
+        {% endif %}
       </div>
     </div>
   </div>
@@ -367,6 +440,41 @@
     {
       "type": "header",
       "content": "Collection Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filtering",
+      "label": "Enable product filters",
+      "default": true,
+      "info": "Shows the same filter drawer as collection pages on the homepage product grid."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "label": "Enable sorting",
+      "default": true
+    },
+    {
+      "type": "collection",
+      "id": "filter_collection",
+      "label": "Filter collection",
+      "info": "Collection used for filters and the filtered product grid. Defaults to the first tab collection if empty."
+    },
+    {
+      "type": "text",
+      "id": "filter_ajax_section_id",
+      "label": "Filter AJAX section ID",
+      "default": "template--collection__main_collection_custom_RXJTTP",
+      "info": "Section rendering ID from the main collection template. Change only if that section key changes."
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4,
+      "label": "Grid columns (desktop)"
     },
     {
       "type": "text",
