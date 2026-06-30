@@ -1,0 +1,75 @@
+{%- comment -%}
+  Filter form only – fetched via Section Rendering API from /collections/all.
+  Used by homepage filter drawer (not placed in templates directly).
+{%- endcomment -%}
+
+{%- liquid
+  assign facet_collection = collection
+  if facet_collection == blank
+    assign facet_collection = collections.all
+  endif
+-%}
+
+{%- paginate facet_collection.products by 1 -%}
+  {%- assign collection = facet_collection -%}
+
+  <div class="home-filter-facets-mount" data-home-filter-facets>
+    <form
+      class="home-filter-form"
+      action="{{ collection.url }}"
+      method="get"
+      data-home-filter-form
+    >
+      <input type="hidden" name="filter.v.availability" value="1">
+
+      {%- if section.settings.enable_sorting -%}
+        <details class="exr-group" open>
+          <summary class="exr-group__trigger">
+            <span>{{ 'products.facets.sort_by_label' | t | default: 'SORTER' | upcase }}</span>
+            <span class="exr-group__arrow">
+              <svg width="12" height="7" viewBox="0 0 12 7" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </summary>
+          <div class="exr-group__body">
+            <div class="exr-sort home-filter-sort">
+              {%- assign sort_by = collection.default_sort_by -%}
+              <select name="sort_by" class="exr-sort__select" aria-label="Sort by">
+                {%- for option in collection.sort_options -%}
+                  <option value="{{ option.value | escape }}" {% if option.value == sort_by %}selected{% endif %}>
+                    {{ option.name | escape }}
+                  </option>
+                {%- endfor -%}
+              </select>
+              <span class="exr-sort__arrow">
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </div>
+          </div>
+        </details>
+      {%- endif -%}
+
+      {% render 'facet-exercer-fields' %}
+    </form>
+  </div>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Home filter facets",
+  "tag": "section",
+  "class": "home-filter-facets-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "label": "Show sort",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Home filter facets"
+    }
+  ]
+}
+{% endschema %}

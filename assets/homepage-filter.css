@@ -68,14 +68,18 @@ body.home-filter-open .home-filter-fab {
   pointer-events: none;
 }
 
-.home-filter-category--child {
-  padding-left: 12px;
-  font-size: 13px;
+.home-filter-loading {
+  padding: 24px 0;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.55);
+  font-family: Lato, sans-serif;
+  font-size: 14px;
 }
 
-.home-filter-categories-group .exr-group__body {
-  max-height: 220px;
-  overflow-y: auto;
+.home-filter-error {
+  padding: 16px 0;
+  font-family: Lato, sans-serif;
+  font-size: 14px;
 }
 
 .home-filter-drawer .exr-drawer__body {

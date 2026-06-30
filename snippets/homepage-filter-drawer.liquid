@@ -1,6 +1,7 @@
 {% comment %}
   Homepage fixed FILTER button + drawer.
-  Categories + filters; Apply redirects to the filter collection page.
+  Filters loaded from /collections/all (same as collection page).
+  Apply redirects to collection with selected filters.
 {% endcomment %}
 
 {%- liquid
@@ -8,19 +9,13 @@
   if home_filter_col == blank
     assign home_filter_col = collections.all
   endif
-  if home_filter_col == blank
-    for block in section.blocks
-      if block.settings.collection != blank
-        assign home_filter_col = block.settings.collection
-        break
-      endif
-    endfor
-  endif
 
   assign show_home_filter = false
   if section.settings.enable_home_filter and home_filter_col != blank
     assign show_home_filter = true
   endif
+
+  assign home_filter_fetch_url = home_filter_col.url | append: '?sections=home-filter-facets'
 -%}
 
 {%- if show_home_filter -%}
@@ -29,7 +24,12 @@
 {{ 'homepage-filter.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'homepage-filter.js' | asset_url }}" defer="defer"></script>
 
-<home-filter-widget class="home-filter-widget">
+<home-filter-widget
+  class="home-filter-widget"
+  data-section-id="{{ section.id }}"
+  data-filter-fetch="{{ home_filter_fetch_url }}"
+  data-collection-url="{{ home_filter_col.url }}"
+>
   <button
     type="button"
     class="home-filter-fab"
@@ -62,60 +62,10 @@
       </button>
     </div>
 
-    <div class="exr-drawer__body">
-      {%- paginate home_filter_col.products by 1 -%}
-        {%- assign collection = home_filter_col -%}
-
-        <details class="exr-group home-filter-categories-group" open>
-          <summary class="exr-group__trigger">
-            <span>{{ section.settings.home_filter_categories_label | default: 'KATEGORI' | escape }}</span>
-            <span class="exr-group__arrow">
-              <svg width="12" height="7" viewBox="0 0 12 7" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-          </summary>
-          <div class="exr-group__body">
-            {% render 'home-filter-categories', section: section, stock_param: false %}
-          </div>
-        </details>
-
-        <form
-          id="home-filter-form-{{ section.id }}"
-          class="home-filter-form"
-          action="{{ collection.url }}"
-          method="get"
-          data-home-filter-form
-        >
-          <input type="hidden" name="filter.v.availability" value="1">
-
-          {%- if section.settings.enable_home_filter_sorting -%}
-            <details class="exr-group" open>
-              <summary class="exr-group__trigger">
-                <span>{{ 'products.facets.sort_by_label' | t | default: 'SORTER' | upcase }}</span>
-                <span class="exr-group__arrow">
-                  <svg width="12" height="7" viewBox="0 0 12 7" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </span>
-              </summary>
-              <div class="exr-group__body">
-                <div class="exr-sort home-filter-sort">
-                  {%- assign sort_by = collection.default_sort_by -%}
-                  <select name="sort_by" class="exr-sort__select" aria-label="Sort by">
-                    {%- for option in collection.sort_options -%}
-                      <option value="{{ option.value | escape }}" {% if option.value == sort_by %}selected{% endif %}>
-                        {{ option.name | escape }}
-                      </option>
-                    {%- endfor -%}
-                  </select>
-                  <span class="exr-sort__arrow">
-                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  </span>
-                </div>
-              </div>
-            </details>
-          {%- endif -%}
-
-          {% render 'facet-exercer-fields' %}
-        </form>
-      {%- endpaginate -%}
+    <div class="exr-drawer__body" data-home-filter-body>
+      <div class="home-filter-loading" data-home-filter-loading>
+        <span class="home-filter-loading__text">Loading filters…</span>
+      </div>
     </div>
 
     <div class="exr-drawer__footer home-filter-drawer__footer">
@@ -123,10 +73,15 @@
         type="submit"
         form="home-filter-form-{{ section.id }}"
         class="button button--primary home-filter-apply"
+        data-home-filter-submit
+        disabled
       >
         {{ section.settings.home_filter_apply_label | default: 'Apply Filter' }}
       </button>
-      <a href="{{ home_filter_col.url }}" class="button button--secondary home-filter-view-all">
+      <a
+        href="{{ home_filter_col.url }}?filter.v.availability=1"
+        class="button button--secondary home-filter-view-all"
+      >
         {{ section.settings.home_filter_view_all_label | default: 'View all products' }}
       </a>
     </div>
