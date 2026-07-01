@@ -1,1 +1,543 @@
-{"sections":{"hero_banner_rdcAa9":{"type":"Hero-Banner","name":"Hero Banner","settings":{"layout_mode":"single","text_align_x":"flex-end","text_align_y":"center","subtext_align":"center","image_left":"shopify:\/\/shop_images\/Forside_Mai_26.png","image_right":"shopify:\/\/shop_images\/Forsidebilde_MOBIL_6a4684bc-4088-467d-b6b4-428176104b66.png","desktop_bg":"#c3a096","desktop_text_color":"#ffffff","image_mobile":"shopify:\/\/shop_images\/Forside_Mobil_Mai_26.png","mobile_text_color":"#ffffff","heading":"VÅRENS NYHETER","subtext":"Nye farger og kombinasjoner. Tidløse gensere i kashmir og merinoull, skapt med omtanke og designet for å vare.","btn_label_1":"Kjøp dame","btn_link_1":"https:\/\/smallmatters.no\/collections\/damekashmir","btn_label_2":"Kjøp herre","btn_link_2":"https:\/\/smallmatters.no\/collections\/herrekashmir","btn_bg_color":"#24293c","btn_hover_bg_color":"#d8cfc4","btn_text_color":"#ffffff","btn_hover_text_color":"#545453"}},"featured_collection_banner_Dzqap7":{"type":"featured-collection-banner","blocks":{"collection_tab_y4GjPD":{"type":"collection_tab","settings":{"tab_label":"Dame","collection":"damekashmir"}},"collection_tab_P7T3Ke":{"type":"collection_tab","settings":{"tab_label":"Herre","collection":"herrekashmir"}}},"block_order":["collection_tab_y4GjPD","collection_tab_P7T3Ke"],"name":"Featured Collection Banner","settings":{"collection":"100-kashmir","button_bg_color":"#3d6aa6","button_text_color":"#ffffff","button_hover_bg_color":"#d8cfc4","button_hover_text_color":"#3c3c3c","show_banner":true,"banner_image":"shopify:\/\/shop_images\/Contrast_Cardigan_denimbla_og_sand_lysebla_navy.png","banner_head":"Vårens nyheter og tilbake på lager","banner_text":"<p>Tidløse gensere og jakker i kashmir og merinoull både til dame og herre <\/p>","banner_button_text":"Se kolleksjonen","banner_button_link":"shopify:\/\/collections\/varens-nyheter","banner_link":"shopify:\/\/collections\/varens-nyheter","title":"Vårens nyheter og tilbake på lager","heading_size":"h1","products_to_show":22,"image_ratio":"adapt","image_shape":"default","show_secondary_image":true,"show_vendor":false,"show_rating":false,"quick_add":"none","color_scheme":"scheme-5","full_width":false,"padding_top":36,"padding_bottom":36}},"animated_text_KJyEyg":{"type":"animated-text","name":"Rich text","settings":{"color_scheme":"scheme-5","main_text":"<p><strong>Ingen logoer. Ingen støy. <\/strong>Bare tidløse plagg i kashmir og merinoull, kjennetegnet av vår signaturstripe på ryggen og nøye utvalgte fargekontraster. Et personlig preg som gjør hver modell unik. <\/p>","sub_text":"","sub_happy":"","font_size":24,"padding_top":28,"padding_bottom":28}},"category_3bKkHt":{"type":"category","blocks":{"category_FccpMb":{"type":"category","settings":{"image":"shopify:\/\/shop_images\/Kashmir_dame.png","title":"Dame","link":"shopify:\/\/collections\/damekashmir"}},"category_BqqNK4":{"type":"category","settings":{"image":"shopify:\/\/shop_images\/7c4fd45fb9b3af454ce62fd70faa191a6d0be2d4.png","title":"Herre","link":"shopify:\/\/collections\/herrekashmir"}},"category_rrb7VP":{"type":"category","settings":{"image":"shopify:\/\/shop_images\/Pakkeposer_e504eecf-0c7f-4c54-920c-c7b2bd7ea6d3.png","title":"Pakkeposer","link":"shopify:\/\/collections\/oppbevaringsposer"}},"category_jNM4G9":{"type":"category","settings":{"image":"shopify:\/\/shop_images\/26e7f54f648bc7b61a75ca620de56f80a127d890.jpg","title":"Bunadsposer","link":"shopify:\/\/collections\/bunadsposer"}}},"block_order":["category_FccpMb","category_BqqNK4","category_rrb7VP","category_jNM4G9"],"name":"Categories Slider","settings":{"padding_top":50,"padding_bottom":50,"padding_top_mobile":30,"padding_bottom_mobile":30,"heading":"Vårt utvalg","bg_color":"#eae5df"}},"reviews_slider_UgYHUK":{"type":"reviews-slider","blocks":{"review_4KzgNc":{"type":"review","settings":{"date":"Okt, 2025","stars_image":"shopify:\/\/shop_images\/6b9f1a000595a7e8d9834cdd014ccf7f9df23b44.png","headline":"Minimalistisk, elegant og allsidig.","content":"Kvaliteten er eksepsjonell – myk, varm og vakkert laget. Jeg har aldri hatt på meg noe så behagelig.","author":"Lorem Ipsum"}},"review_UiVT3f":{"type":"review","settings":{"date":"Okt, 2025","stars_image":"shopify:\/\/shop_images\/6b9f1a000595a7e8d9834cdd014ccf7f9df23b44.png","headline":"Minimalistisk, elegant og allsidig.","content":"Kvaliteten er eksepsjonell – myk, varm og vakkert laget. Jeg har aldri hatt på meg noe så behagelig.","author":"Lorem Ipsum"}},"review_VkUXGG":{"type":"review","settings":{"date":"Okt, 2025","stars_image":"shopify:\/\/shop_images\/6b9f1a000595a7e8d9834cdd014ccf7f9df23b44.png","headline":"Minimalistisk, elegant og allsidig.","content":"Kvaliteten er eksepsjonell – myk, varm og vakkert laget. Jeg har aldri hatt på meg noe så behagelig.","author":"Lorem Ipsum"}},"review_R4r7jk":{"type":"review","settings":{"date":"Okt, 2025","stars_image":"shopify:\/\/shop_images\/6b9f1a000595a7e8d9834cdd014ccf7f9df23b44.png","headline":"Minimalistisk, elegant og allsidig.","content":"Kvaliteten er eksepsjonell – myk, varm og vakkert laget. Jeg har aldri hatt på meg noe så behagelig.","author":"Lorem Ipsum"}},"review_Ee9nFq":{"type":"review","settings":{"date":"Okt, 2025","stars_image":"shopify:\/\/shop_images\/6b9f1a000595a7e8d9834cdd014ccf7f9df23b44.png","headline":"Minimalistisk, elegant og allsidig.","content":"Kvaliteten er eksepsjonell – myk, varm og vakkert laget. Jeg har aldri hatt på meg noe så behagelig.","author":"Lorem Ipsum"}},"review_xGYaER":{"type":"review","settings":{"date":"Okt, 2025","stars_image":"shopify:\/\/shop_images\/6b9f1a000595a7e8d9834cdd014ccf7f9df23b44.png","headline":"Minimalistisk, elegant og allsidig.","content":"Kvaliteten er eksepsjonell – myk, varm og vakkert laget. Jeg har aldri hatt på meg noe så behagelig.","author":"Lorem Ipsum"}}},"block_order":["review_4KzgNc","review_UiVT3f","review_VkUXGG","review_R4r7jk","review_Ee9nFq","review_xGYaER"],"disabled":true,"name":"Reviews Slider","settings":{"padding_top":70,"padding_bottom":70,"padding_top_mobile":35,"padding_bottom_mobile":35,"bg_color":"#eae5df","heading":"Kundeomtaler","trust_text":"Trustpilot","rating_text":"4.8 stjerner | 200+ omtaler","autoplay":false,"autoplay_speed":4000}},"image_banner_a9kx8q":{"type":"image-banner","blocks":{"heading_NYHjhx":{"type":"heading","settings":{"heading":"Noe nytt er på vei.","heading_size":"h1"}},"text_igVJH4":{"type":"text","settings":{"text":"Nye farger, nye modeller, samme tidløse design. Følg med.","text_style":"body"}},"buttons_9PNHAW":{"type":"buttons","settings":{"button_bg_color":"#3d6aa6","button_text_color":"#ffffff","button_hover_bg_color":"#d8cfc4","button_hover_text_color":"#3c3c3c","button_label_1":"Se hva som kommer","button_link_1":"shopify:\/\/pages\/noe-nytt-er-pa-vej","button_style_secondary_1":false,"button_label_2":"","button_link_2":"","button_style_secondary_2":false}}},"block_order":["heading_NYHjhx","text_igVJH4","buttons_9PNHAW"],"disabled":true,"name":"t:sections.image-banner.presets.name","settings":{"custom_class":"something-special","image":"shopify:\/\/shop_images\/ad42744e9d59ba908c6e2ae231287eb3639d0da6.jpg","image_overlay_opacity":0,"image_height":"medium","image_behavior":"none","desktop_content_position":"middle-center","desktop_content_alignment":"center","show_text_box":false,"color_scheme":"scheme-1","stack_images_on_mobile":false,"mobile_content_alignment":"center","show_text_below":false}},"featured_collection_QU6gWz":{"type":"featured-collection","name":"t:sections.featured-collection.presets.name","settings":{"collection_url":"shopify:\/\/collections\/klaer","collection":"klaer","products_to_show":8,"title":"Bestselgere","heading_size":"h1","description":"","show_description":false,"description_style":"body","columns_desktop":4,"enable_desktop_slider":false,"full_width":false,"show_view_all":true,"view_all_style":"solid","color_scheme":"","image_ratio":"adapt","image_shape":"default","show_secondary_image":false,"show_vendor":false,"show_rating":false,"quick_add":"none","columns_mobile":"2","swipe_on_mobile":false,"padding_top":20,"padding_bottom":20}},"about_slider_CyL9C3":{"type":"about-slider","blocks":{"slide_bQRxP4":{"type":"slide","settings":{"image":"shopify:\/\/shop_images\/df97f18b04280600270d210c095aec2e6e1a9b42_2.png","title":"Om oss","text":"<p>Vi startet Smallmatters med en idé: at små ting kan gjøre en forskjell. Denne ideen inspirerte oss, Line Houge og Janicke Lorange, til å starte opp i 2018. <a href=\"\/pages\/om-oss-2\" title=\"Om Oss\">Les mer<\/a><\/p>","btn_label":"","btn_link":"shopify:\/\/pages\/om-oss-2","enable_grayscale":false}},"slide_AyKgXf":{"type":"slide","settings":{"image":"shopify:\/\/shop_images\/Vare_kvaliteter.png","title":"Våre kvaliteter","text":"<p>Mange tror at kashmirull kommer fra Italia, men den eksklusive ullen stammer fra ulike geiteraser som hovedsakelig lever i de kalde strøkene i Kina og Mongolia. <a href=\"\/pages\/vare-kvaliteter\" title=\"Våre kvaliteter\">Les mer<\/a><\/p>","btn_label":"","btn_link":"shopify:\/\/pages\/vare-kvaliteter","enable_grayscale":false}},"slide_YGpjhT":{"type":"slide","settings":{"image":"shopify:\/\/shop_images\/8e25c741820428157488fa3918e5a4f6943dae73.jpg","title":"Våre design","text":"<p>Design med tydelig identitet. Alt vi lager er designet i Norge med respekt for materialene, menneskene og historiene bak produktene. <a href=\"\/pages\/vare-design\" title=\"Våre design\">Les mer<\/a><\/p>","btn_label":"","btn_link":"shopify:\/\/pages\/vare-design","enable_grayscale":false}},"slide_834HEQ":{"type":"slide","settings":{"image":"shopify:\/\/shop_images\/Bevisste_valg_1.png","title":"Bevisste valg","text":"<p>Hos Smallmatters tar vi bevisste valg for å gjøre en forskjell: vi bruker rene, naturlige fibre og overskuddsmaterialer i produksjonen vår. <a href=\"\/pages\/bevisste-valg\" title=\"Bevisste valg\">Les mer<\/a><\/p>","btn_label":"","btn_link":"shopify:\/\/pages\/bevisste-valg","enable_grayscale":false}},"slide_zw68CU":{"type":"slide","settings":{"image":"shopify:\/\/shop_images\/Vare_produksjoner.png","title":"Våre produksjoner","text":"<p>Fra myk kashmir i Indre Mongolia, til bærekraftige tekstiler laget av overskuddsmaterialer, sydd lokalt i Oslo. <a href=\"\/pages\/vare-produksjoner\" title=\"Våre produksjoner\">Les mer<\/a><\/p>","btn_label":"","btn_link":"shopify:\/\/pages\/vare-produksjoner","enable_grayscale":false}}},"block_order":["slide_bQRxP4","slide_AyKgXf","slide_YGpjhT","slide_834HEQ","slide_zw68CU"],"name":"About Us Slider","settings":{"padding_top":20,"padding_bottom":20,"padding_top_mobile":0,"padding_bottom_mobile":0,"bg_color":"#eae5df","main_title":"Om oss","title_size":42,"text_color":"#333333","autoplay_speed":3000,"nav_desktop":"next_only","nav_mobile":"both"}},"custom_social_feed_YrizYd":{"type":"Custom-Social-Feed","blocks":{"image_bqYTgE":{"type":"image","settings":{"image":"shopify:\/\/shop_images\/Thomas_cardigan_oliven_med_jakke.png","link":"shopify:\/\/products\/cardigan-herre-oliven-sand"}},"image_cPGGqK":{"type":"image","settings":{"image":"shopify:\/\/shop_images\/Cardigan_oliven_i_kashmir_og_merinoull.png","link":"shopify:\/\/products\/contrast-cardigan-oliven-offwhite"}},"image_3D7tq6":{"type":"image","settings":{"image":"shopify:\/\/shop_images\/252a0704ebb07dba3450eecdb5a2ed24fdd628fd_1.png","link":"shopify:\/\/products\/spoonie-cardigan-sand-lyssand"}},"image_eMNEEN":{"type":"image","settings":{"image":"shopify:\/\/shop_images\/untitled-15024_kopi.png","link":"shopify:\/\/products\/contrast-cardigan-sand-rod-oransje"}},"image_TipafL":{"type":"image","settings":{"image":"shopify:\/\/shop_images\/IMG_0663.jpg","link":"shopify:\/\/collections\/gilli-round-neck"}},"image_JMEeMz":{"type":"image","settings":{"image":"shopify:\/\/shop_images\/August_Cardigan_sand.png","link":"shopify:\/\/collections\/august-cardigan"}},"image_e6UHbr":{"type":"image","settings":{"image":"shopify:\/\/shop_images\/CC_sand_moss_rosa.png","link":"shopify:\/\/products\/contrast-cardigan-sand-oliven-rosa"}},"image_Q4mqFT":{"type":"image","settings":{"image":"shopify:\/\/shop_images\/507C5B75-EABD-45B9-9921-5AA0CD0A3AC9_1_201_a.heic","link":"shopify:\/\/collections\/kashmirhalser"}},"image_NtpEX8":{"type":"image","settings":{"image":"shopify:\/\/shop_images\/CC_sand_rosa_og_zip_sand_rosa.png","link":"shopify:\/\/products\/cardigan-sand-lysrosa"}},"image_EawPi9":{"type":"image","settings":{"image":"shopify:\/\/shop_images\/CC_navy_rainbow_b5e1c55b-5775-4035-93a3-370e2f18607c.png","link":"shopify:\/\/products\/cardigan-navy-rainbow"}},"image_qWa8kB":{"type":"image","settings":{"image":"shopify:\/\/shop_images\/Kommer_snart_cardigans_i_kashmir_og_merinoull.png","link":"shopify:\/\/collections\/kommer-snart"}}},"block_order":["image_bqYTgE","image_cPGGqK","image_3D7tq6","image_eMNEEN","image_TipafL","image_JMEeMz","image_e6UHbr","image_Q4mqFT","image_NtpEX8","image_EawPi9","image_qWa8kB"],"name":"Custom Social Feed","settings":{"heading":"Hverdagsøyeblikk, skapt for å vare","subtext":"Fra Oslos gater til fjellhytte, tidløse gensere i naturlige omgivelser","handle_text":"@smallmatters_oslo","handle_url":"https:\/\/www.instagram.com\/smallmatters_oslo\/","bg_color":"#eae5df","text_color":"#3c3c3c","padding_top":20,"padding_bottom":32,"enable_autoplay":true,"autoplay_delay":2}},"store_location_mCmy4p":{"type":"store-location","name":"Store Location Map","settings":{"bg_image":"shopify:\/\/shop_images\/e3dc1587581a949ceb90b5f408d210c1f03fc855.jpg","overlay_opacity":60,"title":"<p>Velkommen til vår butikk i Oslo<\/p>","subtext":"Myk kvalitet, tidløs passform, kom innom og opplev den i vår fysiske butikk i Oslo","address":"Adresse: Holmenveien 20, 0374 Oslo","hours_title":"Åpningstider:","hours_text":"Tirsdag: 11–16<br>Torsdag: 11–18<br>","accent_color":"#ffffff","map_embed":"<iframe src=\"https:\/\/www.google.com\/maps\/embed?pb=!1m18!1m12!1m3!1d124.89527936643623!2d10.697325433729539!3d59.94335090000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46416dd6635d117b%3A0xfb59b7d87f6ad837!2sSmallmatters!5e0!3m2!1sen!2s!4v1765076381352!5m2!1sen!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"><\/iframe>"}}},"order":["hero_banner_rdcAa9","featured_collection_banner_Dzqap7","animated_text_KJyEyg","category_3bKkHt","reviews_slider_UgYHUK","image_banner_a9kx8q","featured_collection_QU6gWz","about_slider_CyL9C3","custom_social_feed_YrizYd","store_location_mCmy4p"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero_banner_rdcAa9": {
+      "type": "Hero-Banner",
+      "name": "Hero Banner",
+      "settings": {
+        "layout_mode": "single",
+        "text_align_x": "flex-end",
+        "text_align_y": "center",
+        "subtext_align": "center",
+        "image_left": "shopify://shop_images/FORSIDE_JUNI_26.png",
+        "image_right": "shopify://shop_images/Forsidebilde_MOBIL_6a4684bc-4088-467d-b6b4-428176104b66.png",
+        "desktop_bg": "#c3a096",
+        "desktop_text_color": "#ffffff",
+        "image_mobile": "shopify://shop_images/MOBIL_FORSIDE_JUNI.png",
+        "mobile_text_color": "#ffffff",
+        "heading": "SOMMERFARGER",
+        "subtext": "Tidløse gensere i kashmir og merinoull, skapt med omtanke og designet for å vare.",
+        "btn_label_1": "Kjøp dame",
+        "btn_link_1": "https://smallmatters.no/collections/damekashmir",
+        "btn_label_2": "Kjøp herre",
+        "btn_link_2": "https://smallmatters.no/collections/herrekashmir",
+        "btn_bg_color": "#24293c",
+        "btn_hover_bg_color": "#d8cfc4",
+        "btn_text_color": "#ffffff",
+        "btn_hover_text_color": "#545453"
+      }
+    },
+    "featured_collection_banner_Dzqap7": {
+      "type": "featured-collection-banner",
+      "blocks": {
+        "collection_tab_y4GjPD": {
+          "type": "collection_tab",
+          "settings": {
+            "tab_label": "Dame",
+            "collection": "damekashmir"
+          }
+        },
+        "collection_tab_P7T3Ke": {
+          "type": "collection_tab",
+          "settings": {
+            "tab_label": "Herre",
+            "collection": "herrekashmir"
+          }
+        }
+      },
+      "block_order": [
+        "collection_tab_y4GjPD",
+        "collection_tab_P7T3Ke"
+      ],
+      "name": "Featured Collection Banner",
+      "settings": {
+        "collection": "100-kashmir",
+        "button_bg_color": "#3d6aa6",
+        "button_text_color": "#ffffff",
+        "button_hover_bg_color": "#d8cfc4",
+        "button_hover_text_color": "#3c3c3c",
+        "show_banner": true,
+        "banner_image": "shopify://shop_images/Contrast_Cardigan_denimbla_og_sand_lysebla_navy.png",
+        "banner_head": "Vårens nyheter og tilbake på lager",
+        "banner_text": "<p>Tidløse gensere og jakker i kashmir og merinoull både til dame og herre </p>",
+        "banner_button_text": "Se kolleksjonen",
+        "banner_button_link": "shopify://collections/varens-nyheter",
+        "banner_link": "shopify://collections/varens-nyheter",
+        "title": "Vårens nyheter og tilbake på lager",
+        "heading_size": "h1",
+        "products_to_show": 22,
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "none",
+        "color_scheme": "scheme-5",
+        "full_width": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "animated_text_KJyEyg": {
+      "type": "animated-text",
+      "name": "Rich text",
+      "settings": {
+        "color_scheme": "scheme-5",
+        "main_text": "<p><strong>Ingen logoer. Ingen støy. </strong>Bare tidløse plagg i kashmir og merinoull, kjennetegnet av vår signaturstripe på ryggen og nøye utvalgte fargekontraster. Et personlig preg som gjør hver modell unik. </p>",
+        "sub_text": "",
+        "sub_happy": "",
+        "font_size": 24,
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "category_3bKkHt": {
+      "type": "category",
+      "blocks": {
+        "category_FccpMb": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/Damekashmir.png",
+            "title": "Dame",
+            "link": "shopify://collections/damekashmir"
+          }
+        },
+        "category_BqqNK4": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/7c4fd45fb9b3af454ce62fd70faa191a6d0be2d4.png",
+            "title": "Herre",
+            "link": "shopify://collections/herrekashmir"
+          }
+        },
+        "category_rrb7VP": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/Pakkeposer_e504eecf-0c7f-4c54-920c-c7b2bd7ea6d3.png",
+            "title": "Pakkeposer",
+            "link": "shopify://collections/oppbevaringsposer"
+          }
+        },
+        "category_jNM4G9": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/26e7f54f648bc7b61a75ca620de56f80a127d890.jpg",
+            "title": "Bunadsposer",
+            "link": "shopify://collections/bunadsposer"
+          }
+        }
+      },
+      "block_order": [
+        "category_FccpMb",
+        "category_BqqNK4",
+        "category_rrb7VP",
+        "category_jNM4G9"
+      ],
+      "name": "Categories Slider",
+      "settings": {
+        "padding_top": 50,
+        "padding_bottom": 50,
+        "padding_top_mobile": 30,
+        "padding_bottom_mobile": 30,
+        "heading": "Vårt utvalg",
+        "bg_color": "#eae5df"
+      }
+    },
+    "reviews_slider_UgYHUK": {
+      "type": "reviews-slider",
+      "blocks": {
+        "review_4KzgNc": {
+          "type": "review",
+          "settings": {
+            "date": "Okt, 2025",
+            "stars_image": "shopify://shop_images/6b9f1a000595a7e8d9834cdd014ccf7f9df23b44.png",
+            "headline": "Minimalistisk, elegant og allsidig.",
+            "content": "Kvaliteten er eksepsjonell – myk, varm og vakkert laget. Jeg har aldri hatt på meg noe så behagelig.",
+            "author": "Lorem Ipsum"
+          }
+        },
+        "review_UiVT3f": {
+          "type": "review",
+          "settings": {
+            "date": "Okt, 2025",
+            "stars_image": "shopify://shop_images/6b9f1a000595a7e8d9834cdd014ccf7f9df23b44.png",
+            "headline": "Minimalistisk, elegant og allsidig.",
+            "content": "Kvaliteten er eksepsjonell – myk, varm og vakkert laget. Jeg har aldri hatt på meg noe så behagelig.",
+            "author": "Lorem Ipsum"
+          }
+        },
+        "review_VkUXGG": {
+          "type": "review",
+          "settings": {
+            "date": "Okt, 2025",
+            "stars_image": "shopify://shop_images/6b9f1a000595a7e8d9834cdd014ccf7f9df23b44.png",
+            "headline": "Minimalistisk, elegant og allsidig.",
+            "content": "Kvaliteten er eksepsjonell – myk, varm og vakkert laget. Jeg har aldri hatt på meg noe så behagelig.",
+            "author": "Lorem Ipsum"
+          }
+        },
+        "review_R4r7jk": {
+          "type": "review",
+          "settings": {
+            "date": "Okt, 2025",
+            "stars_image": "shopify://shop_images/6b9f1a000595a7e8d9834cdd014ccf7f9df23b44.png",
+            "headline": "Minimalistisk, elegant og allsidig.",
+            "content": "Kvaliteten er eksepsjonell – myk, varm og vakkert laget. Jeg har aldri hatt på meg noe så behagelig.",
+            "author": "Lorem Ipsum"
+          }
+        },
+        "review_Ee9nFq": {
+          "type": "review",
+          "settings": {
+            "date": "Okt, 2025",
+            "stars_image": "shopify://shop_images/6b9f1a000595a7e8d9834cdd014ccf7f9df23b44.png",
+            "headline": "Minimalistisk, elegant og allsidig.",
+            "content": "Kvaliteten er eksepsjonell – myk, varm og vakkert laget. Jeg har aldri hatt på meg noe så behagelig.",
+            "author": "Lorem Ipsum"
+          }
+        },
+        "review_xGYaER": {
+          "type": "review",
+          "settings": {
+            "date": "Okt, 2025",
+            "stars_image": "shopify://shop_images/6b9f1a000595a7e8d9834cdd014ccf7f9df23b44.png",
+            "headline": "Minimalistisk, elegant og allsidig.",
+            "content": "Kvaliteten er eksepsjonell – myk, varm og vakkert laget. Jeg har aldri hatt på meg noe så behagelig.",
+            "author": "Lorem Ipsum"
+          }
+        }
+      },
+      "block_order": [
+        "review_4KzgNc",
+        "review_UiVT3f",
+        "review_VkUXGG",
+        "review_R4r7jk",
+        "review_Ee9nFq",
+        "review_xGYaER"
+      ],
+      "disabled": true,
+      "name": "Reviews Slider",
+      "settings": {
+        "padding_top": 70,
+        "padding_bottom": 70,
+        "padding_top_mobile": 35,
+        "padding_bottom_mobile": 35,
+        "bg_color": "#eae5df",
+        "heading": "Kundeomtaler",
+        "trust_text": "Trustpilot",
+        "rating_text": "4.8 stjerner | 200+ omtaler",
+        "autoplay": false,
+        "autoplay_speed": 4000
+      }
+    },
+    "image_banner_a9kx8q": {
+      "type": "image-banner",
+      "blocks": {
+        "heading_NYHjhx": {
+          "type": "heading",
+          "settings": {
+            "heading": "Noe nytt er på vei.",
+            "heading_size": "h1"
+          }
+        },
+        "text_igVJH4": {
+          "type": "text",
+          "settings": {
+            "text": "Nye farger, nye modeller, samme tidløse design. Følg med.",
+            "text_style": "body"
+          }
+        },
+        "buttons_9PNHAW": {
+          "type": "buttons",
+          "settings": {
+            "button_bg_color": "#3d6aa6",
+            "button_text_color": "#ffffff",
+            "button_hover_bg_color": "#d8cfc4",
+            "button_hover_text_color": "#3c3c3c",
+            "button_label_1": "Se hva som kommer",
+            "button_link_1": "shopify://pages/noe-nytt-er-pa-vej",
+            "button_style_secondary_1": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_NYHjhx",
+        "text_igVJH4",
+        "buttons_9PNHAW"
+      ],
+      "disabled": true,
+      "name": "t:sections.image-banner.presets.name",
+      "settings": {
+        "custom_class": "something-special",
+        "image": "shopify://shop_images/ad42744e9d59ba908c6e2ae231287eb3639d0da6.jpg",
+        "image_overlay_opacity": 0,
+        "image_height": "medium",
+        "image_behavior": "none",
+        "desktop_content_position": "middle-center",
+        "desktop_content_alignment": "center",
+        "show_text_box": false,
+        "color_scheme": "scheme-1",
+        "stack_images_on_mobile": false,
+        "mobile_content_alignment": "center",
+        "show_text_below": false
+      }
+    },
+    "featured_collection_QU6gWz": {
+      "type": "featured-collection",
+      "name": "t:sections.featured-collection.presets.name",
+      "settings": {
+        "collection_url": "shopify://collections/klaer",
+        "collection": "klaer",
+        "products_to_show": 8,
+        "title": "Bestselgere",
+        "heading_size": "h1",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "columns_desktop": 4,
+        "enable_desktop_slider": false,
+        "full_width": false,
+        "show_view_all": true,
+        "view_all_style": "solid",
+        "color_scheme": "",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "none",
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    },
+    "about_slider_CyL9C3": {
+      "type": "about-slider",
+      "blocks": {
+        "slide_bQRxP4": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/df97f18b04280600270d210c095aec2e6e1a9b42_2.png",
+            "title": "Om oss",
+            "text": "<p>Vi startet Smallmatters med en idé: at små ting kan gjøre en forskjell. Denne ideen inspirerte oss, Line Houge og Janicke Lorange, til å starte opp i 2018. <a href=\"/pages/om-oss-2\" title=\"Om Oss\">Les mer</a></p>",
+            "btn_label": "",
+            "btn_link": "shopify://pages/om-oss-2",
+            "enable_grayscale": false
+          }
+        },
+        "slide_AyKgXf": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Vare_kvaliteter.png",
+            "title": "Våre kvaliteter",
+            "text": "<p>Mange tror at kashmirull kommer fra Italia, men den eksklusive ullen stammer fra ulike geiteraser som hovedsakelig lever i de kalde strøkene i Kina og Mongolia. <a href=\"/pages/vare-kvaliteter\" title=\"Våre kvaliteter\">Les mer</a></p>",
+            "btn_label": "",
+            "btn_link": "shopify://pages/vare-kvaliteter",
+            "enable_grayscale": false
+          }
+        },
+        "slide_YGpjhT": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/8e25c741820428157488fa3918e5a4f6943dae73.jpg",
+            "title": "Våre design",
+            "text": "<p>Design med tydelig identitet. Alt vi lager er designet i Norge med respekt for materialene, menneskene og historiene bak produktene. <a href=\"/pages/vare-design\" title=\"Våre design\">Les mer</a></p>",
+            "btn_label": "",
+            "btn_link": "shopify://pages/vare-design",
+            "enable_grayscale": false
+          }
+        },
+        "slide_834HEQ": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Bevisste_valg_1.png",
+            "title": "Bevisste valg",
+            "text": "<p>Hos Smallmatters tar vi bevisste valg for å gjøre en forskjell: vi bruker rene, naturlige fibre og overskuddsmaterialer i produksjonen vår. <a href=\"/pages/bevisste-valg\" title=\"Bevisste valg\">Les mer</a></p>",
+            "btn_label": "",
+            "btn_link": "shopify://pages/bevisste-valg",
+            "enable_grayscale": false
+          }
+        },
+        "slide_zw68CU": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Vare_produksjoner.png",
+            "title": "Våre produksjoner",
+            "text": "<p>Fra myk kashmir i Indre Mongolia, til bærekraftige tekstiler laget av overskuddsmaterialer, sydd lokalt i Oslo. <a href=\"/pages/vare-produksjoner\" title=\"Våre produksjoner\">Les mer</a></p>",
+            "btn_label": "",
+            "btn_link": "shopify://pages/vare-produksjoner",
+            "enable_grayscale": false
+          }
+        }
+      },
+      "block_order": [
+        "slide_bQRxP4",
+        "slide_AyKgXf",
+        "slide_YGpjhT",
+        "slide_834HEQ",
+        "slide_zw68CU"
+      ],
+      "name": "About Us Slider",
+      "settings": {
+        "padding_top": 20,
+        "padding_bottom": 20,
+        "padding_top_mobile": 0,
+        "padding_bottom_mobile": 0,
+        "bg_color": "#eae5df",
+        "main_title": "Om oss",
+        "title_size": 42,
+        "text_color": "#333333",
+        "autoplay_speed": 3000,
+        "nav_desktop": "next_only",
+        "nav_mobile": "both"
+      }
+    },
+    "custom_social_feed_YrizYd": {
+      "type": "Custom-Social-Feed",
+      "blocks": {
+        "image_bqYTgE": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Thomas_cardigan_oliven_med_jakke.png",
+            "link": "shopify://products/cardigan-herre-oliven-sand"
+          }
+        },
+        "image_cPGGqK": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Cardigan_oliven_i_kashmir_og_merinoull.png",
+            "link": "shopify://products/contrast-cardigan-oliven-offwhite"
+          }
+        },
+        "image_3D7tq6": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/252a0704ebb07dba3450eecdb5a2ed24fdd628fd_1.png",
+            "link": "shopify://products/spoonie-cardigan-sand-lyssand"
+          }
+        },
+        "image_eMNEEN": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/untitled-15024_kopi.png",
+            "link": "shopify://products/contrast-cardigan-sand-rod-oransje"
+          }
+        },
+        "image_TipafL": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/IMG_0663.jpg",
+            "link": "shopify://collections/gilli-round-neck"
+          }
+        },
+        "image_JMEeMz": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/August_Cardigan_sand.png",
+            "link": "shopify://collections/august-cardigan"
+          }
+        },
+        "image_e6UHbr": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/CC_sand_moss_rosa.png",
+            "link": "shopify://products/contrast-cardigan-sand-oliven-rosa"
+          }
+        },
+        "image_Q4mqFT": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/507C5B75-EABD-45B9-9921-5AA0CD0A3AC9_1_201_a.heic",
+            "link": "shopify://collections/kashmirhalser"
+          }
+        },
+        "image_NtpEX8": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/CC_sand_rosa_og_zip_sand_rosa.png",
+            "link": "shopify://products/cardigan-sand-lysrosa"
+          }
+        },
+        "image_EawPi9": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/CC_navy_rainbow_b5e1c55b-5775-4035-93a3-370e2f18607c.png",
+            "link": "shopify://products/cardigan-navy-rainbow"
+          }
+        },
+        "image_qWa8kB": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Kommer_snart_cardigans_i_kashmir_og_merinoull.png",
+            "link": "shopify://collections/kommer-snart"
+          }
+        }
+      },
+      "block_order": [
+        "image_bqYTgE",
+        "image_cPGGqK",
+        "image_3D7tq6",
+        "image_eMNEEN",
+        "image_TipafL",
+        "image_JMEeMz",
+        "image_e6UHbr",
+        "image_Q4mqFT",
+        "image_NtpEX8",
+        "image_EawPi9",
+        "image_qWa8kB"
+      ],
+      "name": "Custom Social Feed",
+      "settings": {
+        "heading": "Hverdagsøyeblikk, skapt for å vare",
+        "subtext": "Fra Oslos gater til fjellhytte, tidløse gensere i naturlige omgivelser",
+        "handle_text": "@smallmatters_oslo",
+        "handle_url": "https://www.instagram.com/smallmatters_oslo/",
+        "bg_color": "#eae5df",
+        "text_color": "#3c3c3c",
+        "padding_top": 20,
+        "padding_bottom": 32,
+        "enable_autoplay": true,
+        "autoplay_delay": 2
+      }
+    },
+    "store_location_mCmy4p": {
+      "type": "store-location",
+      "name": "Store Location Map",
+      "settings": {
+        "bg_image": "shopify://shop_images/e3dc1587581a949ceb90b5f408d210c1f03fc855.jpg",
+        "overlay_opacity": 60,
+        "title": "<p>Velkommen til vår butikk i Oslo</p>",
+        "subtext": "Myk kvalitet, tidløs passform, kom innom og opplev den i vår fysiske butikk i Oslo",
+        "address": "Adresse: Holmenveien 20, 0374 Oslo",
+        "hours_title": "Åpningstider:",
+        "hours_text": "SOMMERSTENGT FRA 01.07-07.08 GOD SOMMER",
+        "accent_color": "#ffffff",
+        "map_embed": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d124.89527936643623!2d10.697325433729539!3d59.94335090000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46416dd6635d117b%3A0xfb59b7d87f6ad837!2sSmallmatters!5e0!3m2!1sen!2s!4v1765076381352!5m2!1sen!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>"
+      }
+    }
+  },
+  "order": [
+    "hero_banner_rdcAa9",
+    "featured_collection_banner_Dzqap7",
+    "animated_text_KJyEyg",
+    "category_3bKkHt",
+    "reviews_slider_UgYHUK",
+    "image_banner_a9kx8q",
+    "featured_collection_QU6gWz",
+    "about_slider_CyL9C3",
+    "custom_social_feed_YrizYd",
+    "store_location_mCmy4p"
+  ]
+}
