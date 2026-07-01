@@ -32,6 +32,10 @@ if (!customElements.get('exercer-filters')) {
       this.isLoadingNextPage = false;
       this.infiniteObserver = null;
       this.onPopStateBound = this.onPopState.bind(this);
+      this._formBound = false;
+      this._accordionsBound = false;
+      this._canAutoLoad = false;
+      this._onUserScroll = null;
     }
 
     connectedCallback() {
@@ -51,6 +55,12 @@ if (!customElements.get('exercer-filters')) {
 
       window.addEventListener('popstate', this.onPopStateBound);
 
+      // Only allow the infinite-scroll observer to auto-load after a genuine
+      // user scroll. This prevents 3–4 pages loading at once after filtering.
+      this._onUserScroll = () => { this._canAutoLoad = true; };
+      window.addEventListener('scroll', this._onUserScroll, { passive: true });
+      window.addEventListener('touchmove', this._onUserScroll, { passive: true });
+
       const urlWithStock = this.ensureInStockFilter(window.location.href);
       if (urlWithStock !== window.location.href) {
         history.replaceState({}, '', urlWithStock);
@@ -60,6 +70,10 @@ if (!customElements.get('exercer-filters')) {
 
     disconnectedCallback() {
       window.removeEventListener('popstate', this.onPopStateBound);
+      if (this._onUserScroll) {
+        window.removeEventListener('scroll', this._onUserScroll);
+        window.removeEventListener('touchmove', this._onUserScroll);
+      }
     }
 
     /* ---- Drawer open / close ---- */
@@ -107,19 +121,21 @@ if (!customElements.get('exercer-filters')) {
       }
     }
 
-    /* ---- Accordions ---- */
+    /* ---- Accordions (delegated once; survives AJAX re-render) ---- */
     bindAccordions() {
-      this.querySelectorAll('[data-exr-group]').forEach(details => {
-        const trigger = details.querySelector('[data-exr-trigger]');
-        if (!trigger) return;
-        trigger.addEventListener('click', (e) => {
-          e.preventDefault();
-          if (details.hasAttribute('open')) {
-            details.removeAttribute('open');
-          } else {
-            details.setAttribute('open', '');
-          }
-        });
+      if (!this.form || this._accordionsBound) return;
+      this._accordionsBound = true;
+      this.form.addEventListener('click', (e) => {
+        const trigger = e.target.closest('[data-exr-trigger]');
+        if (!trigger || !this.form.contains(trigger)) return;
+        e.preventDefault();
+        const details = trigger.closest('[data-exr-group]');
+        if (!details) return;
+        if (details.hasAttribute('open')) {
+          details.removeAttribute('open');
+        } else {
+          details.setAttribute('open', '');
+        }
       });
     }
 
@@ -147,45 +163,48 @@ if (!customElements.get('exercer-filters')) {
     }
 
     lockInStockFilters() {
+      // Just enforce the checked state; the change handler in bindForm keeps it
+      // locked. (No per-input listeners here — they would stack on re-render.)
       this.querySelectorAll('[data-exr-in-stock-locked]').forEach((input) => {
         input.checked = true;
-        input.addEventListener('change', () => {
-          input.checked = true;
-        });
       });
     }
 
-    /* ---- Form (checkbox / price changes) ---- */
+    /* ---- Form (checkbox / price changes) — bound once, fully delegated ---- */
     bindForm() {
-      if (!this.form) return;
+      if (!this.form || this._formBound) return;
+      this._formBound = true;
 
+      // Checkbox / radio changes (change bubbles, so it survives re-render)
       this.form.addEventListener('change', (e) => {
         if (e.target.matches('[data-exr-in-stock-locked]')) {
           e.target.checked = true;
           return;
         }
 
-        // Debounce for rapid clicking
+        // Debounce so a single click = a single fetch
         clearTimeout(this.debounceTimer);
         this.debounceTimer = setTimeout(() => {
           this.submitFilters();
         }, 500);
       });
 
-      // Price range inputs – submit on Enter or blur
-      this.form.querySelectorAll('[data-exr-price-input]').forEach(input => {
-        input.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            this.submitFilters();
-          }
-        });
-        input.addEventListener('blur', () => {
+      // Price range: submit on Enter (keydown bubbles → delegated)
+      this.form.addEventListener('keydown', (e) => {
+        if (e.target.matches('[data-exr-price-input]') && e.key === 'Enter') {
+          e.preventDefault();
+          this.submitFilters();
+        }
+      });
+
+      // Price range: submit on blur (focusout bubbles → delegated)
+      this.form.addEventListener('focusout', (e) => {
+        if (e.target.matches('[data-exr-price-input]')) {
           clearTimeout(this.debounceTimer);
           this.debounceTimer = setTimeout(() => {
             this.submitFilters();
           }, 400);
-        });
+        }
       });
     }
 
@@ -320,12 +339,14 @@ if (!customElements.get('exercer-filters')) {
           this.loadNextPage(currentPage, totalPages);
         });
       } else if (loadStatus) {
-        // Scroll based pagination
+        // Scroll based pagination — only auto-load after a real user scroll so
+        // filtering doesn't cascade-load several pages at once.
         this.infiniteObserver = new IntersectionObserver((entries) => {
-          if (entries[0].isIntersecting && !this.isLoadingNextPage) {
+          if (entries[0].isIntersecting && !this.isLoadingNextPage && this._canAutoLoad) {
+            this._canAutoLoad = false;
             this.loadNextPage(currentPage, totalPages);
           }
-        }, { rootMargin: '0px 0px 400px 0px' });
+        }, { rootMargin: '0px 0px 200px 0px' });
         this.infiniteObserver.observe(loadStatus);
       }
     }
@@ -394,6 +415,9 @@ if (!customElements.get('exercer-filters')) {
       const currentGrid = document.getElementById('ProductGridContainer');
       if (newGrid && currentGrid) {
         currentGrid.innerHTML = newGrid.innerHTML;
+        // Block auto-loading right after a filter/sort render; require the user
+        // to scroll before the next page loads.
+        this._canAutoLoad = false;
         this.bindInfiniteScroll();
       }
     }
@@ -423,10 +447,10 @@ if (!customElements.get('exercer-filters')) {
         currentCountBtn.textContent = newCountBtn.textContent;
       }
 
-      // Re-bind events on new DOM
+      // The <form> element itself persists (only its innards were swapped), so
+      // the delegated listeners from connectedCallback still work — do NOT
+      // re-bind here or listeners would stack and cause multiple fetches.
       this.form = this.querySelector('[data-exr-form]');
-      this.bindForm();
-      this.bindAccordions();
       this.lockInStockFilters();
     }
 
