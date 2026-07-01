@@ -204,10 +204,16 @@ if (!customElements.get('exercer-filters')) {
 
     /* ---- Sort ---- */
     bindSort() {
-      const sortSelect = this.querySelector('[data-exr-sort]');
-      if (!sortSelect) return;
-      sortSelect.addEventListener('change', () => {
-        this.submitFilters();
+      const sortSelects = this.querySelectorAll('[data-exr-sort]');
+      if (!sortSelects.length) return;
+      sortSelects.forEach((select) => {
+        select.addEventListener('change', () => {
+          // Keep toolbar + drawer sort dropdowns in sync
+          sortSelects.forEach((other) => {
+            if (other !== select) other.value = select.value;
+          });
+          this.submitFilters();
+        });
       });
     }
 

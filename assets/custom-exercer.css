@@ -614,6 +614,43 @@ exercer-filters {
   color: var(--exr-text-light);
 }
 
+/* ---- Sort inside drawer (mobile only) ---- */
+.exr-drawer__sort {
+  display: none;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--exr-border);
+}
+
+.exr-drawer__sort-label {
+  display: block;
+  font-family: var(--exr-font);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--exr-text);
+  margin-bottom: 10px;
+}
+
+.exr-drawer__sort .exr-sort {
+  display: block;
+  width: 100%;
+}
+
+.exr-drawer__sort .exr-sort__select {
+  width: 100%;
+}
+
+/* On mobile, move Sort out of the toolbar and into the filter drawer */
+@media only screen and (max-width: 749px) {
+  .exr-toolbar .exr-sort {
+    display: none;
+  }
+  .exr-drawer__sort {
+    display: block;
+  }
+}
+
 /* ---- Animations ---- */
 .exr-group__body {
   overflow: hidden;

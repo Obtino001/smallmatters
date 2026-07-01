@@ -78,32 +78,35 @@ white-space: nowrap;
   .collection-category-tabs{
     display: none;
   }
-  .collection-category-tabs-mob .collection-category-tabs{
+  /* Category tabs = full-width horizontal slider showing ALL categories */
+  .collection-category-tabs-mob .collection-category-tabs {
     display: flex;
     width: 100%;
-    align-items: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
     border-radius: 20px;
+    margin-bottom: 4px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    gap: 8px;
+  }
+  .collection-category-tabs-mob .collection-category-tabs::-webkit-scrollbar {
+    display: none;
   }
   .collection-category-tabs .tab {
     padding-block: 6px;
-    width: 100%;
+    flex: 0 0 auto;
+    width: auto;
     justify-content: flex-start;
     white-space: nowrap;
     font-size: 12px;
-}
-.collection-category-tabs-mob .collection-category-tabs {
-    display: flex;
-    width: 100%;
-    align-items: flex-start;
-    border-radius: 20px;
-    margin-bottom: 10px;
-    overflow-x: scroll;
-    scrollbar-width: none;
-    /* flex-direction: column; */
-}
-.collection-category-tabs-mob {
+  }
+  .collection-category-tabs-mob {
     flex-direction: column;
-}
+    align-items: stretch;
+  }
   .collection-category-tabs .tab:last-child{
     border-bottom: none;
   }

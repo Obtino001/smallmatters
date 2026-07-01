@@ -67,6 +67,24 @@
 
     {%- comment -%} ── Scrollable Body ── {%- endcomment -%}
     <div class="exr-drawer__body">
+      {%- if enable_sorting -%}
+        {%- assign drawer_sort_by = collection.sort_by | default: collection.default_sort_by -%}
+        <div class="exr-drawer__sort">
+          <label class="exr-drawer__sort-label">{{ 'products.facets.sort_by_label' | t }}</label>
+          <div class="exr-sort">
+            <select data-exr-sort class="exr-sort__select" aria-label="{{ 'products.facets.sort_by_label' | t }}">
+              {%- for option in collection.sort_options -%}
+                <option value="{{ option.value | escape }}" {% if option.value == drawer_sort_by %}selected{% endif %}>
+                  {{ option.name | escape }}
+                </option>
+              {%- endfor -%}
+            </select>
+            <span class="exr-sort__arrow">
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </div>
+        </div>
+      {%- endif -%}
       <form data-exr-form>
         {% render 'facet-exercer-fields' %}
       </form>
