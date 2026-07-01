@@ -590,6 +590,37 @@ color: #3C3C3C;
                   render 'share-button', block: block, share_link: share_url
                 %}
 
+              {%- when 'custom_pickup_availability' -%}
+                <div class="pickup-availability-preview custom-pickup-block" {{ block.shopify_attributes }}>
+                  <span class="svg-wrapper">
+                    {{- 'icon-tick.svg' | inline_asset_content -}}
+                  </span>
+                  <div class="pickup-availability-info">
+                    <p class="caption-large">{{ block.settings.heading }}</p>
+                    <p class="caption">{{ block.settings.subtitle }}</p>
+                    {% if block.settings.store_info != blank %}
+                      <details class="custom-pickup-details">
+                        <summary class="pickup-availability-button link link--text underlined-link" style="cursor: pointer; list-style: none;">{{ block.settings.link_text }}</summary>
+                        <div class="custom-pickup-drawer-content" style="padding: 1.5rem; font-size: 1.4rem; margin-top: 1rem; background: rgba(var(--color-foreground), 0.04); border-radius: var(--popup-corner-radius, 5px);">
+                          {{ block.settings.store_info }}
+                        </div>
+                      </details>
+                    {% endif %}
+                  </div>
+                </div>
+                <style>
+                  .custom-pickup-block {
+                    margin-top: 1.5rem;
+                    margin-bottom: 1.5rem;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 1rem;
+                  }
+                  .custom-pickup-details summary::-webkit-details-marker {
+                    display: none;
+                  }
+                </style>
+
               {%- when 'variant_picker' -%}
                 {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
                           {%- when 'buy_buttons' -%}
@@ -600,7 +631,7 @@ color: #3C3C3C;
                     product: product,
                     product_form_id: product_form_id,
                     section_id: section.id,
-                    show_pickup_availability: true
+                    show_pickup_availability: block.settings.show_pickup_availability
                   -%}
 
             <div class="vipps-button-wrapper">
@@ -1248,10 +1279,47 @@ color: #3C3C3C;
       ]
     },
     {
+      "type": "custom_pickup_availability",
+      "name": "Custom Pickup Info",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Henting tilgjengelig hos Smallmatters AS",
+          "label": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "default": "Vanligvis klar på 24 timer",
+          "label": "Subtitle"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "default": "Vis butikkinformasjon",
+          "label": "Link Text"
+        },
+        {
+          "type": "richtext",
+          "id": "store_info",
+          "default": "<p>Smallmatters AS<br>Holmenveien 20<br>0374 Oslo<br>Norge<br>004790162628</p>",
+          "label": "Store Information"
+        }
+      ]
+    },
+    {
       "type": "buy_buttons",
       "name": "t:sections.main-product.blocks.buy_buttons.name",
       "limit": 1,
       "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_pickup_availability",
+          "default": true,
+          "label": "Show Shopify pickup availability"
+        },
         {
           "type": "checkbox",
           "id": "show_dynamic_checkout",
