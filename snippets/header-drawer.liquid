@@ -473,23 +473,42 @@
 
     let submenuStack = [];
     let isOpen = false;
+    let savedScrollY = 0;
 
     // ── Open Drawer ──
     function openDrawer() {
       if (isOpen) return;
       isOpen = true;
-      drawer.classList.add('gs-drawer--open');
+
+      // Lock body scroll while preserving the current scroll position
+      // (prevents the page from jumping to the top, which felt buggy)
+      savedScrollY = window.scrollY || window.pageYOffset || 0;
+      document.body.style.top = '-' + savedScrollY + 'px';
       document.body.classList.add('gs-drawer-body-lock');
+
+      // Step 1: make the drawer visible so the (one-time) layout/paint of the
+      // preloaded content settles BEFORE the slide begins.
+      drawer.classList.add('gs-drawer--visible');
       drawer.setAttribute('aria-hidden', 'false');
+
+      // Force the browser to flush layout now (reads offsetWidth).
+      void drawer.offsetWidth;
+
+      // Step 2: on the next frame, trigger the slide-in transform. Because the
+      // reflow is already done, the animation runs on the compositor smoothly.
+      requestAnimationFrame(() => {
+        drawer.classList.add('gs-drawer--open');
+      });
 
       // Update hamburger
       openBtns.forEach(btn => btn.setAttribute('aria-expanded', 'true'));
 
-      // Trap focus
-      requestAnimationFrame(() => {
+      // Move focus AFTER the animation so it doesn't cause a mid-slide repaint.
+      setTimeout(() => {
+        if (!isOpen) return;
         const closeBtn = drawer.querySelector('.gs-drawer__close');
-        if (closeBtn) closeBtn.focus();
-      });
+        if (closeBtn) closeBtn.focus({ preventScroll: true });
+      }, 380);
     }
 
     // ── Close Drawer ──
@@ -497,11 +516,17 @@
       if (!isOpen) return;
       isOpen = false;
       drawer.classList.remove('gs-drawer--open');
-      document.body.classList.remove('gs-drawer-body-lock');
       drawer.setAttribute('aria-hidden', 'true');
 
-      // Close any open submenus after a delay to allow the drawer to slide out seamlessly
+      // Restore body scroll + position
+      document.body.classList.remove('gs-drawer-body-lock');
+      document.body.style.top = '';
+      window.scrollTo(0, savedScrollY);
+
+      // Remove the "visible" state and close submenus after the slide-out ends.
       setTimeout(() => {
+        if (isOpen) return; // guard against a rapid re-open
+        drawer.classList.remove('gs-drawer--visible');
         closeAllSubmenus();
       }, 350);
 

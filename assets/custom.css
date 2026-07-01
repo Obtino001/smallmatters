@@ -3020,7 +3020,44 @@ span#ProductCount {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 16px;
+}
+
+/* Category tabs take the remaining width and scroll horizontally if needed */
+.collection-category-tabs-mob > .collection-category-tabs {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Filter / sort toolbar stays a fixed size on the right, vertically centered */
+.collection-category-tabs-mob > #main-collection-filters,
+.collection-category-tabs-mob > .facets-wrapper {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.collection-category-tabs-mob .exr-toolbar {
+  padding: 0;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+/* Stack tabs above the filter toolbar on tablet / mobile */
+@media (max-width: 786px) {
+  .collection-category-tabs-mob {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .collection-category-tabs-mob > #main-collection-filters,
+  .collection-category-tabs-mob > .facets-wrapper {
+    width: 100%;
+  }
+  .collection-category-tabs-mob .exr-toolbar {
+    width: 100%;
+    justify-content: space-between;
+  }
 }
 
 span#ProductCountssss {

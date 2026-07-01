@@ -32,9 +32,17 @@
 .collection-category-tabs {
   display: flex;
   align-items: center;
+  flex-wrap: nowrap;
+  gap: 4px;
   border-radius: 40px;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   background: transparent;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.collection-category-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .collection-category-tabs .tab {
@@ -43,9 +51,9 @@
     color: #3c3c3c;
     text-decoration: none;
     position: relative;
-    gap: 12px;
     cursor: pointer;
-    max-width: 150px;
+    flex: 0 0 auto;
+    white-space: nowrap;
 }
 .collection-category-tabs .tab.active {
     color: #000000;
@@ -63,7 +71,7 @@ font-size: 14px;
 leading-trim: NONE;
 line-height: 100%;
 letter-spacing: 0%;
-
+white-space: nowrap;
 }
 
 @media (max-width: 786px) {
