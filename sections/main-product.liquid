@@ -590,7 +590,7 @@ color: #3C3C3C;
                   render 'share-button', block: block, share_link: share_url
                 %}
 
-              {%- when 'custom_pickup_availability' -%}
+              {%- when 'pickup_availability' -%}
                 <div class="pickup-availability-preview custom-pickup-block" {{ block.shopify_attributes }}>
                   <span class="svg-wrapper">
                     {{- 'icon-tick.svg' | inline_asset_content -}}
@@ -1279,7 +1279,7 @@ color: #3C3C3C;
       ]
     },
     {
-      "type": "custom_pickup_availability",
+      "type": "pickup_availability",
       "name": "Custom Pickup Info",
       "limit": 1,
       "settings": [
