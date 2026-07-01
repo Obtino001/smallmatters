@@ -4441,3 +4441,7 @@ body:has(.scrolled-past-header) .header--transparent--cc .gs-hamburger__icon pat
     width: 100%;
     height: 200px;
 }
+
+span {
+  font-family: 'Lato' !important;
+}
