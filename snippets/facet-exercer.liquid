@@ -8,7 +8,7 @@
   <script src="{{ 'custom-filters.js' | asset_url }}" defer="defer"></script>
 {%- endunless -%}
 
-<exercer-filters{% if ajax_section_id != blank %} data-exr-section-id="{{ ajax_section_id }}"{% endif %}>
+<exercer-filters {% if ajax_section_id != blank %} data-exr-section-id="{{ ajax_section_id }}"{% endif %}>
 
   {%- comment -%} ── Toolbar above the grid ── {%- endcomment -%}
   <div class="exr-toolbar">
