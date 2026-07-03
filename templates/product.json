@@ -1401,10 +1401,10 @@
         "pickup_availability_TLGMF9": {
           "type": "pickup_availability",
           "settings": {
-            "heading": "Henting tilgjengelig hos Smallmatters AS",
-            "subtitle": "Vanligvis klar på 24 timer",
+            "heading": "Henting vanligvis tilgjengelig hos Smallmatters AS",
+            "subtitle": "",
             "link_text": "Vis butikkinformasjon",
-            "store_info": "<p>Smallmatters AS<br/>Holmenveien 20<br/>0374 Oslo<br/>Norge<br/>004790162628</p>"
+            "store_info": "<p>Smallmatters AS<br/>Holmenveien 20<br/>0374 Oslo<br/>Norge<br/>BUTIKKEN ER SOMMERSTENGT FREM TIL 07.08.26</p>"
           }
         },
         "us_ps_nixk9H": {
