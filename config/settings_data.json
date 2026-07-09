@@ -238,6 +238,11 @@
         "type": "shopify://apps/microsoft-clarity/blocks/clarity_js/31c3d126-8116-4b4a-8ba1-baeda7c4aeea",
         "disabled": false,
         "settings": {}
+      },
+      "1732888969108105213": {
+        "type": "shopify://apps/onskeskyen/blocks/serverside-tracking/be6e5a80-54ea-40af-aa80-5746282173b8",
+        "disabled": false,
+        "settings": {}
       }
     },
     "color_schemes": {
