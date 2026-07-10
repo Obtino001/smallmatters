@@ -176,7 +176,7 @@
       "cart-drawer": {
         "type": "cart-drawer",
         "settings": {
-          "complete_look_title": "Complete the Look Title",
+          "complete_look_title": "ANBEFALT TILBEHØR",
           "complete_look_add_btn_text": "+ LEGG TIL",
           "you_may_also_like_title": "DU VIL KANSKJE OGSÅ LIKE",
           "bundle_title": "SMALLMATTERS-PAKKE",
@@ -236,6 +236,11 @@
       },
       "2567389343055140935": {
         "type": "shopify://apps/microsoft-clarity/blocks/clarity_js/31c3d126-8116-4b4a-8ba1-baeda7c4aeea",
+        "disabled": false,
+        "settings": {}
+      },
+      "1732888969108105213": {
+        "type": "shopify://apps/onskeskyen/blocks/serverside-tracking/be6e5a80-54ea-40af-aa80-5746282173b8",
         "disabled": false,
         "settings": {}
       }
