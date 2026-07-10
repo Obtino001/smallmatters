@@ -437,17 +437,21 @@ width: 100%;
   >
     <div class="footer__content-bottom-wrapper container-x{% if section.settings.enable_country_selector == false and section.settings.enable_language_selector == false %} footer__content-bottom-wrapper--center{% endif %}">
      <div class="footer__copyright caption">
-  <small class="copyright__content">
-    &copy; 2018 - {{ 'now' | date: "%Y" }}, {{ shop.name | link_to: routes.root_url }}.
-  </small>
-  <small class="copyright__content">Alle rettigheter forbeholdt.</small>
-  <small class="copyright__content">
-    Designed and Developed by <a href="https://obtino.com" target="_blank" rel="noopener"><strong>Obtino</strong></a>
-  </small>
+   <div class="footer__bottom-row" style="margin-top: 0px; padding: 0px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+  <div style="margin: 0; opacity: 0.7; font-size: 13.5px; color: {{ bar_text }};">
+    &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}
+  </div>
+
+  <!-- Made by Obtino · Premium Glassmorphism Badge -->
+  <a href="https://obtino.com" target="_blank" rel="noopener"
+     style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: {{ bar_text }}; font-family: 'Hanken Grotesk', system-ui, sans-serif; padding: 8px 16px; border-radius: 6px; background-color: color-mix(in srgb, {{ bar_text }} 10%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid color-mix(in srgb, {{ bar_text }} 15%, transparent); box-shadow: 0 4px 12px color-mix(in srgb, {{ bar_text }} 5%, transparent); transition: opacity 0.2s ease;">
+    <svg width="17" height="15" viewBox="0 0 102 92" fill="currentColor" aria-hidden="true" style="flex-shrink: 0;"><path d="M43.5993 87C37.1618 87 31.264 85.8686 25.9016 83.6142C20.5391 81.3599 15.9271 78.2443 12.0655 74.2717C8.20384 70.2991 5.22753 65.6806 3.13652 60.4162C1.04551 55.156 0 49.5159 0 43.5C0 37.4841 1.0708 31.8482 3.21662 26.5838C5.36243 21.3194 8.36404 16.7009 12.2257 12.7283C16.0873 8.75572 20.674 5.64015 25.9817 3.38578C31.2893 1.12719 37.1618 0 43.5993 0C50.0367 0 55.7448 1.12719 61.0567 3.38578C66.3643 5.64015 70.951 8.75572 74.8127 12.7283C78.6743 16.7051 81.6759 21.3236 83.8217 26.5838C85.9675 31.8482 87.0383 37.4841 87.0383 43.5C87.0383 49.5159 85.9633 55.156 83.8217 60.4162C81.6759 65.6806 78.6743 70.2991 74.8127 74.2717C70.951 78.2443 66.3685 81.3599 61.0567 83.6142C55.749 85.8686 49.9271 87 43.5993 87ZM43.5993 14.1763C39.5226 14.1763 35.7411 14.9573 32.2547 16.5151C28.7683 18.0729 25.7371 20.2218 23.1655 22.9616C20.5897 25.7015 18.5788 28.8424 17.1328 32.3844C15.6868 35.9263 14.9617 39.7427 14.9617 43.8251C14.9617 47.9074 15.7374 51.7196 17.293 55.2658C18.8444 58.812 20.9396 61.8727 23.566 64.4479C26.1924 67.0273 29.2236 69.0664 32.6552 70.5693C36.0868 72.0764 39.7334 72.8279 43.595 72.8279C47.4567 72.8279 51.0991 72.0764 54.5349 70.5693C57.9665 69.0664 60.9934 67.0273 63.6241 64.4479C66.2505 61.8685 68.3162 58.812 69.817 55.2658C71.3178 51.7238 72.0682 47.9117 72.0682 43.8251C72.0682 39.7385 71.3178 35.9052 69.817 32.3084C68.312 28.7115 66.2505 25.5706 63.6241 22.8814C60.9934 20.1964 57.9665 18.0772 54.5349 16.5194C51.0991 14.9658 47.4567 14.1806 43.595 14.1806L43.5993 14.1763ZM102 72.0173H87.0383V87H102V72.0173Z"/></svg>
+    <span style="font-size: 13.5px; line-height: 1;">
+      <span style="font-weight: 400; opacity: 0.6;">Made by</span> <span style="font-weight: 600;">Obtino</span>
+    </span>
+  </a>
 </div>
-      <div class="footer__copyright caption">
-        {% render 'payments-footer' %}
-    </div>
+ 
     </div>
   </div>
 </footer>
