@@ -66,7 +66,12 @@ if (!customElements.get('exercer-filters')) {
         history.replaceState({}, '', urlWithStock);
         this.fetchAndRender(urlWithStock);
       } else {
-        this.applyVariantStockFilter();
+        // Wait for DOM to finish parsing since <exercer-filters> is above the grid in HTML
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => this.applyVariantStockFilter());
+        } else {
+          setTimeout(() => this.applyVariantStockFilter(), 0);
+        }
       }
     }
 
