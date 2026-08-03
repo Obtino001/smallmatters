@@ -65,6 +65,8 @@ if (!customElements.get('exercer-filters')) {
       if (urlWithStock !== window.location.href) {
         history.replaceState({}, '', urlWithStock);
         this.fetchAndRender(urlWithStock);
+      } else {
+        this.applyVariantStockFilter();
       }
     }
 
@@ -295,6 +297,9 @@ if (!customElements.get('exercer-filters')) {
         // Update product count in toolbar and footer
         this.updateProductCount(doc);
 
+        // Apply client-side variant stock filtering
+        this.applyVariantStockFilter();
+
       } catch (err) {
         console.error('[ExercerFilters] fetch error:', err);
       } finally {
@@ -377,6 +382,9 @@ if (!customElements.get('exercer-filters')) {
         if (newItems.length > 0 && productGrid) {
           newItems.forEach(item => productGrid.appendChild(item));
         }
+
+        // Apply client-side variant stock filtering to newly added items
+        this.applyVariantStockFilter();
 
         // Update progress bar
         const totalItemsInput = document.getElementById('collection-total-count');
@@ -484,6 +492,94 @@ if (!customElements.get('exercer-filters')) {
     /* ---- Browser back/forward ---- */
     onPopState() {
       this.fetchAndRender(window.location.href);
+    }
+
+    /* ---- Client-side Variant Stock Filtering ---- */
+    applyVariantStockFilter() {
+      const params = new URLSearchParams(window.location.search);
+      const optionFilters = {}; // key: option name (lowercase), value: array of selected values
+      
+      for (const [key, value] of params.entries()) {
+        if (key.startsWith('filter.v.option.')) {
+          const optionName = key.replace('filter.v.option.', '').toLowerCase();
+          if (!optionFilters[optionName]) {
+            optionFilters[optionName] = [];
+          }
+          optionFilters[optionName].push(value.toLowerCase());
+        }
+      }
+
+      const productCards = document.querySelectorAll('#ProductGridContainer .grid__item');
+      
+      // If no option filters are active, show all cards
+      if (Object.keys(optionFilters).length === 0) {
+        productCards.forEach(item => {
+          item.style.display = '';
+        });
+        return;
+      }
+
+      // Check each product card
+      let visibleCount = 0;
+      productCards.forEach(card => {
+        try {
+          const scriptTag = card.querySelector('script[type="application/json"]');
+          if (!scriptTag) return;
+          const productData = JSON.parse(scriptTag.textContent);
+          
+          // Find which option index (1, 2, 3) corresponds to which filter
+          const optionMappings = {}; // key: optionKey (e.g. 'option1'), value: array of selected values
+          let hasRelevantFilter = false;
+          
+          if (productData.options) {
+            productData.options.forEach((optName, index) => {
+              const lowerOptName = optName.toLowerCase();
+              if (optionFilters[lowerOptName]) {
+                optionMappings[`option${index + 1}`] = optionFilters[lowerOptName];
+                hasRelevantFilter = true;
+              }
+            });
+          }
+
+          if (!hasRelevantFilter) {
+            card.style.display = '';
+            visibleCount++;
+            return;
+          }
+
+          // Check if ANY variant matches the selected filters AND is available
+          const hasAvailableMatchingVariant = productData.variants.some(variant => {
+            let matchesAllFilters = true;
+            
+            for (const optKey in optionMappings) {
+              const selectedValues = optionMappings[optKey];
+              const variantValue = variant[optKey] ? variant[optKey].toLowerCase() : '';
+              if (!selectedValues.includes(variantValue)) {
+                matchesAllFilters = false;
+                break;
+              }
+            }
+            
+            return matchesAllFilters && variant.available;
+          });
+
+          if (hasAvailableMatchingVariant) {
+            card.style.display = '';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
+
+        } catch (e) {
+          console.error('Error applying variant stock filter', e);
+        }
+      });
+      
+      // Optionally update the product count display if products were hidden client-side
+      const currentToolbarCount = document.querySelector('[data-exr-toolbar-count]');
+      if (currentToolbarCount && visibleCount < productCards.length) {
+         currentToolbarCount.textContent = `${visibleCount} products`;
+      }
     }
   }
 
