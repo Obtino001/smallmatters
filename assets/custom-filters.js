@@ -579,12 +579,6 @@ if (!customElements.get('exercer-filters')) {
           console.error('Error applying variant stock filter', e);
         }
       });
-      
-      // Optionally update the product count display if products were hidden client-side
-      const currentToolbarCount = document.querySelector('[data-exr-toolbar-count]');
-      if (currentToolbarCount && visibleCount < productCards.length) {
-         currentToolbarCount.textContent = `${visibleCount} products`;
-      }
     }
   }
 
