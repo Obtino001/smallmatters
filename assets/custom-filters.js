@@ -36,6 +36,10 @@ if (!customElements.get('exercer-filters')) {
       this._accordionsBound = false;
       this._canAutoLoad = false;
       this._onUserScroll = null;
+      this._fetchController = null;
+      this._pendingUrl = null;
+      this._skipHistory = false;
+      this._scrollGateUntil = 0;
     }
 
     connectedCallback() {
@@ -55,23 +59,27 @@ if (!customElements.get('exercer-filters')) {
 
       window.addEventListener('popstate', this.onPopStateBound);
 
-      // Only allow the infinite-scroll observer to auto-load after a genuine
-      // user scroll. This prevents 3–4 pages loading at once after filtering.
-      this._onUserScroll = () => { this._canAutoLoad = true; };
+      // Only allow infinite-scroll after a real page scroll (not drawer touch).
+      this._onUserScroll = () => {
+        if (this.drawer?.classList.contains('is-open')) return;
+        if (this.isLoading || this.isLoadingNextPage) return;
+        if (Date.now() < this._scrollGateUntil) return;
+        this._canAutoLoad = true;
+      };
       window.addEventListener('scroll', this._onUserScroll, { passive: true });
-      window.addEventListener('touchmove', this._onUserScroll, { passive: true });
 
+      // Keep in-stock in the URL quietly — do NOT refetch the whole grid on load
+      // (that was causing the visible "reload again and again" feel).
       const urlWithStock = this.ensureInStockFilter(window.location.href);
       if (urlWithStock !== window.location.href) {
         history.replaceState({}, '', urlWithStock);
-        this.fetchAndRender(urlWithStock);
+      }
+
+      const runStockFilter = () => this.applyVariantStockFilter();
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', runStockFilter, { once: true });
       } else {
-        // Wait for DOM to finish parsing since <exercer-filters> is above the grid in HTML
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', () => this.applyVariantStockFilter());
-        } else {
-          setTimeout(() => this.applyVariantStockFilter(), 0);
-        }
+        requestAnimationFrame(runStockFilter);
       }
     }
 
@@ -79,7 +87,10 @@ if (!customElements.get('exercer-filters')) {
       window.removeEventListener('popstate', this.onPopStateBound);
       if (this._onUserScroll) {
         window.removeEventListener('scroll', this._onUserScroll);
-        window.removeEventListener('touchmove', this._onUserScroll);
+      }
+      if (this._fetchController) {
+        this._fetchController.abort();
+        this._fetchController = null;
       }
     }
 
@@ -223,7 +234,7 @@ if (!customElements.get('exercer-filters')) {
         e.preventDefault();
         const url = tag.getAttribute('href') || tag.dataset.exrRemove;
         if (url) {
-          this.fetchAndRender(url);
+          this.fetchAndRender(url, { pushHistory: true });
         }
       });
     }
@@ -269,47 +280,75 @@ if (!customElements.get('exercer-filters')) {
     /* ---- Submit filters ---- */
     submitFilters() {
       const url = this.ensureInStockFilter(this.buildURL());
-      this.fetchAndRender(url);
+      this.fetchAndRender(url, { pushHistory: true });
     }
 
     /* ---- Fetch & Render ---- */
-    async fetchAndRender(url) {
-      if (this.isLoading) return;
-      this.isLoading = true;
-
+    async fetchAndRender(url, options = {}) {
+      const pushHistory = options.pushHistory !== false;
       url = this.ensureInStockFilter(url);
+
+      // Coalesce: keep only the latest URL if a fetch is already running
+      if (this.isLoading) {
+        this._pendingUrl = { url, pushHistory };
+        if (this._fetchController) {
+          this._fetchController.abort();
+          this._fetchController = null;
+        }
+        return;
+      }
+
+      this.isLoading = true;
+      this._canAutoLoad = false;
+      this._scrollGateUntil = Date.now() + 1000;
+
+      const controller = new AbortController();
+      this._fetchController = controller;
       const fetchUrl = this.resolveFetchURL(url);
 
-      // Show loading
       this.setLoading(true);
 
-      // Push to history
-      history.pushState({}, '', url);
+      if (pushHistory && !this._skipHistory) {
+        const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+        if (current !== url) {
+          history.pushState({}, '', url);
+        } else {
+          history.replaceState({}, '', url);
+        }
+      } else {
+        history.replaceState({}, '', url);
+      }
+      this._skipHistory = false;
 
       try {
         const response = await fetch(fetchUrl, {
-          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+          headers: { 'X-Requested-With': 'XMLHttpRequest' },
+          signal: controller.signal
         });
         const html = await response.text();
+        if (controller.signal.aborted) return;
+
         const doc = new DOMParser().parseFromString(html, 'text/html');
 
-        // Update product grid
         this.updateProductGrid(doc);
-
-        // Update this filter component
         this.updateFilters(doc);
-
-        // Update product count in toolbar and footer
         this.updateProductCount(doc);
-
-        // Apply client-side variant stock filtering
         this.applyVariantStockFilter();
-
       } catch (err) {
+        if (err.name === 'AbortError') return;
         console.error('[ExercerFilters] fetch error:', err);
       } finally {
+        if (this._fetchController === controller) {
+          this._fetchController = null;
+        }
         this.isLoading = false;
         this.setLoading(false);
+
+        if (this._pendingUrl) {
+          const next = this._pendingUrl;
+          this._pendingUrl = null;
+          this.fetchAndRender(next.url, { pushHistory: next.pushHistory });
+        }
       }
     }
 
@@ -431,6 +470,7 @@ if (!customElements.get('exercer-filters')) {
         // Block auto-loading right after a filter/sort render; require the user
         // to scroll before the next page loads.
         this._canAutoLoad = false;
+        this._scrollGateUntil = Date.now() + 1000;
         this.bindInfiniteScroll();
       }
     }
@@ -481,7 +521,6 @@ if (!customElements.get('exercer-filters')) {
       if (!grid) return;
       if (state) {
         grid.classList.add('exr-loading');
-        // Add spinner if not present
         if (!grid.querySelector('.exr-spinner')) {
           const spinner = document.createElement('div');
           spinner.className = 'exr-spinner';
@@ -491,12 +530,17 @@ if (!customElements.get('exercer-filters')) {
         grid.classList.remove('exr-loading');
         const spinner = grid.querySelector('.exr-spinner');
         if (spinner) spinner.remove();
+        // Soft fade-in after swap
+        grid.classList.remove('exr-grid-ready');
+        void grid.offsetWidth;
+        grid.classList.add('exr-grid-ready');
       }
     }
 
     /* ---- Browser back/forward ---- */
     onPopState() {
-      this.fetchAndRender(window.location.href);
+      this._skipHistory = true;
+      this.fetchAndRender(window.location.href, { pushHistory: false });
     }
 
     /* ---- Client-side Variant Stock Filtering ---- */

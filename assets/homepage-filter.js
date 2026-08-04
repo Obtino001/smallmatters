@@ -64,6 +64,8 @@ if (!customElements.get('home-filter-widget')) {
     lockInStockFilters() {
       this.querySelectorAll('[data-exr-in-stock-locked]').forEach((input) => {
         input.checked = true;
+        if (input.dataset.exrLockBound) return;
+        input.dataset.exrLockBound = '1';
         input.addEventListener('change', () => {
           input.checked = true;
         });
