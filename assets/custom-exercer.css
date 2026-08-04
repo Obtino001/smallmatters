@@ -509,8 +509,6 @@ exercer-filters {
 .exr-loading {
   position: relative;
   pointer-events: none;
-  transition: opacity 0.2s ease;
-  opacity: 0.55;
 }
 
 .exr-loading::after {
@@ -544,15 +542,6 @@ exercer-filters {
   to {
     transform: translate(-50%, -50%) rotate(360deg);
   }
-}
-
-#ProductGridContainer.exr-grid-ready {
-  animation: exr-grid-fade 0.25s ease;
-}
-
-@keyframes exr-grid-fade {
-  from { opacity: 0.7; }
-  to { opacity: 1; }
 }
 
 /* ---- Mobile Trigger Button ---- */

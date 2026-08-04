@@ -75,7 +75,10 @@ if (!customElements.get('exercer-filters')) {
         history.replaceState({}, '', urlWithStock);
       }
 
-      const runStockFilter = () => this.applyVariantStockFilter();
+      const runStockFilter = () => {
+        this.revealScrollTriggers(document.getElementById('ProductGridContainer'));
+        this.applyVariantStockFilter();
+      };
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', runStockFilter, { once: true });
       } else {
@@ -424,11 +427,15 @@ if (!customElements.get('exercer-filters')) {
         const productGrid = document.querySelector('#ProductGridContainer ul');
 
         if (newItems.length > 0 && productGrid) {
-          newItems.forEach(item => productGrid.appendChild(item));
+          newItems.forEach(item => {
+            item.classList.add('scroll-trigger--cancel');
+            productGrid.appendChild(item);
+          });
         }
 
         // Apply client-side variant stock filtering to newly added items
         this.applyVariantStockFilter();
+        this.revealScrollTriggers(document.getElementById('ProductGridContainer'));
 
         // Update progress bar
         const totalItemsInput = document.getElementById('collection-total-count');
@@ -467,11 +474,22 @@ if (!customElements.get('exercer-filters')) {
       const currentGrid = document.getElementById('ProductGridContainer');
       if (newGrid && currentGrid) {
         currentGrid.innerHTML = newGrid.innerHTML;
-        // Block auto-loading right after a filter/sort render; require the user
-        // to scroll before the next page loads.
+        // Dawn scroll-reveal starts at opacity ~0; after AJAX it never
+        // re-observes, so products stay invisible unless we cancel it.
+        this.revealScrollTriggers(currentGrid);
         this._canAutoLoad = false;
         this._scrollGateUntil = Date.now() + 1000;
         this.bindInfiniteScroll();
+      }
+    }
+
+    revealScrollTriggers(root) {
+      const scope = root || document;
+      scope.querySelectorAll('.scroll-trigger').forEach((el) => {
+        el.classList.add('scroll-trigger--cancel');
+      });
+      if (scope.classList?.contains('scroll-trigger')) {
+        scope.classList.add('scroll-trigger--cancel');
       }
     }
 
@@ -530,10 +548,7 @@ if (!customElements.get('exercer-filters')) {
         grid.classList.remove('exr-loading');
         const spinner = grid.querySelector('.exr-spinner');
         if (spinner) spinner.remove();
-        // Soft fade-in after swap
-        grid.classList.remove('exr-grid-ready');
-        void grid.offsetWidth;
-        grid.classList.add('exr-grid-ready');
+        this.revealScrollTriggers(grid);
       }
     }
 
