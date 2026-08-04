@@ -294,15 +294,19 @@
                       {%- assign img_title_key = 'image_' | append: i | append: '_title' -%}
                       
                       {%- if mega_block.settings[img_key] != blank -%}
+                        {%- assign featured_alt = mega_block.settings[img_title_key] | default: link.title -%}
                         <a href="{{ mega_block.settings[img_link_key] | default: '#' }}" class="gs-drawer__featured-card">
                           <div class="gs-drawer__featured-img">
-                            <img
-                              src="{{ mega_block.settings[img_key] | image_url: width: 400 }}"
-                              alt="{{ mega_block.settings[img_title_key] | default: link.title }}"
-                              loading="lazy"
-                              width="180"
-                              height="180"
-                            >
+                            {{
+                              mega_block.settings[img_key]
+                              | image_url: width: 800
+                              | image_tag:
+                                loading: 'lazy',
+                                widths: '400, 600, 800',
+                                sizes: '(max-width: 749px) 48vw, 300px',
+                                alt: featured_alt,
+                                class: 'gs-drawer__featured-photo'
+                            }}
                             <div class="gs-drawer__featured-gradient"></div>
                           </div>
                           {%- if mega_block.settings[img_title_key] != blank -%}

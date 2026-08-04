@@ -4437,9 +4437,10 @@ body:has(.scrolled-past-header) .header--transparent--cc .gs-hamburger__icon pat
   display: none;
 }
 
-.gs-drawer__featured  .card__inner {
-    width: 100%;
-    height: 200px;
+.gs-drawer__featured .card__inner {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
 }
 
 span {
