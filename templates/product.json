@@ -1398,15 +1398,6 @@
             "size": 12
           }
         },
-        "pickup_availability_TLGMF9": {
-          "type": "pickup_availability",
-          "settings": {
-            "heading": "Henting tilgjengelig i butikk",
-            "subtitle": "",
-            "link_text": "Vis butikkinformasjon",
-            "store_info": "<p>Smallmatters AS<br/>Holmenveien 20<br/>0374 Oslo<br/>Norge<br/></p>"
-          }
-        },
         "us_ps_nixk9H": {
           "type": "USPs",
           "settings": {
@@ -1489,7 +1480,6 @@
         "buy_buttons",
         "hurtigkasse_smallmatters_as_vipps_payment_button_exzz3e",
         "shipping_info_3U4beY",
-        "pickup_availability_TLGMF9",
         "us_ps_nixk9H",
         "faq_blocks_nPRdbj",
         "faq_blocks_Viz9dF",
