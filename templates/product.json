@@ -1401,7 +1401,7 @@
         "pickup_availability_TLGMF9": {
           "type": "pickup_availability",
           "settings": {
-            "heading": "Velg henting øverst på siden hvis du ønsker å hente i vår butikk",
+            "heading": "Henting tilgjengelig i butikk",
             "subtitle": "",
             "link_text": "Vis butikkinformasjon",
             "store_info": "<p>Smallmatters AS<br/>Holmenveien 20<br/>0374 Oslo<br/>Norge<br/></p>"
