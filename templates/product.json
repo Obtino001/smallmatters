@@ -1393,7 +1393,7 @@
           "type": "shipping-info",
           "settings": {
             "dot_color": "#13a877",
-            "text": "Levering innen 2-7 virkedager",
+            "text": "Levering innen 2-5 virkedager",
             "text_color": "#13a877",
             "size": 12
           }
