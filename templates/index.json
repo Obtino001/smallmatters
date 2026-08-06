@@ -71,6 +71,13 @@
         "banner_button_text": "Se kolleksjonen",
         "banner_button_link": "shopify://collections/varens-nyheter",
         "banner_link": "shopify://collections/varens-nyheter",
+        "enable_home_filter": true,
+        "filter_collection": "",
+        "enable_home_filter_sorting": true,
+        "home_filter_label": "Filter",
+        "home_filter_drawer_title": "Filter",
+        "home_filter_apply_label": "Apply Filter",
+        "home_filter_view_all_label": "View all products",
         "title": "Vårens nyheter og tilbake på lager",
         "heading_size": "h1",
         "products_to_show": 22,
@@ -83,7 +90,8 @@
         "color_scheme": "scheme-5",
         "full_width": false,
         "padding_top": 36,
-        "padding_bottom": 36
+        "padding_bottom": 36,
+        "view_all_text": "View All Products"
       }
     },
     "animated_text_KJyEyg": {
@@ -522,7 +530,7 @@
         "subtext": "Myk kvalitet, tidløs passform, kom innom og opplev den i vår fysiske butikk i Oslo",
         "address": "Adresse: Holmenveien 20, 0374 Oslo",
         "hours_title": "Åpningstider:",
-        "hours_text": "SOMMERSTENGT FRA 01.07-07.08 GOD SOMMER",
+        "hours_text": "Vi har faste åpningstider: \nTirsdag 11-16\nTorsdag 11 - 18\nEvt ta kontakt på post@smallmatters.no",
         "accent_color": "#ffffff",
         "map_embed": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d124.89527936643623!2d10.697325433729539!3d59.94335090000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46416dd6635d117b%3A0xfb59b7d87f6ad837!2sSmallmatters!5e0!3m2!1sen!2s!4v1765076381352!5m2!1sen!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>"
       }
