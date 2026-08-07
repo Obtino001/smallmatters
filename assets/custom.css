@@ -4097,7 +4097,7 @@ vipps-button#vipps-button {
 }
 
 /* Ensure the main image hides so there's no "ghosting" */
-.WI_productCard_img:hover .hover-active .img-main {
+.WI_productCard_img:hover .hover-active:has(.img-secondary) .img-main {
   opacity: 0 !important;
 }
 
