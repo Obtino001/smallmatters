@@ -8,8 +8,7 @@
 
   assign total_images = card_product.images.size
   
-  assign parent_id_str = parent_id | default: 'none'
-  assign unique_id = section_id | append: '-' | append: parent_id_str | append: '-' | append: card_product.id | append: '-' | append: card_product.handle | append: 'card'
+  assign unique_id = section_id | append: '-' | append: card_product.id | append: '-' | append: card_product.handle | append: 'card'
 %}
 
 <div class="WI_productCard_img hover-load-trigger" data-handle="{{ card_product.handle }}" style="display:none;">

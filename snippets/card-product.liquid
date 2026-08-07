@@ -139,7 +139,7 @@
       {% if card_product.metafields.custom.products_color.value != blank %}
               {% for prod in card_product.metafields.custom.products_color.value %}
                 {% if card_product.handle != prod.handle %}
-                {% render 'wi_product_img-container', card_product: prod, section: section, parent_id: card_product.id %}
+                {% render 'wi_product_img-container', card_product: prod, section: section %}
                 {% endif %}
               {% endfor %}
             {% endif %}
