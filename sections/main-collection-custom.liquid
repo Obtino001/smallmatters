@@ -267,71 +267,6 @@
     {{ 'mask-arch.svg' | inline_asset_content }}
   {%- endif -%}
 </div>
-<style>
-.page-load-status {
-  text-align: center;
-  margin-top: 30px;
-  margin-bottom: 30px;
-}
-.load-more-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 30px;
-}
-.infinite-scroll-request,
-.infinite-scroll-last,
-.infinite-scroll-error {
-  display: none;
-}
-.page-load-status .spinner {
-  width: 20px;
-  height: 20px;
-  animation: rotate 1.4s linear infinite;
-}
-.infinite-scroll-request .view-more-button {
-  display: none; 
-}
-.page-load-status .spinner .path {
-  stroke: #000;
-  stroke-dasharray: 187;
-  stroke-dashoffset: 0;
-  transform-origin: center;
-  animation: dash 1.4s ease-in-out infinite;
-}
-@keyframes rotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(270deg); }
-}
-@keyframes dash {
-  0% { stroke-dashoffset: 187; }
-  50% { stroke-dashoffset: 46; transform: rotate(135deg); }
-  100% { stroke-dashoffset: 187; transform: rotate(450deg); }
-}
-
-{% if section.settings.infinite_progressbar %}
- .collection-progress-wrapper {
-  max-width: 400px;
-  margin: 20px auto;
-  text-align: center;
-}
-.progress-bar-bg {
-  width: 100%;
-  height: 6px;
-  background-color: #e0e0e0;
-  border-radius: 3px;
-  overflow: hidden;
-  margin-top: 10px;
-}
-#progress-bar-fill {
-  height: 100%;
-  background-color: #3c3c3c;
-  transition: width 0.3s ease;
-}
-{% endif %}
-</style>
-
-{% endif %}
 {% schema %}
 {
   "name": "t:sections.main-collection-product-grid.name",
@@ -571,7 +506,7 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 36
-    },
+    }
   ],
   "blocks": [
     {
