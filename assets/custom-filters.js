@@ -427,7 +427,12 @@ if (!customElements.get('exercer-filters')) {
         const productGrid = document.querySelector('#ProductGridContainer ul');
 
         if (newItems.length > 0 && productGrid) {
+          const existingHrefs = Array.from(productGrid.querySelectorAll('a.full-unstyled-link, a.card__heading')).map(a => a.href);
           newItems.forEach(item => {
+            const link = item.querySelector('a.full-unstyled-link, a.card__heading');
+            if (link && existingHrefs.includes(link.href)) {
+              return; // Skip duplicates
+            }
             item.classList.add('scroll-trigger--cancel');
             productGrid.appendChild(item);
           });
