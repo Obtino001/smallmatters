@@ -98,6 +98,17 @@
             {{ form | payment_button }}
           {%- endif -%}
         </div>
+        
+        <div class="vipps-button-wrapper" style="margin-top: 10px;">
+          <a href="javascript:void(0)" id="custom-vipps-trigger" class="vipps-button" style="background: #ff5b24; color: #ffffff; display: flex; align-items: center; justify-content: center; text-decoration: none; padding: 10px 20px; border-radius: 0px; width: 100%;">
+            <span>Betal med</span>
+            <img src="//smallmatters.no/cdn/shop/files/Vector_37_x60.svg?v=1765114917" alt="Vipps icon" class="vipps-icon" style="width: 60px; margin-left: 8px;">
+          </a>
+        </div>
+
+        <div style="display: none;">
+          <vipps-button id="vipps-button" loading="false" variant="orange" branded="true" stretched="true" slidecart="false"></vipps-button>
+        </div>
       {%- endform -%}
     </product-form>
   {%- else -%}
