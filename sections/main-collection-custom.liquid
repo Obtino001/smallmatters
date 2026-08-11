@@ -258,7 +258,7 @@
   <input type="hidden" id="total-pages" value="{{ paginate.pages }}">
   
   {% if section.settings.infinite_progressbar %}
-    <input type="hidden" id="collection-total-count" value="{{ collection.all_products_count }}">
+    <input type="hidden" id="collection-total-count" value="{{ collection.products_count }}">
     <div class="collection-progress-wrapper">
       {% comment %} Text replaced with schema setting {% endcomment %}
       <p id="progress-text">{{ section.settings.infinite_progress_text  }}</p>
