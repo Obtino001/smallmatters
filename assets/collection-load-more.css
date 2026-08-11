@@ -1,0 +1,144 @@
+/* <collection-load-more> — button-driven pagination */
+
+.collection-load-more {
+  display: block;
+  margin: 3.5rem 0 1rem;
+}
+
+/* Numbered pagination stays for no-JS and search engines */
+.collection-load-more--ready .collection-load-more__pagination {
+  display: none;
+}
+
+.collection-load-more__ui {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  text-align: center;
+}
+
+.collection-load-more__count {
+  margin: 0;
+  font-size: 1.4rem;
+  letter-spacing: 0.04em;
+  color: rgba(var(--color-foreground), 0.7);
+}
+
+.collection-load-more__track {
+  width: min(28rem, 70vw);
+  height: 3px;
+  border-radius: 3px;
+  background: rgba(var(--color-foreground), 0.12);
+  overflow: hidden;
+}
+
+.collection-load-more__bar {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: rgb(var(--color-foreground));
+  transition: width 0.35s ease;
+}
+
+.collection-load-more__button {
+  --load-more-fg: rgb(var(--color-foreground));
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  min-width: 20rem;
+  min-height: 4.8rem;
+  padding: 1.2rem 3.2rem;
+  border: 1px solid var(--load-more-fg);
+  border-radius: 0;
+  background: transparent;
+  color: var(--load-more-fg);
+  font-family: inherit;
+  font-size: 1.3rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.collection-load-more__button:hover {
+  background: var(--load-more-fg);
+  color: rgb(var(--color-background));
+}
+
+.collection-load-more__button:focus-visible {
+  outline: 2px solid var(--load-more-fg);
+  outline-offset: 3px;
+}
+
+.collection-load-more__button[disabled] {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.collection-load-more__button[disabled]:hover {
+  background: transparent;
+  color: var(--load-more-fg);
+}
+
+/* Spinner replaces the label while a page is in flight */
+.collection-load-more--loading .collection-load-more__button > span {
+  visibility: hidden;
+}
+
+.collection-load-more--loading .collection-load-more__button::after {
+  content: '';
+  position: absolute;
+  width: 1.8rem;
+  height: 1.8rem;
+  border: 2px solid rgba(var(--color-foreground), 0.25);
+  border-top-color: rgb(var(--color-foreground));
+  border-radius: 50%;
+  animation: collection-load-more-spin 0.6s linear infinite;
+}
+
+@keyframes collection-load-more-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.collection-load-more__done {
+  margin: 0;
+  font-size: 1.3rem;
+  letter-spacing: 0.06em;
+  color: rgba(var(--color-foreground), 0.6);
+}
+
+/* Author display rules above outrank the UA [hidden] rule, so restate it */
+.collection-load-more__ui[hidden],
+.collection-load-more__count[hidden],
+.collection-load-more__track[hidden],
+.collection-load-more__button[hidden],
+.collection-load-more__done[hidden] {
+  display: none;
+}
+
+@media screen and (max-width: 749px) {
+  .collection-load-more {
+    margin-top: 2.5rem;
+  }
+
+  .collection-load-more__button {
+    min-width: min(30rem, 80vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collection-load-more__bar {
+    transition: none;
+  }
+
+  .collection-load-more--loading .collection-load-more__button::after {
+    animation-duration: 1.6s;
+  }
+}

@@ -31,6 +31,11 @@
   <script src="{{ 'custom-filters.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}
 
+{%- if section.settings.pagination_style == 'load_more' -%}
+  {{ 'collection-load-more.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'collection-load-more.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
 {%- style -%}
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
@@ -254,9 +259,40 @@
               {%- endfor -%}
             </ul>
 
-            {% comment %} Custom infinite scroll removed — theme pagination only {% endcomment %}
             {%- if paginate.pages > 1 -%}
-              {% render 'pagination', paginate: paginate, anchor: '' %}
+              {%- if section.settings.pagination_style == 'load_more' -%}
+                {%- comment -%}
+                  Numbered pagination is always rendered as the no-JS/SEO fallback.
+                  The component hides it and drives loading from the "next" link.
+                {%- endcomment -%}
+                <collection-load-more
+                  class="collection-load-more"
+                  data-section-id="{{ section.id }}"
+                  data-total="{{ collection.products_count }}"
+                  data-count-text="{{ section.settings.load_more_count_text | escape }}"
+                >
+                  <div class="collection-load-more__pagination" data-load-more-pagination>
+                    {% render 'pagination', paginate: paginate, anchor: '' %}
+                  </div>
+
+                  <div class="collection-load-more__ui" hidden data-load-more-ui>
+                    <p class="collection-load-more__count" data-load-more-count role="status"></p>
+                    <div class="collection-load-more__track" data-load-more-track>
+                      <span class="collection-load-more__bar" data-load-more-bar></span>
+                    </div>
+                    <button type="button" class="collection-load-more__button" data-load-more>
+                      <span data-load-more-label>
+                        {{- section.settings.load_more_text | default: 'Last mer' -}}
+                      </span>
+                    </button>
+                    <p class="collection-load-more__done" hidden data-load-more-done>
+                      {{- section.settings.load_more_done_text -}}
+                    </p>
+                  </div>
+                </collection-load-more>
+              {%- else -%}
+                {% render 'pagination', paginate: paginate, anchor: '' %}
+              {%- endif -%}
             {%- endif -%}
           </div>
         {%- endif -%}
@@ -297,81 +333,41 @@
   "info": "Applies to product cards",
   "default": "scheme-1"
 },
-  {
-      "type": "header",
-      "content": "Infinite Scrolling"
-    },
     {
-  "type": "text",
-  "id": "infinite_progress_text",
-  "label": "Tekst for fremgangsfelt",
-  "default": "Viser varer..."
-},
-{
-  "type": "text",
-  "id": "infinite_btn_text",
-  "label": "Tekst for last mer-knapp",
-  "default": "Last mer"
-},
-{
-  "type": "text",
-  "id": "infinite_finished_text",
-  "label": "Tekst for ferdig lastet",
-  "default": "Alle produkter er lastet inn"
-},
-{
-  "type": "text",
-  "id": "infinite_error_text",
-  "label": "Tekst for ingen flere sider",
-  "default": "Ingen flere sider å laste"
-},
-{
-  "type": "text",
-  "id": "infinite_showing_text",
-  "label": "Tekst for 'Viser'",
-  "default": "Viser"
-},
-{
-  "type": "text",
-  "id": "infinite_of_text",
-  "label": "Tekst for 'av'",
-  "default": "av"
-},
-{
-  "type": "text",
-  "id": "infinite_products_text",
-  "label": "Tekst for 'produkter'",
-  "default": "produkter"
-},
+      "type": "header",
+      "content": "Pagination"
+    },
     {
       "type": "select",
-      "id": "infinite",
+      "id": "pagination_style",
+      "label": "Pagination style",
       "options": [
-        {
-          "label": "Pagination",
-          "value": "pagination"
-        },
-        {
-          "label": "Infinite",
-          "value": "infinite"
-        }
+        { "value": "pagination", "label": "Numbered pages" },
+        { "value": "load_more", "label": "Load more button" }
       ],
-      "label": "Select",
-      "default": "pagination"
+      "default": "load_more"
     },
     {
-      "type": "checkbox",
-      "id": "infinite_btn",
-      "label": "Load more button",
-      "default": false,
-      "visible_if": "{{ section.settings.infinite == 'infinite' }}"
+      "type": "text",
+      "id": "load_more_text",
+      "label": "Tekst for last mer-knapp",
+      "default": "Last mer",
+      "visible_if": "{{ section.settings.pagination_style == 'load_more' }}"
     },
     {
-      "type": "checkbox",
-      "id": "infinite_progressbar",
-      "label": "Progress bar",
-      "default": false,
-      "visible_if": "{{ section.settings.infinite == 'infinite' }}"
+      "type": "text",
+      "id": "load_more_done_text",
+      "label": "Tekst for ferdig lastet",
+      "default": "Alle produkter er lastet inn",
+      "visible_if": "{{ section.settings.pagination_style == 'load_more' }}"
+    },
+    {
+      "type": "text",
+      "id": "load_more_count_text",
+      "label": "Tekst for antall",
+      "info": "Bruk [shown] og [total]. La stå tomt for å skjule.",
+      "default": "Viser [shown] av [total] produkter",
+      "visible_if": "{{ section.settings.pagination_style == 'load_more' }}"
     },
 {
   "type": "header",
