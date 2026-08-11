@@ -288,11 +288,11 @@
     {% comment %} Text replaced with schema setting {% endcomment %}
     <p class="infinite-scroll-error">{{ section.settings.infinite_error_text  }}</p>
   </div>
-{% endif %}
-            
-            {% comment %} {%- if paginate.pages > 1 -%}
-              {% render 'pagination', paginate: paginate, anchor: '' %}
-            {%- endif -%} {% endcomment %}
+            {% else %}
+              {%- if paginate.pages > 1 -%}
+                {% render 'pagination', paginate: paginate, anchor: '' %}
+              {%- endif -%}
+            {% endif %}
           </div>
         {%- endif -%}
       </div>

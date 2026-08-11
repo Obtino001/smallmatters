@@ -89,7 +89,7 @@
         "infinite_showing_text": "Viser",
         "infinite_of_text": "av",
         "infinite_products_text": "produkter",
-        "infinite": "infinite",
+        "infinite": "pagination",
         "infinite_btn": false,
         "infinite_progressbar": false,
         "image_ratio": "adapt",
