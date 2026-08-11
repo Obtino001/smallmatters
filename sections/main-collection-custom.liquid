@@ -254,45 +254,10 @@
               {%- endfor -%}
             </ul>
 
-           {% if section.settings.infinite == 'infinite' %}
-  <input type="hidden" id="total-pages" value="{{ paginate.pages }}">
-  
-  {% if section.settings.infinite_progressbar %}
-    <input type="hidden" id="collection-total-count" value="{{ collection.products_count }}">
-    <div class="collection-progress-wrapper">
-      {% comment %} Text replaced with schema setting {% endcomment %}
-      <p id="progress-text">{{ section.settings.infinite_progress_text  }}</p>
-      <div class="progress-bar-bg">
-        <div id="progress-bar-fill" style="width: 0%;"> </div>
-      </div>
-    </div>
-  {% endif %}
-
-  {% if section.settings.infinite_btn %}
-    <div class="load-more-container">
-      <button class="view-more-button btn button nx-btn"> 
-        {% comment %} Text replaced with schema setting {% endcomment %}
-        <span class="nx-btn-text">{{ section.settings.infinite_btn_text  }}</span>
-      </button>
-    </div>
-  {% endif %}
-
-  <div class="page-load-status">
-    <div class="infinite-scroll-request">
-      <svg aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
-        <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
-      </svg>
-    </div>
-    {% comment %} Text replaced with schema setting {% endcomment %}
-    <p class="infinite-scroll-last">{{ section.settings.infinite_finished_text }}</p>
-    {% comment %} Text replaced with schema setting {% endcomment %}
-    <p class="infinite-scroll-error">{{ section.settings.infinite_error_text  }}</p>
-  </div>
-            {% else %}
-              {%- if paginate.pages > 1 -%}
-                {% render 'pagination', paginate: paginate, anchor: '' %}
-              {%- endif -%}
-            {% endif %}
+            {% comment %} Custom infinite scroll removed — theme pagination only {% endcomment %}
+            {%- if paginate.pages > 1 -%}
+              {% render 'pagination', paginate: paginate, anchor: '' %}
+            {%- endif -%}
           </div>
         {%- endif -%}
       </div>
@@ -302,9 +267,6 @@
     {{ 'mask-arch.svg' | inline_asset_content }}
   {%- endif -%}
 </div>
-{% if section.settings.infinite == 'infinite' %}
-{% comment %} Infinite Scroll logic is now handled natively in custom-filters.js via IntersectionObserver {% endcomment %}
-{% endif %}
 <style>
 .page-load-status {
   text-align: center;

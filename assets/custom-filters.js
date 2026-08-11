@@ -29,19 +29,12 @@ if (!customElements.get('exercer-filters')) {
       this.form = null;
       this.debounceTimer = null;
       this.isLoading = false;
-      this.isLoadingNextPage = false;
-      this.infiniteObserver = null;
       this.onPopStateBound = this.onPopState.bind(this);
       this._formBound = false;
       this._accordionsBound = false;
-      this._canAutoLoad = false;
-      this._onUserScroll = null;
       this._fetchController = null;
       this._pendingUrl = null;
       this._skipHistory = false;
-      this._scrollGateUntil = 0;
-      this._gridPage = null;
-      this._gridTotalPages = 1;
     }
 
     connectedCallback() {
@@ -56,19 +49,9 @@ if (!customElements.get('exercer-filters')) {
       this.bindActiveTags();
       this.bindSort();
       this.bindAccordions();
-      this.bindInfiniteScroll();
       this.lockInStockFilters();
 
       window.addEventListener('popstate', this.onPopStateBound);
-
-      // Only allow infinite-scroll after a real page scroll (not drawer touch).
-      this._onUserScroll = () => {
-        if (this.drawer?.classList.contains('is-open')) return;
-        if (this.isLoading || this.isLoadingNextPage) return;
-        if (Date.now() < this._scrollGateUntil) return;
-        this._canAutoLoad = true;
-      };
-      window.addEventListener('scroll', this._onUserScroll, { passive: true });
 
       // Keep in-stock in the URL quietly — do NOT refetch the whole grid on load
       // (that was causing the visible "reload again and again" feel).
@@ -90,9 +73,6 @@ if (!customElements.get('exercer-filters')) {
 
     disconnectedCallback() {
       window.removeEventListener('popstate', this.onPopStateBound);
-      if (this._onUserScroll) {
-        window.removeEventListener('scroll', this._onUserScroll);
-      }
       if (this._fetchController) {
         this._fetchController.abort();
         this._fetchController = null;
@@ -167,8 +147,12 @@ if (!customElements.get('exercer-filters')) {
       if (!parsed.searchParams.has(EXR_IN_STOCK_PARAM)) {
         parsed.searchParams.set(EXR_IN_STOCK_PARAM, EXR_IN_STOCK_VALUE);
       }
-      // A filter/sort/tag URL must always render from page 1. Stale ?page=
-      // params were causing skipped products and duplicate appends.
+      return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+    }
+
+    stripPageParam(url) {
+      // A filter/sort/tag action must always restart at page 1
+      const parsed = new URL(url, window.location.origin);
       parsed.searchParams.delete('page');
       return `${parsed.pathname}${parsed.search}${parsed.hash}`;
     }
@@ -294,7 +278,7 @@ if (!customElements.get('exercer-filters')) {
     /* ---- Fetch & Render ---- */
     async fetchAndRender(url, options = {}) {
       const pushHistory = options.pushHistory !== false;
-      url = this.ensureInStockFilter(url);
+      url = this.stripPageParam(this.ensureInStockFilter(url));
 
       // Coalesce: keep only the latest URL if a fetch is already running
       if (this.isLoading) {
@@ -307,8 +291,6 @@ if (!customElements.get('exercer-filters')) {
       }
 
       this.isLoading = true;
-      this._canAutoLoad = false;
-      this._scrollGateUntil = Date.now() + 1000;
 
       const controller = new AbortController();
       this._fetchController = controller;
@@ -360,162 +342,6 @@ if (!customElements.get('exercer-filters')) {
       }
     }
 
-    /* ---- Infinite Scroll ----
-       State lives on the component (this._gridPage / this._gridTotalPages),
-       never in the address bar. Appends are deduped by product URL, so a
-       double-fire or a re-fetched page can never show a product twice. */
-
-    productKeyForItem(item) {
-      const link = item.querySelector('a[href*="/products/"]');
-      if (!link) return null;
-      try {
-        return new URL(link.getAttribute('href'), window.location.origin).pathname;
-      } catch (e) {
-        return null;
-      }
-    }
-
-    updateInfiniteStatus() {
-      const done = this._gridPage >= this._gridTotalPages;
-      const lastStatus = document.querySelector('.infinite-scroll-last');
-      if (lastStatus) lastStatus.style.display = done ? 'block' : 'none';
-      const errStatus = document.querySelector('.infinite-scroll-error');
-      if (errStatus) errStatus.style.display = 'none';
-      const loadMoreBtn = document.querySelector('.view-more-button');
-      if (loadMoreBtn) loadMoreBtn.style.display = done ? 'none' : '';
-      this.updateProgress();
-    }
-
-    updateProgress() {
-      const totalInput = document.getElementById('collection-total-count');
-      if (!totalInput) return;
-      const total = parseInt(totalInput.value, 10) || 0;
-      const shownRaw = document.querySelectorAll('#ProductGridContainer .collection-grid-item').length;
-      const shown = total > 0 ? Math.min(shownRaw, total) : shownRaw;
-
-      const bar = document.querySelector('#progress-bar-fill');
-      if (bar) {
-        const percent = total > 0 ? Math.min((shown / total) * 100, 100) : 100;
-        bar.style.width = percent + '%';
-      }
-
-      const text = document.querySelector('#progress-text');
-      if (text) {
-        if (!text.dataset.exrTemplate) text.dataset.exrTemplate = text.textContent;
-        let i = 0;
-        text.textContent = text.dataset.exrTemplate.replace(/\d+/g, () => (i++ === 0 ? shown : total));
-      }
-    }
-
-    bindInfiniteScroll() {
-      if (this.infiniteObserver) {
-        this.infiniteObserver.disconnect();
-        this.infiniteObserver = null;
-      }
-
-      const totalPagesInput = document.getElementById('total-pages');
-      if (!totalPagesInput) return; // Not an infinite scroll enabled grid
-
-      this._gridTotalPages = parseInt(totalPagesInput.value, 10) || 1;
-
-      // First bind on a server-rendered page: honour a ?page= landing URL once.
-      if (this._gridPage === null) {
-        const params = new URLSearchParams(window.location.search);
-        this._gridPage = parseInt(params.get('page'), 10) || 1;
-      }
-
-      this.updateInfiniteStatus();
-      if (this._gridPage >= this._gridTotalPages) return;
-
-      const loadMoreBtn = document.querySelector('.view-more-button');
-      const loadStatus = document.querySelector('.page-load-status');
-
-      if (loadMoreBtn) {
-        const newBtn = loadMoreBtn.cloneNode(true);
-        loadMoreBtn.parentNode.replaceChild(newBtn, loadMoreBtn);
-        newBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          this.loadNextPage();
-        });
-      } else if (loadStatus) {
-        // Auto-load only after a genuine user scroll so a filter/sort action
-        // never cascades several pages at once.
-        this.infiniteObserver = new IntersectionObserver((entries) => {
-          if (entries[0].isIntersecting && !this.isLoadingNextPage && !this.isLoading && this._canAutoLoad) {
-            this._canAutoLoad = false;
-            this.loadNextPage();
-          }
-        }, { rootMargin: '0px 0px 300px 0px' });
-        this.infiniteObserver.observe(loadStatus);
-      }
-    }
-
-    async loadNextPage() {
-      if (this.isLoadingNextPage || this.isLoading) return;
-      if (this._gridPage >= this._gridTotalPages) return;
-      this.isLoadingNextPage = true;
-
-      const reqStatus = document.querySelector('.infinite-scroll-request');
-      const loadMoreBtn = document.querySelector('.view-more-button');
-      if (reqStatus) reqStatus.style.display = 'block';
-      if (loadMoreBtn) loadMoreBtn.style.display = 'none';
-
-      const targetPage = this._gridPage + 1;
-      const baseObj = new URL(this.buildURL(), window.location.origin);
-      baseObj.searchParams.set('page', targetPage);
-      const fetchUrl = this.resolveFetchURL(baseObj.toString());
-
-      try {
-        const response = await fetch(fetchUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
-        const html = await response.text();
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-
-        const newItems = doc.querySelectorAll('#ProductGridContainer .collection-grid-item');
-        const productGrid = document.querySelector('#ProductGridContainer ul');
-
-        let appended = 0;
-        if (newItems.length > 0 && productGrid) {
-          const existingKeys = new Set(
-            Array.from(productGrid.querySelectorAll('.collection-grid-item'))
-              .map((item) => this.productKeyForItem(item))
-              .filter(Boolean)
-          );
-          newItems.forEach((item) => {
-            const key = this.productKeyForItem(item);
-            if (key && existingKeys.has(key)) return; // never show a product twice
-            if (key) existingKeys.add(key);
-            item.classList.add('scroll-trigger--cancel');
-            productGrid.appendChild(item);
-            appended++;
-          });
-        }
-
-        this._gridPage = targetPage;
-
-        // Keep total pages in sync with the fetched document
-        const freshTotal = doc.getElementById('total-pages');
-        if (freshTotal) {
-          this._gridTotalPages = parseInt(freshTotal.value, 10) || this._gridTotalPages;
-        }
-        // Nothing new came back → treat as finished to avoid endless refetching
-        if (newItems.length === 0 || (appended === 0 && targetPage >= this._gridTotalPages)) {
-          this._gridPage = this._gridTotalPages;
-        }
-
-        this.applyVariantStockFilter();
-        this.revealScrollTriggers(document.getElementById('ProductGridContainer'));
-        this.updateInfiniteStatus();
-      } catch (err) {
-        console.error('Infinite scroll fetch error:', err);
-        const errStatus = document.querySelector('.infinite-scroll-error');
-        if (errStatus) errStatus.style.display = 'block';
-      } finally {
-        this.isLoadingNextPage = false;
-        if (reqStatus) reqStatus.style.display = 'none';
-        this.bindInfiniteScroll(); // Re-arm for the next page
-      }
-    }
-
     updateProductGrid(doc) {
       const newGrid = doc.getElementById('ProductGridContainer');
       const currentGrid = document.getElementById('ProductGridContainer');
@@ -524,11 +350,6 @@ if (!customElements.get('exercer-filters')) {
         // Dawn scroll-reveal starts at opacity ~0; after AJAX it never
         // re-observes, so products stay invisible unless we cancel it.
         this.revealScrollTriggers(currentGrid);
-        this._canAutoLoad = false;
-        this._scrollGateUntil = Date.now() + 1000;
-        // Fresh filtered result set always starts back at page 1
-        this._gridPage = 1;
-        this.bindInfiniteScroll();
       }
     }
 
