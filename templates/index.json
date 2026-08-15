@@ -59,7 +59,7 @@
       ],
       "name": "Featured Collection Banner",
       "settings": {
-        "collection": "100-kashmir",
+        "collection": "back-in-stock",
         "button_bg_color": "#3d6aa6",
         "button_text_color": "#ffffff",
         "button_hover_bg_color": "#d8cfc4",
