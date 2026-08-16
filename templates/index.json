@@ -540,8 +540,8 @@
       "type": "store-location",
       "name": "Store Location Map",
       "settings": {
-        "bg_image": "shopify://shop_images/e3dc1587581a949ceb90b5f408d210c1f03fc855.jpg",
-        "overlay_opacity": 60,
+        "bg_image": "shopify://shop_images/Var_butikk.png",
+        "overlay_opacity": 20,
         "title": "<p>Velkommen til vår butikk i Oslo</p>",
         "subtext": "Myk kvalitet, tidløs passform, kom innom og opplev den i vår fysiske butikk i Oslo",
         "address": "Adresse: Holmenveien 20, 0374 Oslo",
