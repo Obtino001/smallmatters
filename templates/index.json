@@ -415,6 +415,13 @@
     "custom_social_feed_YrizYd": {
       "type": "Custom-Social-Feed",
       "blocks": {
+        "image_T3PCBM": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Sommer_26_4.png",
+            "link": "shopify://products/colette-short-sleeve-denimblaa-lyssand"
+          }
+        },
         "image_eMNEEN": {
           "type": "image",
           "settings": {
@@ -501,6 +508,7 @@
         }
       },
       "block_order": [
+        "image_T3PCBM",
         "image_eMNEEN",
         "image_cPGGqK",
         "image_qWa8kB",
