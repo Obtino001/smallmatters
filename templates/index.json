@@ -113,7 +113,7 @@
         "category_FccpMb": {
           "type": "category",
           "settings": {
-            "image": "shopify://shop_images/Damekashmir.png",
+            "image": "shopify://shop_images/Dame_kashmir_1.png",
             "title": "Dame",
             "link": "shopify://collections/damekashmir"
           }
@@ -121,7 +121,7 @@
         "category_BqqNK4": {
           "type": "category",
           "settings": {
-            "image": "shopify://shop_images/7c4fd45fb9b3af454ce62fd70faa191a6d0be2d4.png",
+            "image": "shopify://shop_images/Herre_kashmir.png",
             "title": "Herre",
             "link": "shopify://collections/herrekashmir"
           }
@@ -137,7 +137,7 @@
         "category_jNM4G9": {
           "type": "category",
           "settings": {
-            "image": "shopify://shop_images/26e7f54f648bc7b61a75ca620de56f80a127d890.jpg",
+            "image": "shopify://shop_images/Bunadsposer_6e5609d4-d3e3-4173-88c1-55e869eb52d9.png",
             "title": "Bunadsposer",
             "link": "shopify://collections/bunadsposer"
           }
