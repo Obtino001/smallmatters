@@ -491,6 +491,13 @@
             "image": "shopify://shop_images/CC_navy_rainbow_b5e1c55b-5775-4035-93a3-370e2f18607c.png",
             "link": "shopify://products/cardigan-navy-rainbow"
           }
+        },
+        "image_fVbqMN": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Sommer_26_3.png",
+            "link": "shopify://products/gilli-round-neck-kashmir-rosa-sand-lyssand"
+          }
         }
       },
       "block_order": [
@@ -504,7 +511,8 @@
         "image_e6UHbr",
         "image_Q4mqFT",
         "image_NtpEX8",
-        "image_EawPi9"
+        "image_EawPi9",
+        "image_fVbqMN"
       ],
       "name": "Custom Social Feed",
       "settings": {
