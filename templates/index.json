@@ -415,11 +415,11 @@
     "custom_social_feed_YrizYd": {
       "type": "Custom-Social-Feed",
       "blocks": {
-        "image_bqYTgE": {
+        "image_eMNEEN": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/Thomas_cardigan_oliven_med_jakke.png",
-            "link": "shopify://products/cardigan-herre-oliven-sand"
+            "image": "shopify://shop_images/CC_offwhite_navy_lysebla_og_zip_sand_navy.png",
+            "link": "shopify://products/contrast-cardigan-offwhite-navy-lysebla"
           }
         },
         "image_cPGGqK": {
@@ -429,6 +429,13 @@
             "link": "shopify://products/contrast-cardigan-sand-lysegronn-oliven-rosa"
           }
         },
+        "image_qWa8kB": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Host_26_2.png",
+            "link": "shopify://collections/floor-cardigan"
+          }
+        },
         "image_3D7tq6": {
           "type": "image",
           "settings": {
@@ -436,11 +443,11 @@
             "link": "shopify://products/spoonie-cardigan-sand-lyssand"
           }
         },
-        "image_eMNEEN": {
+        "image_bqYTgE": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/CC_offwhite_navy_lysebla_og_zip_sand_navy.png",
-            "link": "shopify://products/contrast-cardigan-offwhite-navy-lysebla"
+            "image": "shopify://shop_images/Thomas_cardigan_oliven_med_jakke.png",
+            "link": "shopify://products/cardigan-herre-oliven-sand"
           }
         },
         "image_TipafL": {
@@ -484,27 +491,20 @@
             "image": "shopify://shop_images/CC_navy_rainbow_b5e1c55b-5775-4035-93a3-370e2f18607c.png",
             "link": "shopify://products/cardigan-navy-rainbow"
           }
-        },
-        "image_qWa8kB": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/Host_26_2.png",
-            "link": "shopify://collections/floor-cardigan"
-          }
         }
       },
       "block_order": [
-        "image_bqYTgE",
-        "image_cPGGqK",
-        "image_3D7tq6",
         "image_eMNEEN",
+        "image_cPGGqK",
+        "image_qWa8kB",
+        "image_3D7tq6",
+        "image_bqYTgE",
         "image_TipafL",
         "image_JMEeMz",
         "image_e6UHbr",
         "image_Q4mqFT",
         "image_NtpEX8",
-        "image_EawPi9",
-        "image_qWa8kB"
+        "image_EawPi9"
       ],
       "name": "Custom Social Feed",
       "settings": {
