@@ -60,7 +60,7 @@
       "name": "Featured Collection Banner",
       "settings": {
         "collection": "back-in-stock",
-        "button_bg_color": "#3d6aa6",
+        "button_bg_color": "#13151E",
         "button_text_color": "#ffffff",
         "button_hover_bg_color": "#d8cfc4",
         "button_hover_text_color": "#3c3c3c",
