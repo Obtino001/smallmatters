@@ -32,7 +32,34 @@
   endif
 -%}
 
+{%- liquid
+  # Banner text color and placement (theme editor settings)
+  assign banner_text_color = section.settings.banner_text_color | default: '#ffffff'
+  assign banner_pos_x = section.settings.banner_content_pos_x | default: 'center'
+  assign banner_pos_y = section.settings.banner_content_pos_y | default: 'flex-start'
+  case banner_pos_x
+    when 'flex-start'
+      assign banner_text_align = 'left'
+    when 'flex-end'
+      assign banner_text_align = 'right'
+    else
+      assign banner_text_align = 'center'
+  endcase
+-%}
+
 {%- style -%}
+  .section-{{ section.id }}-padding .featured-collection-banner__content {
+    height: 100%;
+    justify-content: {{ banner_pos_y }};
+    align-items: {{ banner_pos_x }};
+    color: {{ banner_text_color }};
+  }
+  .section-{{ section.id }}-padding .featured-collection-banner__head,
+  .section-{{ section.id }}-padding .featured-collection-banner__text {
+    color: {{ banner_text_color }};
+    text-align: {{ banner_text_align }};
+  }
+
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
@@ -370,6 +397,34 @@
       "type": "text",
       "id": "banner_head",
       "label": "Banner Heading"
+    },
+    {
+      "type": "color",
+      "id": "banner_text_color",
+      "label": "Banner Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "select",
+      "id": "banner_content_pos_y",
+      "label": "Text Vertical Position",
+      "options": [
+        { "value": "flex-start", "label": "Top" },
+        { "value": "center", "label": "Middle" },
+        { "value": "flex-end", "label": "Bottom" }
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "select",
+      "id": "banner_content_pos_x",
+      "label": "Text Horizontal Position",
+      "options": [
+        { "value": "flex-start", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Right" }
+      ],
+      "default": "center"
     },
     {
       "type": "richtext",
