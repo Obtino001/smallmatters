@@ -348,6 +348,20 @@
   color:var(--nx-btn-hover-text);
 }
 
+  /* --- LARGE / WIDE SCREENS --- */
+  @media screen and (min-width: 1600px) {
+    /* Let the hero grow with the screen width so the image isn't cropped into a thin strip */
+    .split-hero-wrapper.single-mode {
+      height: min(40vw, 1000px);
+    }
+    /* Keep the text inside a centered content area instead of hugging the screen edge */
+    .split-hero-wrapper.single-mode .hero-content-col {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 40px 60px;
+    }
+  }
+
   /* --- MOBILE LAYOUT --- */
   @media screen and (max-width: 768px) {
     .split-hero-wrapper, 
