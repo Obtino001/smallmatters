@@ -508,8 +508,7 @@
   },
   "platform_customizations": {
     "custom_css": [
-      ".card {border-radius: 30px}",
-      "@media screen and (max-width: 749px) {.gs-drawer__menu-item, .gs-drawer__menu-btn, .gs-drawer__menu-text, .gs-drawer__submenu-link, .gs-drawer__bottom-link {color: #000000 !important; }}"
+      ".card {border-radius: 30px;}"
     ]
   }
 }
