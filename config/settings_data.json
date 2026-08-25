@@ -508,8 +508,7 @@
   },
   "platform_customizations": {
     "custom_css": [
-      ".card {border-radius: 30px}",
-      ".gs-drawer {--color-foreground: 0, 0, 0;}"
+      ".card {border-radius: 30px}"
     ]
   }
 }
