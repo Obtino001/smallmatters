@@ -60,6 +60,16 @@
     text-align: {{ banner_text_align }};
   }
 
+  {%- if section.settings.banner_text_color_mobile != blank -%}
+  @media screen and (max-width: 990px) {
+    .section-{{ section.id }}-padding .featured-collection-banner__content,
+    .section-{{ section.id }}-padding .featured-collection-banner__head,
+    .section-{{ section.id }}-padding .featured-collection-banner__text {
+      color: {{ section.settings.banner_text_color_mobile }};
+    }
+  }
+  {%- endif -%}
+
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
@@ -403,6 +413,12 @@
       "id": "banner_text_color",
       "label": "Banner Text Color",
       "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "banner_text_color_mobile",
+      "label": "Banner Text Color (Mobile)",
+      "info": "Leave empty to use the same color as on desktop."
     },
     {
       "type": "select",
