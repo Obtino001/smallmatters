@@ -74,15 +74,16 @@
     stroke: #3c3c3c;
 }
 {% if template.name == 'index' and section.settings.enable_transparent_header %}
+  {%- assign th_color = section.settings.transparent_header_color | default: '#ffffff' -%}
   @media screen and (max-width: 750px) {
     img.header__heading-logo.header-logo--transparent {
     display: none
   }
   .header__icon--menu .icon path{
-      stroke: #fff;
+      stroke: {{ th_color }};
   }
 .header--transparent--cc .header__menu-item .icon-caret path {
-  stroke: white;
+  stroke: {{ th_color }};
 }
 .header__heading-logo {
     max-width: 100%;
@@ -159,10 +160,10 @@ border-bottom: 2px solid #FFFFFF26;
 }
 
 .header--transparent--cc .header__icon  .svg-wrapper svg path{
-    stroke:  #fff;
+    stroke:  {{ th_color }};
 }
 .header--transparent--cc .header__menu-item span {
-  color: #fff;
+  color: {{ th_color }};
 }
 body:has(.scrolled-past-header) .header--transparent--cc .header-logo--transparent {
   display: none;
@@ -180,8 +181,8 @@ body:has(.gs-drawer--open)  .header--transparent--cc .header-logo--transparent {
   display: none;
 }
 .header--transparent--cc .header__icon--menu .icon path {
-    fill: #fff;
-    stroke: #fff;
+    fill: {{ th_color }};
+    stroke: {{ th_color }};
 }
 .marquee-container {
     border-bottom: 1px solid #00000017;
@@ -720,6 +721,13 @@ body:has(.scrolled-past-header) .header--transparent--cc .header__icon--menu .ic
   "id": "enable_transparent_header",
   "label": "Enable transparent header",
   "default": false
+  },
+    {
+  "type": "color",
+  "id": "transparent_header_color",
+  "label": "Transparent Header Icon & Text Color (Mobile)",
+  "default": "#FFFFFF",
+  "info": "Color of the menu, search and cart icons on the transparent header over the front page image on mobile. Pick a dark color when the image is light. If you change this, also swap the Transparent Header Logo image to a matching version."
   },
     {
       "type": "select",
