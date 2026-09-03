@@ -442,6 +442,7 @@
         "world_link_url": "",
         "transparent_logo": "shopify://shop_images/6bf190bd0cafa31c0dce937ee5971929d84f4729.png",
         "enable_transparent_header": true,
+        "transparent_header_color": "#4B3937",
         "logo_position": "middle-center",
         "mobile_logo_position": "center",
         "menu": "mega-menu",
