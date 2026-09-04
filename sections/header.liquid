@@ -184,6 +184,10 @@ body:has(.gs-drawer--open)  .header--transparent--cc .header-logo--transparent {
     fill: {{ th_color }};
     stroke: {{ th_color }};
 }
+/* Custom drawer hamburger (styled white in custom.css) — doubled class beats it without breaking the scrolled state */
+.header--transparent--cc .gs-hamburger__icon.gs-hamburger__icon path {
+    stroke: {{ th_color }};
+}
 .marquee-container {
     border-bottom: 1px solid #00000017;
 }
